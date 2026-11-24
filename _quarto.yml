@@ -1,0 +1,17 @@
+project:
+  type: default
+  output-dir: _site
+  render:
+    - index.qmd
+  resources:
+    - assets/**
+    - reading.html
+    - downloads/**
+    - static/data/**
+    - practice/**
+    - r/**
+    - missing_data_practice.R
+    - scripts/install_packages.R
+execute:
+  enabled: false
+lang: ru

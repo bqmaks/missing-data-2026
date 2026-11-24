@@ -1,0 +1,479 @@
+/*-- scss:defaults --*/
+// =============================================================================
+//  Material — тема revealjs, парная к material-typst.
+//  Порт beamer-темы materialbeamer (Lorenzo Lancia).
+//  Размеры рассчитаны на сцену 1600×900 и повторяют пропорции PDF-версии.
+// =============================================================================
+
+$mat-primary: #2196f3 !default;
+$mat-primary-dark: #1976d2 !default;
+$mat-primary-light: #bbdefb !default;
+$mat-block-body: #f0f0f0 !default;
+
+// высоты полос: 1600×900 ≈ 297×167 мм из typst-версии
+$mat-nav-h: 40px !default;
+$mat-title-h: 76px !default;
+$mat-shade-h: 10px !default;
+$mat-foot-h: 44px !default;
+$mat-pad-x: 76px !default;
+
+$font-family-sans-serif: Roboto, "Helvetica Neue", Arial, sans-serif !default;
+$presentation-font-family: $font-family-sans-serif !default;
+$presentation-heading-font: $font-family-sans-serif !default;
+$presentation-font-size-root: 38px !default;
+$presentation-heading-font-weight: 400 !default;
+$presentation-heading-color: $mat-primary-dark !default;
+$presentation-line-height: 1.35 !default;
+
+$body-bg: #ffffff !default;
+$body-color: #1a1a1a !default;
+$link-color: $mat-primary-dark !default;
+$selection-bg: $mat-primary-light !default;
+
+$code-block-bg: $mat-block-body !default;
+$code-block-border-color: $mat-block-body !default;
+$font-family-monospace: "Roboto Mono", "DejaVu Sans Mono", monospace !default;
+
+$presentation-h1-font-size: 2.1em !default;
+$presentation-h2-font-size: 1.25em !default;
+$presentation-h3-font-size: 1.02em !default;
+$presentation-h4-font-size: 0.95em !default;
+
+/*-- scss:rules --*/
+
+.reveal {
+  font-stretch: 100%;
+}
+
+// ------------------------------------------------------------- поля слайда --
+// Отступы получают только листовые слайды: у секции-стопки (.stack) они бы
+// сложились с отступами вложенного слайда.
+.reveal .slides > section:not(.stack),
+.reveal .slides > section > section {
+  padding: $mat-nav-h $mat-pad-x ($mat-foot-h + 10px) $mat-pad-x !important;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.reveal .slides > section.stack {
+  padding: 0 !important;
+}
+
+// {.center} — слайд занимает всю высоту, по центру выравнивается только тело
+.reveal .slides > section.center.level2:not(.stack),
+.reveal .slides > section > section.center.level2 {
+  top: 0 !important;
+  height: 100%;
+}
+
+.reveal .slides section.center > .mat-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: calc(100% - #{$mat-title-h} - 0.7em);
+}
+
+.reveal .slides section.center.plain > .mat-body,
+.reveal .slides section.center.inverse > .mat-body {
+  height: 100%;
+}
+
+// --------------------------------------------------- полоса заголовка слайда --
+.reveal .slides section > h2 {
+  position: relative;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: $mat-title-h;
+  margin: 0 (-$mat-pad-x) 0.7em (-$mat-pad-x);
+  padding: 0 $mat-pad-x;
+  background: $mat-primary;
+  color: #fff;
+  font-size: $presentation-h2-font-size;
+  font-stretch: 75%;
+  font-weight: 400;
+  line-height: 1.1;
+  text-align: left;
+  text-transform: none;
+}
+
+.reveal .slides section > h2::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  height: $mat-shade-h;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0));
+}
+
+.reveal .slides section > h3,
+.reveal .slides section > h4 {
+  color: $mat-primary-dark;
+  font-stretch: 75%;
+  text-align: left;
+  text-transform: none;
+}
+
+// ---------------------------------------------- верхняя навигация по секциям --
+.reveal .slides > .mat-nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  width: 100%;
+  height: $mat-nav-h;
+  padding: 0 $mat-pad-x;
+  background: $mat-primary-dark;
+  color: #fff;
+  font-size: 0.5em;
+  font-stretch: 75%;
+  line-height: 1;
+}
+
+.reveal .slides > .mat-nav .mat-nav-title {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.reveal .slides > .mat-nav .mat-nav-sections {
+  display: flex;
+  gap: 1.4em;
+  overflow: hidden;
+  font-size: 0.92em;
+}
+
+.reveal .slides > .mat-nav .mat-nav-sections span {
+  color: rgba($mat-primary-light, 0.85);
+  white-space: nowrap;
+}
+
+.reveal .slides > .mat-nav .mat-nav-sections span.active {
+  color: #fff;
+  font-weight: 700;
+}
+
+// ------------------------------------------------------ нижний колонтитул --
+.reveal .slides > .mat-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  width: 100%;
+  height: $mat-foot-h;
+  padding: 0 $mat-pad-x;
+  background: $mat-primary-dark;
+  color: #fff;
+  font-size: 0.45em;
+  line-height: 1;
+}
+
+// слайды {.plain} и {.inverse} идут без рамки
+.reveal .slides.mat-bare > .mat-nav,
+.reveal .slides.mat-bare > .mat-footer {
+  display: none;
+}
+
+.reveal-viewport.mat-inverse,
+.reveal-viewport.mat-inverse .reveal {
+  background: $mat-primary;
+  color: #fff;
+}
+
+.reveal .slides section.plain,
+.reveal .slides section.inverse {
+  padding: 0 $mat-pad-x !important;
+  text-align: center;
+}
+
+// заголовок таких слайдов лежит внутри .mat-body, поэтому селектор вложенный
+.reveal .slides section.plain h2,
+.reveal .slides section.inverse h2 {
+  display: block;
+  height: auto;
+  margin: 0 0 0.5em 0;
+  padding: 0;
+  background: transparent;
+  font-size: 2.2em;
+  font-stretch: 75%;
+  text-align: center;
+}
+
+.reveal .slides section.plain h2 {
+  color: $mat-primary-dark;
+}
+
+.reveal .slides section.inverse,
+.reveal .slides section.inverse h2,
+.reveal .slides section.inverse a {
+  color: #fff;
+}
+
+.reveal .slides section.plain h2::after,
+.reveal .slides section.inverse h2::after {
+  content: none;
+}
+
+// ---------------------------------------------------------- титульный слайд --
+.reveal .slides section#title-slide {
+  display: block;
+  height: 100%;
+  padding: $mat-nav-h 0 $mat-foot-h 0 !important;
+  text-align: left;
+}
+
+.reveal .slides section#title-slide .mat-title-meta {
+  padding: 3.5% $mat-pad-x 0 $mat-pad-x;
+  text-align: right;
+}
+
+.reveal .slides section#title-slide .mat-title-meta .quarto-title-author-name,
+.reveal .slides section#title-slide .mat-title-meta .author {
+  font-size: 1.1em;
+}
+
+.reveal .slides section#title-slide .mat-title-meta .institute,
+.reveal .slides section#title-slide .mat-title-meta .date,
+.reveal .slides section#title-slide .mat-title-meta .quarto-title-affiliation {
+  font-size: 0.72em;
+  font-stretch: 75%;
+}
+
+.reveal .slides section#title-slide .mat-title-panel {
+  margin-top: 6%;
+  padding: 3.2% $mat-pad-x 8%;
+  background: $mat-primary;
+  color: #fff;
+}
+
+.reveal .slides section#title-slide .mat-title-panel h1.title {
+  margin: 0;
+  color: #fff;
+  font-size: 2.4em;
+  font-weight: 400;
+  line-height: 1.05;
+  text-transform: none;
+}
+
+.reveal .slides section#title-slide .mat-title-panel .subtitle {
+  margin: 0.2em 0 0 0;
+  color: #fff;
+  font-size: 1.05em;
+  font-stretch: 75%;
+}
+
+.reveal .slides section#title-slide .quarto-title-authors {
+  display: block;
+}
+
+.reveal .slides section#title-slide .quarto-title-author {
+  display: block;
+}
+
+// ------------------------------------------------------------ слайд секции --
+.reveal .slides section.title-slide.level1:not(#title-slide) {
+  text-align: center;
+}
+
+.reveal .slides section.title-slide.level1:not(#title-slide) > h1 {
+  margin-top: 22%;
+  color: $mat-primary-dark;
+  font-size: 1.8em;
+  font-stretch: 75%;
+  text-align: center;
+  text-transform: none;
+}
+
+.reveal .slides section.title-slide.level1:not(#title-slide) > h1::after {
+  display: block;
+  width: 22%;
+  height: 5px;
+  margin: 0.45em auto 0;
+  background: $mat-primary;
+  content: "";
+}
+
+// -------------------------------------------------------------------- списки --
+.reveal ul,
+.reveal ol {
+  margin-left: 0.9em;
+}
+
+.reveal ul {
+  list-style: none;
+}
+
+.reveal ul > li::before {
+  display: inline-block;
+  width: 0.75em;
+  margin-left: -0.75em;
+  color: $mat-primary;
+  content: "•";
+}
+
+.reveal ol > li::marker {
+  color: $mat-primary;
+}
+
+.reveal li {
+  margin-bottom: 0.35em;
+}
+
+.reveal strong,
+.reveal b {
+  color: $mat-primary-dark;
+  font-weight: 700;
+}
+
+// ------------------------------------------------ блоки и callout-контейнеры --
+@mixin mat-accent($accent) {
+  > .block-title,
+  .callout-title {
+    background: $accent !important;
+  }
+}
+
+.reveal .block {
+  margin: 0.6em 0;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.13);
+
+  > .block-title {
+    padding: 0.35em 0.6em;
+    background: $mat-primary;
+    color: #fff;
+    font-size: 1.05em;
+    font-stretch: 75%;
+  }
+
+  > .block-body {
+    padding: 0.5em 0.6em;
+    background: $mat-block-body;
+  }
+
+  > .block-body > :first-child {
+    margin-top: 0;
+  }
+
+  > .block-body > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Разметка коллаута в revealjs: .callout > .callout-body > (.callout-title, .callout-content)
+.reveal .callout {
+  margin: 0.6em 0;
+  border: none !important;
+  border-radius: 0;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.13);
+
+  // фон перебиваем !important: собственные правила quarto специфичнее
+  .callout-title {
+    margin: 0;
+    padding: 0.35em 0.6em;
+    border: none;
+    background: $mat-primary !important;
+    color: #fff;
+    font-stretch: 75%;
+  }
+
+  .callout-icon-container {
+    width: 1.4em;
+    margin-right: 0.1em;
+  }
+
+  .callout-title p,
+  .callout-title strong {
+    margin: 0;
+    color: #fff;
+    font-size: 1.05em;
+    font-weight: 400;
+  }
+
+  .callout-icon {
+    filter: brightness(0) invert(1);
+  }
+
+  .callout-content {
+    padding: 0.5em 0.6em;
+    background: $mat-block-body;
+  }
+
+  .callout-content > :first-child {
+    margin-top: 0;
+  }
+
+  .callout-content > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+.reveal .callout.callout-tip {
+  @include mat-accent(#00a63e);
+}
+
+.reveal .callout.callout-warning {
+  @include mat-accent(#ff9e00);
+}
+
+.reveal .callout.callout-important {
+  @include mat-accent(#dc2626);
+}
+
+.reveal .callout.callout-caution {
+  @include mat-accent(#f57c00);
+}
+
+// -------------------------------------------------------------------- прочее --
+.reveal table {
+  margin: 0.5em 0;
+}
+
+.reveal table th {
+  border-bottom: 2px solid $mat-primary-dark;
+  color: $mat-primary-dark;
+}
+
+.reveal table td,
+.reveal table th {
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+.reveal blockquote {
+  box-shadow: none;
+  border-left: 5px solid $mat-primary-light;
+  background: transparent;
+  font-style: normal;
+}
+
+.reveal pre {
+  box-shadow: none;
+  width: 100%;
+}
+
+.reveal pre code {
+  padding: 0.6em;
+  background: $mat-block-body;
+}
+
+.reveal figcaption {
+  color: #666;
+  font-size: 0.7em;
+}
+
+// прогресс-полоса reveal в цвет темы, если её включат
+.reveal .progress {
+  color: $mat-primary;
+}
+
+// Кнопка меню reveal перекрывала бы колонтитул; меню открывается клавишей «m».
+.reveal .slide-menu-button {
+  display: none;
+}

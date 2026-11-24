@@ -1,0 +1,155 @@
+<script>
+// =============================================================================
+//  Material — рамка слайда для revealjs.
+//  Навигация и колонтитул живут внутри .slides, поэтому масштабируются вместе
+//  со сценой (в отличие от стандартного quarto-футера, привязанного к окну).
+// =============================================================================
+(function () {
+  "use strict";
+
+  var conf = window.matTheme || {};
+
+  function el(tag, cls, text) {
+    var node = document.createElement(tag);
+    if (cls) node.className = cls;
+    if (text != null) node.textContent = text;
+    return node;
+  }
+
+  // Листовые слайды в порядке показа: секции верхнего уровня и вложенные стопки.
+  function leafSlides(slides) {
+    var out = [];
+    Array.prototype.forEach.call(slides.children, function (node) {
+      if (node.tagName !== "SECTION") return;
+      var nested = node.querySelectorAll(":scope > section");
+      if (nested.length) {
+        Array.prototype.push.apply(out, nested);
+      } else {
+        out.push(node);
+      }
+    });
+    return out;
+  }
+
+  function sectionTitles(slides) {
+    var titles = [];
+    Array.prototype.forEach.call(slides.children, function (node) {
+      if (node.tagName !== "SECTION") return;
+      var head = node.querySelector(":scope > section.level1 > h1, :scope > h1");
+      if (head) titles.push({ text: head.textContent.trim(), stack: node });
+    });
+    return titles;
+  }
+
+  // Титульный слайд: автор и аффилиация сверху, заголовок — в цветной плашке.
+  function buildTitleSlide(slides) {
+    var title = slides.querySelector("#title-slide");
+    if (!title || title.querySelector(".mat-title-panel")) return;
+
+    var panel = el("div", "mat-title-panel");
+    var meta = el("div", "mat-title-meta");
+
+    Array.prototype.slice.call(title.children).forEach(function (node) {
+      var isTitle = node.matches("h1.title, .subtitle, p.subtitle");
+      (isTitle ? panel : meta).appendChild(node);
+    });
+
+    title.appendChild(meta);
+    title.appendChild(panel);
+  }
+
+  // На слайдах {.center} reveal центрирует секцию целиком, вместе с полосой
+  // заголовка. Поэтому тело слайда выносим в отдельный контейнер и центрируем
+  // только его — полоса остаётся приклеенной к верху.
+  function wrapCenteredBodies(slides) {
+    slides.querySelectorAll("section.center.level2").forEach(function (section) {
+      if (section.querySelector(":scope > .mat-body")) return;
+      // на слайдах без рамки заголовок центрируется вместе с телом,
+      // на обычных — остаётся в полосе заголовка наверху
+      var bare = section.classList.contains("plain") || section.classList.contains("inverse");
+      var body = el("div", "mat-body");
+      Array.prototype.slice.call(section.children).forEach(function (node) {
+        if (bare || node.tagName !== "H2") body.appendChild(node);
+      });
+      section.appendChild(body);
+    });
+  }
+
+  function init() {
+    var slides = document.querySelector(".reveal .slides");
+    if (!slides || slides.querySelector(":scope > .mat-nav")) return;
+
+    buildTitleSlide(slides);
+    wrapCenteredBodies(slides);
+
+    var sections = sectionTitles(slides);
+    var leaves = leafSlides(slides);
+
+    // ---- верхняя навигация
+    var nav = el("div", "mat-nav");
+    nav.setAttribute("aria-hidden", "true");
+    nav.appendChild(el("div", "mat-nav-title", conf.shortTitle || ""));
+
+    var navSections = el("div", "mat-nav-sections");
+    sections.forEach(function (section) {
+      navSections.appendChild(el("span", null, section.text));
+    });
+    nav.appendChild(navSections);
+
+    // ---- колонтитул
+    var footer = el("div", "mat-footer");
+    footer.setAttribute("aria-hidden", "true");
+    footer.appendChild(el("div", "mat-footer-author", conf.shortAuthor || ""));
+    var num = el("div", "mat-footer-num");
+    footer.appendChild(num);
+
+    slides.appendChild(nav);
+    slides.appendChild(footer);
+
+    var viewport = document.querySelector(".reveal-viewport") || document.body;
+
+    function update() {
+      var current = document.querySelector(".reveal .slides section.present");
+      if (!current) return;
+      if (current.querySelector(":scope > section.present")) {
+        current = current.querySelector(":scope > section.present");
+      }
+
+      // номер слайда
+      var index = leaves.indexOf(current);
+      num.textContent = index >= 0 ? index + 1 + " / " + leaves.length : "";
+
+      // подсветка текущей секции
+      var stack = current.parentElement === slides ? current : current.parentElement;
+      var active = -1;
+      sections.forEach(function (section, i) {
+        if (section.stack === stack) active = i;
+      });
+      Array.prototype.forEach.call(navSections.children, function (node, i) {
+        node.classList.toggle("active", i === active);
+      });
+
+      // слайды без рамки
+      var bare = current.classList.contains("plain") || current.classList.contains("inverse");
+      slides.classList.toggle("mat-bare", bare);
+      viewport.classList.toggle("mat-inverse", current.classList.contains("inverse"));
+    }
+
+    if (window.Reveal && window.Reveal.on) {
+      window.Reveal.on("ready", update);
+      window.Reveal.on("slidechanged", update);
+      if (window.Reveal.isReady && window.Reveal.isReady()) update();
+    } else {
+      document.addEventListener("reveal.ready", update);
+      window.addEventListener("hashchange", update);
+      setTimeout(update, 300);
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+</script>

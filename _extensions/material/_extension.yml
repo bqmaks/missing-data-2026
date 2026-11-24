@@ -1,0 +1,89 @@
+title: Material
+author: Material presentation template
+version: 1.0.0
+quarto-required: ">=1.4.0"
+contributes:
+  formats:
+
+    # ---------------------------------------------------------------- PDF ---
+    typst:
+      template-partials:
+        - typst-template.typ
+        - typst-show.typ
+      filters:
+        - material.lua
+      papersize: presentation-16-9
+      aspect-ratio: "16-9"
+      fontsize: 20pt
+      mainfont: Roboto
+      monofont: Roboto Mono
+      # значения по умолчанию для булевых опций темы:
+      # они обязаны присутствовать, иначе `false` неотличим от «не задано»
+      title-slide: true
+      section-slides: true
+      slide-toc: true
+      slide-number: true
+      navigation: true
+      toc-title: "Содержание"
+      theme-color: "#2196F3"
+      theme-color-dark: "#1976D2"
+      theme-color-light: "#BBDEFB"
+      block-color: "#F0F0F0"
+      # предупреждения о переопределении #callout не нужны
+      keep-typ: false
+
+    # --------------------------------------------------------------- HTML ---
+    revealjs:
+      theme: [default, material.scss]
+      filters:
+        - material.lua
+      width: 1600
+      height: 900
+      margin: 0
+      min-scale: 0.2
+      max-scale: 2.0
+      center: false
+      slide-number: false
+      progress: false
+      controls: false
+      hash: true
+      history: true
+      transition: fade
+      transition-speed: fast
+      background-transition: none
+      highlight-style: github
+      code-line-numbers: false
+      include-in-header:
+        - text: |
+            <style>
+              @font-face {
+                font-family: "Roboto";
+                src: url("fonts/Roboto-Variable.ttf") format("truetype-variations"),
+                     url("_extensions/material/fonts/Roboto-Variable.ttf") format("truetype-variations");
+                font-weight: 100 900;
+                font-stretch: 75% 100%;
+                font-style: normal;
+                font-display: swap;
+              }
+              @font-face {
+                font-family: "Roboto";
+                src: url("fonts/Roboto-Italic-Variable.ttf") format("truetype-variations"),
+                     url("_extensions/material/fonts/Roboto-Italic-Variable.ttf") format("truetype-variations");
+                font-weight: 100 900;
+                font-stretch: 75% 100%;
+                font-style: italic;
+                font-display: swap;
+              }
+              @font-face {
+                font-family: "Roboto Mono";
+                src: url("fonts/RobotoMono-Variable.ttf") format("truetype-variations"),
+                     url("_extensions/material/fonts/RobotoMono-Variable.ttf") format("truetype-variations");
+                font-weight: 100 700;
+                font-style: normal;
+                font-display: swap;
+              }
+            </style>
+      include-after-body:
+        - material.html
+      format-resources:
+        - fonts

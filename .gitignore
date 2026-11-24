@@ -49,7 +49,21 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 
-# compiled code 
+# compiled code
 src/*.o
 src/*.so
 src/*.dll
+
+# Local source files defining the course structure; maintained independently
+/course-inputs/
+
+# Local renders, execution outputs, and development caches
+/_site/
+/fonts/
+/outputs/
+/.quarto/
+/.Rlib/
+**/__pycache__/
+Rplots.pdf
+node_modules/
+**/*.quarto_ipynb
