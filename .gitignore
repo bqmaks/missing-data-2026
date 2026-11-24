@@ -67,3 +67,6 @@ src/*.dll
 Rplots.pdf
 node_modules/
 **/*.quarto_ipynb
+
+# Local application log
+/snowflake.log
