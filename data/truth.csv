@@ -1,0 +1,10 @@
+"parameter","value"
+"mean_BMI",27
+"mean_SBP",135
+"sd_BMI",4
+"sd_SBP",15
+"correlation",0.6
+"intercept_SBP",74.25
+"slope_SBP",2.25
+"intercept_BMI",5.4
+"slope_BMI",0.16

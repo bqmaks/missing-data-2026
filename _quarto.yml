@@ -3,7 +3,31 @@ project:
   output-dir: _site
   render:
     - index.qmd
+  resources:
+    - assets/mice-mascot.svg
+    - assets/mice-cell.svg
+    - assets/vendor/mathjax/**
+    - assets/vendor/d3.v7.9.0.min.js
+    - widgets/**
+    - data/**
 
 lang: ru
 format:
-  material-revealjs: default
+  material-revealjs:
+    html-math-method:
+      method: mathjax
+      url: assets/vendor/mathjax/MathJax.js
+    css:
+      - assets/course.css
+      - widgets/widget.css
+    include-in-header:
+      - text: '<script src="assets/vendor/d3.v7.9.0.min.js"></script>'
+    include-after-body:
+      - assets/widgets.html
+    auto-stretch: false
+    pdf-max-pages-per-slide: 1
+execute:
+  echo: false
+  warning: true
+  message: false
+  cache: false

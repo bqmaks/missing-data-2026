@@ -70,3 +70,5 @@ node_modules/
 
 # Local application log
 /snowflake.log
+
+/.luarc.json

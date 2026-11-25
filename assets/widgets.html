@@ -1,0 +1,6 @@
+<script type="module">
+import { patternsWidget } from './widgets/patterns.js';
+import { locfWidget } from './widgets/locf.js';
+document.getElementById('w-patterns')?.append(patternsWidget(window.d3));
+document.getElementById('w-locf')?.append(locfWidget(window.d3));
+</script>

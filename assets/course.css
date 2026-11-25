@@ -1,0 +1,357 @@
+/* Настройки этой лекции; общий fb-presentation не изменяется. */
+:root {
+  --course-observed: #006cc2;
+  --course-missing: #b61a51;
+  --course-imputed: #b61a51;
+  --title-panel-inset: 76px;
+  --title-text-gap: 32px;
+}
+.reveal { font-size: 34px; }
+.reveal .slides section > h2 { font-size: 1.18em; }
+.reveal p { margin: .35em 0 .6em; }
+.reveal li { margin-bottom: .25em; }
+.reveal .columns { gap: 32px; align-items: flex-start; }
+.reveal .column { min-width: 0; }
+.reveal .column > :first-child { margin-top: 0; }
+.reveal .small { font-size: .78em; }
+.reveal .muted { color: #536574; }
+.reveal .takeaway { border-left: 6px solid var(--course-observed); background: #edf5fd; padding: .4em .65em; margin-top: .6em; }
+.reveal .warning-note { border-left: 6px solid var(--course-missing); background: #fff4f2; padding: .4em .65em; }
+.reveal .takeaway > p, .reveal .warning-note > p { margin: 0; }
+.reveal .estimates { font-size: 27px; width: 100%; margin: .4em 0; font-variant-numeric: tabular-nums; }
+.reveal .estimates th, .reveal .estimates td { padding: .32em .4em; border-bottom: 1px solid #dbe4ed; white-space: nowrap; }
+.reveal .estimates thead th { color: var(--course-observed); background: #edf5fd; font-weight: 600; text-align: center; white-space: normal; }
+.reveal .estimates td { text-align: right; }
+.reveal .estimates tbody th { font-weight: 400; }
+.reveal .estimates tbody tr:nth-child(even) { background: #f6f8fa; }
+.reveal .comparison .estimates { font-size: 28px; }
+.reveal .comparison .estimates th, .reveal .comparison .estimates td { padding: .28em .38em; }
+.reveal #notation .notation-layout { display: grid; row-gap: 72px; }
+.reveal #notation .notation-matrices {
+  display: grid;
+  grid-template-columns: repeat(3, max-content);
+  justify-content: space-between;
+  align-items: start;
+  column-gap: 24px;
+  font-size: 22px;
+}
+.reveal #notation .notation-layout p { margin: 0; }
+.reveal #notation .notation-layout .MathJax_Display { margin: 0 !important; }
+.reveal #notation :is(.notation-tuple, .notation-indicator) .MathJax_Display {
+  text-align: left !important;
+}
+/* Индикаторы M наблюдаемы: один шаг меняет цвет, не скрывая матрицу. */
+.reveal #notation .indicator-observed.fragment {
+  --indicator-value-color: #858b94;
+  opacity: 1;
+  visibility: visible;
+}
+.reveal #notation .indicator-observed.fragment.visible {
+  --indicator-value-color: var(--course-observed);
+}
+.reveal #notation .indicator-observed .MathJax :is(.mi, .mn) {
+  color: var(--indicator-value-color);
+  transition: color .25s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal #notation .indicator-observed .MathJax :is(.mi, .mn) { transition: none; }
+}
+.reveal .pattern-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.reveal .pattern-panel { display: block; width: 100%; height: auto; }
+.reveal .pattern-panel :is(.pattern-frame, .pattern-heading) { stroke: #1a1a1a; stroke-width: 1.5px; }
+.reveal .pattern-panel .pattern-title { font-family: inherit; font-size: 31px; fill: #1a1a1a; }
+.reveal .pattern-grid :is(.cell, .cell-output-display) { display: contents; }
+.reveal .pattern-grid-print { grid-template-columns: repeat(2, 344px); justify-content: center; }
+.reveal .mechanism { display: grid; grid-template-columns: 170px 1fr; gap: 25px; margin-bottom: .65em; padding: .3em .5em; background: #f5f8fc; }
+.reveal .mechanism-label { color: var(--course-observed); font-size: 34px; padding-top: .3em; }
+.reveal .mechanism p { margin: .1em 0 .3em; }
+.reveal .mechanism .math { font-size: 31px; }
+.reveal .figure-note { font-size: 24px; color: #536574; margin: 0; }
+.reveal .cell-output-display p { margin: 0; }
+.reveal img { max-width: 100%; }
+.reveal .compact { font-size: 30px; }
+.reveal .examples-table { font-size: 30px; }
+.reveal .examples-table td, .reveal .examples-table th { padding: .35em .55em; }
+.reveal .MathJax_Display { margin: .5em 0 !important; }
+.reveal .source { font-size: 22px; color: #536574; }
+.reveal .references { font-size: 28px; }
+.reveal .references li { margin-bottom: .5em; line-height: 1.25; }
+.reveal .references li p { margin: 0; }
+.reveal .compact table { font-size: 26px; }
+.reveal #coverage .estimates { font-size: 27px; }
+.reveal .widget-slide > h2 { margin-bottom: .35em; }
+
+/* Определение отдельным блоком; примеры обсуждаем по одному. */
+.reveal #definition .definition-quote {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 36px 52px;
+  background: #f0f0f0;
+}
+.reveal #definition blockquote {
+  width: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+  font-size: 36px;
+  line-height: 1.4;
+  font-style: normal;
+  color: #1a1a1a;
+}
+.reveal #definition blockquote p { margin: 0; }
+.reveal #definition .definition-translation {
+  margin-top: 24px;
+}
+.reveal #definition .definition-source {
+  margin-top: 24px;
+  font-size: 24px;
+  line-height: 1.4;
+  color: #536574;
+}
+.reveal #definition .definition-source p { margin: 0; }
+.reveal :is(#missing-examples, #inference) > ul {
+  display: block;
+  margin: 20px 0 0 1.1em;
+  font-size: 34px;
+  line-height: 1.35;
+}
+.reveal :is(#missing-examples, #inference) li { margin-bottom: .35em; }
+.reveal :is(#missing-examples, #inference) ul ul {
+  display: block;
+  list-style: none;
+  margin: .25em 0 0 1.15em;
+  font-size: inherit;
+  line-height: inherit;
+}
+.reveal :is(#missing-examples, #inference) ul ul li:last-child { margin-bottom: 0; }
+.reveal :is(#missing-examples, #inference) li.fragment {
+  color: #a8a8a8;
+  transition: opacity .2s ease, color .2s ease;
+}
+.reveal :is(#missing-examples, #inference) li.fragment.current-fragment { color: #1a1a1a; }
+.reveal #inference li.fragment.visible:not(.current-fragment) { color: #555; }
+.reveal :is(#missing-examples, #inference) li.fragment::before { color: currentColor; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal :is(#missing-examples, #inference) li.fragment { transition: none; }
+}
+
+.reveal :is(#missing-examples, #inference) li.fragment strong { color: inherit; }
+.reveal #inference > ul {
+  margin-top: 16px;
+  font-size: 32px;
+}
+.reveal #inference li { margin-bottom: .3em; }
+.reveal #inference .requirement-detail {
+  display: block;
+  margin-top: 2px;
+  font-size: 30px;
+  line-height: 1.25;
+}
+
+/* Слайд 2: электронная таблица и фотография без отдельного заголовка. */
+.reveal .slides section#intro-table {
+  top: 0 !important;
+  height: var(--slide-height, 900px);
+  padding: 80px 40px 84px !important;
+}
+.reveal .slides #intro-table > h2 { display: none; }
+.reveal #intro-table .intro-layout {
+  display: grid;
+  grid-template-columns: 880px 600px;
+  gap: 40px;
+  height: 736px;
+  align-items: center;
+}
+.reveal #intro-table .sheet-window {
+  height: 736px;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1px solid #c9d0d7;
+  background: #fff;
+}
+.reveal #intro-table .intro-sheet {
+  table-layout: fixed;
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0;
+  font-size: 34px;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+.reveal #intro-table .sheet-index { width: 48px; }
+.reveal #intro-table .intro-sheet th,
+.reveal #intro-table .intro-sheet td {
+  box-sizing: border-box;
+  border: 1px solid #d7dce1;
+  padding: 0 16px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.reveal #intro-table .intro-sheet tr > :first-child { border-left: 0; }
+.reveal #intro-table .intro-sheet tr > :last-child { border-right: 0; }
+.reveal #intro-table .sheet-letters { height: 36px; }
+.reveal #intro-table .sheet-letters th {
+  border-top: 0;
+  background: #f1f3f4;
+  color: #60666e;
+  text-align: center;
+  font-size: 19px;
+  font-weight: 400;
+}
+.reveal #intro-table .sheet-corner { position: relative; }
+.reveal #intro-table .sheet-corner::after {
+  content: "";
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  border-right: 13px solid #bbc2c9;
+  border-top: 13px solid transparent;
+}
+.reveal #intro-table .sheet-fields { height: 70px; }
+.reveal #intro-table .sheet-fields th {
+  padding: 0 10px;
+  background: #eaf2fa;
+  color: #243c50;
+  font-size: 28px;
+  font-weight: 500;
+  text-align: center;
+}
+.reveal #intro-table .intro-sheet .sheet-row-number {
+  padding: 0;
+  background: #f1f3f4;
+  color: #60666e;
+  text-align: center;
+  font-size: 19px;
+  font-weight: 400;
+}
+.reveal #intro-table .intro-sheet tbody tr { height: 98px; }
+.reveal #intro-table .intro-sheet td {
+  color: var(--course-observed);
+  text-align: right;
+  font-weight: 400;
+}
+.reveal #intro-table .intro-sheet .sheet-sex { text-align: center; }
+.reveal #intro-table .intro-sheet .sheet-missing { color: var(--course-missing); }
+.reveal #intro-table .intro-sheet .sheet-missing-label {
+  padding: 0 10px;
+  font-size: 28px;
+  line-height: 1.15;
+  text-align: center;
+  white-space: normal;
+}
+.reveal #intro-table .intro-sheet .sheet-mascot {
+  position: relative;
+  padding: 0;
+}
+.reveal #intro-table .sheet-mascot img {
+  --mouse-width: 120px;
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: calc(-.5px - var(--mouse-width) * 24 / 224);
+  transform: translateX(-50%);
+  display: block;
+  width: var(--mouse-width);
+  height: auto;
+  max-height: none;
+  margin: 0;
+  border: 0;
+  box-shadow: none;
+}
+.reveal #intro-table .sheet-tabs {
+  height: 40px;
+  display: flex;
+  align-items: stretch;
+  padding-left: 48px;
+  background: #f1f3f4;
+  font-size: 18px;
+  line-height: 38px;
+  color: #31536d;
+}
+.reveal #intro-table .sheet-tab {
+  padding: 0 22px;
+  border-bottom: 3px solid var(--course-observed);
+  background: #e4eef8;
+}
+.reveal #intro-table img.intro-cat {
+  display: block;
+  width: 600px;
+  height: 736px;
+  object-fit: cover;
+  object-position: center;
+  max-height: none;
+  margin: 0;
+  border: 0;
+  box-shadow: none;
+}
+
+/* Пробный титульный слайд и поля колонтитулов, 2026-11-25. */
+.reveal .slides > .mat-nav,
+.reveal .slides > .mat-footer { padding-right: 16px; padding-left: 16px; }
+.reveal .slides:has(#title-slide.present) > .mat-nav > *,
+.reveal .slides:has(#title-slide.present) > .mat-footer > * { visibility: hidden; }
+.reveal .slides section#title-slide .mat-title-panel {
+  position: absolute;
+  top: 80px;
+  left: 0;
+  width: 100%;
+  height: 576px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: var(--title-panel-inset);
+  background-image: url("title-missing-matrix.svg");
+  background-repeat: no-repeat;
+  background-position: right var(--title-panel-inset) bottom var(--title-panel-inset);
+  background-size: 1448px 424px;
+}
+.reveal .slides section#title-slide .mat-title-panel h1.title {
+  font-size: 80px;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+.reveal .slides section#title-slide .mat-title-meta {
+  position: absolute;
+  left: 76px;
+  bottom: 120px;
+  height: 48px;
+  padding: 0;
+  text-align: left;
+}
+.reveal .slides section#title-slide .mat-title-meta p,
+.reveal .slides section#title-slide .quarto-title-authors { margin: 0; }
+.reveal .slides section#title-slide .quarto-title-author { padding: 0; }
+.reveal .slides section#title-slide .quarto-title-authors,
+.reveal .slides section#title-slide .quarto-title-author,
+.reveal .slides section#title-slide .quarto-title-author-name {
+  height: 48px;
+  line-height: 48px;
+  margin: 0;
+}
+
+/* В PDF Reveal оборачивает слайды в .pdf-page: сохраняем поля этой лекции. */
+html.print-pdf .reveal .slides .pdf-page section.slide {
+  padding: 40px 76px 50px !important;
+  box-sizing: border-box !important;
+}
+html.print-pdf .reveal .slides .pdf-page #title-slide {
+  top: 0 !important;
+  height: var(--slide-height, 900px) !important;
+  padding: 40px 0 !important;
+}
+html.print-pdf .reveal .slides .pdf-page #intro-table {
+  top: 0 !important;
+  height: var(--slide-height, 900px) !important;
+  padding: 80px 40px 84px !important;
+}
+html.print-pdf .reveal .slides .pdf-page section#definition {
+  top: 0 !important;
+  height: var(--slide-height, 900px) !important;
+}
+html.print-pdf .reveal .slides > .mat-nav,
+html.print-pdf .reveal .slides > .mat-footer { display: none !important; }
+html.print-pdf .reveal .references li { margin-bottom: .5em !important; line-height: 1.25 !important; }
+html.print-pdf .reveal .references li p { margin: 0 !important; line-height: 1.25 !important; }
+html.print-pdf .reveal .widget-print img { max-height: 550px; width: auto !important; margin: 0 auto; }
+html.print-pdf .reveal .widget-print .cell-output-display { text-align: center; }
