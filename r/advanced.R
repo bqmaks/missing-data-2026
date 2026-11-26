@@ -190,12 +190,22 @@ locf_effects <- function(d) {
   c(full = eff('y'), ctrl = eff('locf_ctrl'), trt = eff('locf_trt'))
 }
 
+# JSON для интерактива D68: x – ИМТ, y – САД (включая скрытые значения для показа), M – маска MAR,
+# truth – параметры DGP, cd – оценки по полным данным, ml – аналитические оценки ММП.
+ml_mechanism_json <- function(ex, ml, digits = 4) {
+  d <- ex$complete
+  jsonlite::toJSON(list(x = d$BMI, y = d$SBP, M = as.integer(ex$masks$MAR),
+    truth = as.list(ex$truth), cd = as.list(unlist(ex$estimates[ex$estimates$scenario == 'Full' &
+      ex$estimates$method == 'Full', names(ex$truth)])), ml = as.list(ml$parameters)),
+    auto_unbox = TRUE, digits = digits)
+}
+
 make_advanced <- function(ex) {
   b <- binary_mar(ex); demo <- ac_demo()
   list(binary = b, binary_ipw = binary_ipw(b), ipw = ipw_fit(ex$observed$MAR),
        ml = normal_ml(ex$observed$MAR), em = normal_em(ex$observed$MAR),
        category = category_example(), distinct = distinctness_example(),
-       demo = demo, ac = ac_estimates(demo), locf = locf_trajectories())
+       demo = demo, ac = ac_estimates(demo), locf = locf_trajectories(), ex_for_json = ex)
 }
 
 export_advanced <- function(a, path = 'data') {
@@ -211,6 +221,8 @@ export_advanced <- function(a, path = 'data') {
   save_csv(a$distinct$draws, 'distinctness-replicates.csv')
   save_csv(cbind(a$demo$observed, block = a$demo$block), 'ac-demo.csv')
   save_csv(a$locf, 'locf-example.csv')
+  # Данные интерактива «Как ММП использует строки без САД» (D68) и эталонные оценки для теста.
+  writeLines(ml_mechanism_json(a$ex_for_json, a$ml, digits = NA), file.path(path, 'ml-mechanism.json'))
   save_csv(data.frame(parameter = names(a$demo$beta), truth = a$demo$beta,
     lm_full = a$ac$lm_full, sem_full = a$ac$sem_full, lm_cc = a$ac$lm_cc, sem_ac = a$ac$sem_ac),
     'ac-demo-estimates.csv')

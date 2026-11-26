@@ -320,17 +320,26 @@ $\Pr(Y=y)=f(y)$ – та же функция вероятности для ди�
 $f(y\mid\theta)$ – функция вероятности или плотность при заданных параметрах $\theta$<br>
 для дискретных величин $\int$ заменяется на $\sum$
 :::
+::: {.formula-no}
+ 
+:::
 ::: {.formula-term}
 **Маргинальное распределение**
 :::
 ::: {.formula-body}
 $f(y_1)=\displaystyle\int f(y_1,y_2)\,dy_2$
 :::
+::: {.formula-no}
+[(1)]{.fno}
+:::
 ::: {.formula-term}
 **Условное распределение**
 :::
 ::: {.formula-body}
 $f(y_2\mid y_1)=\dfrac{f(y_1,y_2)}{f(y_1)},\qquad f(y_1)>0$
+:::
+::: {.formula-no}
+[(2)]{.fno}
 :::
 ::: {.formula-term}
 **Цепное правило**
@@ -339,11 +348,17 @@ $f(y_2\mid y_1)=\dfrac{f(y_1,y_2)}{f(y_1)},\qquad f(y_1)>0$
 $f(y_1,y_2)=f(y_1)\,f(y_2\mid y_1)$<br>
 $f(y_1,\dots,y_p)=f(y_1)\,f(y_2\mid y_1)\cdots f(y_p\mid y_1,\dots,y_{p-1})$
 :::
+::: {.formula-no}
+[(3)]{.fno}
+:::
 ::: {.formula-term}
 **Формула Байеса**
 :::
 ::: {.formula-body}
 $f(y_2\mid y_1)=\dfrac{f(y_1\mid y_2)\,f(y_2)}{f(y_1)}$
+:::
+::: {.formula-no}
+[(4)]{.fno}
 :::
 ::: {.formula-term}
 **Независимость**
@@ -352,11 +367,17 @@ $f(y_2\mid y_1)=\dfrac{f(y_1\mid y_2)\,f(y_2)}{f(y_1)}$
 $Y_1\perp Y_2\iff f(y_1,y_2)=f(y_1)\,f(y_2)$<br>
 $f(\mathbf y^{(1)},\dots,\mathbf y^{(n)}\mid\theta)=\prod_{i=1}^{n}f(\mathbf y^{(i)}\mid\theta)$
 :::
+::: {.formula-no}
+[(5)]{.fno}
+:::
 ::: {.formula-term}
 **Условная независимость**
 :::
 ::: {.formula-body}
 $Y_1\perp Y_2\mid Y_3\iff f(y_1\mid y_2,y_3)=f(y_1\mid y_3)$
+:::
+::: {.formula-no}
+[(6)]{.fno}
 :::
 ::::
 
@@ -378,11 +399,17 @@ $Y_1\perp Y_2\mid Y_3\iff f(y_1\mid y_2,y_3)=f(y_1\mid y_3)$
 ::: {.formula-body}
 $\mathrm E\,g(Y)=\displaystyle\int g(y)\,f(y)\,dy$
 :::
+::: {.formula-no}
+[(7)]{.fno}
+:::
 ::: {.formula-term}
 **Условное ожидание**
 :::
 ::: {.formula-body}
 $\mathrm E(Y_2\mid Y_1=y_1)=\displaystyle\int y_2\,f(y_2\mid y_1)\,dy_2$ – функция от $y_1$
+:::
+::: {.formula-no}
+[(8)]{.fno}
 :::
 ::: {.formula-term}
 **Дисперсия**
@@ -391,17 +418,26 @@ $\mathrm E(Y_2\mid Y_1=y_1)=\displaystyle\int y_2\,f(y_2\mid y_1)\,dy_2$ – ф�
 $\operatorname{Var}(Y)=\mathrm E(Y^2)-(\mathrm E\,Y)^2$<br>
 $\mathrm E(Y_2^2\mid Y_1)=\operatorname{Var}(Y_2\mid Y_1)+\mathrm E(Y_2\mid Y_1)^2$
 :::
+::: {.formula-no}
+[(9)]{.fno}
+:::
 ::: {.formula-term}
 **Закон повторного ожидания**
 :::
 ::: {.formula-body}
 $\mathrm E(Y_2)=\mathrm E\big[\mathrm E(Y_2\mid Y_1)\big]$
 :::
+::: {.formula-no}
+[(10)]{.fno}
+:::
 ::: {.formula-term}
 **Разложение дисперсии**
 :::
 ::: {.formula-body}
 $\operatorname{Var}(Y_2)=\mathrm E\big[\operatorname{Var}(Y_2\mid Y_1)\big]+\operatorname{Var}\big[\mathrm E(Y_2\mid Y_1)\big]$
+:::
+::: {.formula-no}
+[(11)]{.fno}
 :::
 ::::
 
@@ -836,8 +872,12 @@ $$\widehat\pi_g=\frac{n_{\mathrm{obs},\,g}}{n_g},\qquad w^{(i)}=\frac{1}{\wideha
 
 $$\widehat\mu_{\text{САД},\,\mathrm{CC}}=\frac{1}{n_{\mathrm{obs}}}\sum_{i:\,M^{(i)}_{\text{САД}}=0}Y^{(i)}_{\text{САД}}$$
 
+::: {.with-ref}
 $$\widehat\mu_{\text{САД},\,\mathrm{IPW}}=\frac{\sum_{i:\,M^{(i)}_{\text{САД}}=0}w^{(i)}\,Y^{(i)}_{\text{САД}}}{\sum_{i:\,M^{(i)}_{\text{САД}}=0}w^{(i)}}
 =\sum_{g}\frac{n_g}{n}\,\overline{Y}_{\text{САД},\,g}^{\,\mathrm{CC}}$$
+
+[(10)]{.eq-ref}
+:::
 :::
 ::::
 
@@ -1577,7 +1617,11 @@ I_1 – информация на одно наблюдение. ММП не г�
 
 $$Y^{(i)}\overset{\text{i.i.d.}}{\sim}\mathcal N(\mu,\sigma^2),\qquad \theta=(\mu,\sigma^2)$$
 
+::: {.with-ref}
 $$L(\theta;\mathbf y)=\prod_{i=1}^{n}f\bigl(y^{(i)}\mid\mu,\sigma^2\bigr)$$
+
+[(5)]{.eq-ref}
+:::
 
 $$\widehat\mu=\bar y=\frac1n\sum_{i=1}^{n}y^{(i)}$$
 
@@ -1588,7 +1632,11 @@ $$\widehat\sigma^2=\frac1n\sum_{i=1}^{n}\bigl(y^{(i)}-\bar y\bigr)^2$$
 
 $$\mathbf y^{(i)}=\bigl(y^{(i)}_1,y^{(i)}_2\bigr)^{\top}\overset{\text{i.i.d.}}{\sim}\mathcal N_2(\boldsymbol\mu,\Sigma),\qquad \theta=(\boldsymbol\mu,\Sigma)$$
 
+::: {.with-ref}
 $$L(\theta;\mathbf y)=\prod_{i=1}^{n}f\bigl(\mathbf y^{(i)}\mid\boldsymbol\mu,\Sigma\bigr)$$
+
+[(5)]{.eq-ref}
+:::
 
 $$\widehat{\boldsymbol\mu}=\bar{\mathbf y},\qquad
 \widehat\Sigma=\frac1n\sum_{i=1}^{n}\bigl(\mathbf y^{(i)}-\bar{\mathbf y}\bigr)\bigl(\mathbf y^{(i)}-\bar{\mathbf y}\bigr)^{\top}$$
@@ -1615,18 +1663,30 @@ $$\widehat\beta_1=\frac{\widehat\sigma_{12}}{\widehat\sigma_1^2},\qquad
 
 Наблюдаем $(\color{#006CC2}{Y_{\mathrm{obs}}},\color{#006CC2}{M})$, поэтому в общем случае:
 
+::: {.with-ref}
 $$L(\theta,\psi;\color{#006CC2}{Y_{\mathrm{obs}}},\color{#006CC2}{M})=\int f(\color{#006CC2}{Y_{\mathrm{obs}}},\color{#B61A51}{Y_{\mathrm{mis}}},\color{#006CC2}{M}\mid\theta,\psi)\,d\color{#B61A51}{Y_{\mathrm{mis}}}$$
+
+[(1)]{.eq-ref}
+:::
 
 ::: {.fragment}
 [Selection model]{.ml-subhead}
 
+::: {.with-ref}
 $$f(Y,\color{#006CC2}{M}\mid\theta,\psi)=f(Y\mid\theta)\,f(\color{#006CC2}{M}\mid Y,\psi)$$
+
+[(3)]{.eq-ref}
+:::
 :::
 
 ::: {.fragment}
 [Pattern-mixture model]{.ml-subhead}
 
+::: {.with-ref}
 $$f(Y,\color{#006CC2}{M}\mid\theta,\psi)=f(Y\mid \color{#006CC2}{M},\theta_{M})\,f(\color{#006CC2}{M}\mid\psi)$$
+
+[(3)]{.eq-ref}
+:::
 :::
 
 ::: {.notes}
@@ -1643,18 +1703,34 @@ Little (1993), Pattern-mixture models for multivariate incomplete data.
 
 ## Maximum likelihood estimation {#mar-factorization .compact .left-math}
 
+::: {.with-ref}
 $$L(\theta,\psi;\color{#006CC2}{Y_{\mathrm{obs}}},\color{#006CC2}{M})=\int f(\color{#006CC2}{Y_{\mathrm{obs}}},\color{#B61A51}{Y_{\mathrm{mis}}},\color{#006CC2}{M}\mid\theta,\psi)\,d\color{#B61A51}{Y_{\mathrm{mis}}}$$
 
+[(1)]{.eq-ref}
+:::
+
 ::: {.fragment}
+::: {.with-ref}
 $$\phantom{L(\theta,\psi;\color{#006CC2}{Y_{\mathrm{obs}}},\color{#006CC2}{M})}\overset{\llap{\text{selection model}}}{=}\int f(\color{#006CC2}{Y_{\mathrm{obs}}},\color{#B61A51}{Y_{\mathrm{mis}}}\mid\theta)\,f(\color{#006CC2}{M}\mid \color{#006CC2}{Y_{\mathrm{obs}}},\color{#B61A51}{Y_{\mathrm{mis}}},\psi)\,d\color{#B61A51}{Y_{\mathrm{mis}}}$$
+
+[(3)]{.eq-ref}
+:::
 :::
 
 ::: {.fragment}
+::: {.with-ref}
 $$\phantom{L(\theta,\psi;\color{#006CC2}{Y_{\mathrm{obs}}},\color{#006CC2}{M})}\overset{\llap{\mathrm{MAR}}}{=}\int f(\color{#006CC2}{Y_{\mathrm{obs}}},\color{#B61A51}{Y_{\mathrm{mis}}}\mid\theta)\,d\color{#B61A51}{Y_{\mathrm{mis}}}\cdot f(\color{#006CC2}{M}\mid \color{#006CC2}{Y_{\mathrm{obs}}},\psi)$$
+
+[(6)]{.eq-ref}
+:::
 :::
 
 ::: {.fragment}
+::: {.with-ref}
 $$\phantom{L(\theta,\psi;\color{#006CC2}{Y_{\mathrm{obs}}},\color{#006CC2}{M})}=L(\theta;\color{#006CC2}{Y_{\mathrm{obs}}})\cdot f(\color{#006CC2}{M}\mid \color{#006CC2}{Y_{\mathrm{obs}}},\psi)$$
+
+[(1)]{.eq-ref}
+:::
 :::
 
 ::: {.fragment .ml-final-line}
@@ -1714,7 +1790,11 @@ $$s=\sum_{i:\,M^{(i)}=0}Y^{(i)}$$
 
 $$\widehat\theta_{\mathrm{obs}}=\frac{s}{n_{\mathrm{obs}}}$$
 
+::: {.with-ref}
 $$\widehat\theta_{\mathrm{joint}}=\frac{s+n-n_{\mathrm{obs}}}{n+n_{\mathrm{obs}}}$$
+
+[(5)]{.eq-ref}
+:::
 
 ```{r}
 #| results: asis
@@ -1751,9 +1831,13 @@ n = 100, θ = 0.30, 3000 репликаций, seed 20261152; числа пол�
 
 $$\bigl(x^{(i)},y^{(i)}\bigr)^{\top}\overset{\text{i.i.d.}}{\sim}\mathcal N_2(\boldsymbol\mu,\Sigma),\qquad\theta=(\boldsymbol\mu,\Sigma)$$
 
+::: {.with-ref}
 $$L(\theta;\color{#006CC2}{Y_{\mathrm{obs}}})=
-\underbrace{\prod_{i:\,\color{#006CC2}{M^{(i)}}=0}f\bigl(x^{(i)},y^{(i)}\mid\boldsymbol\mu,\Sigma\bigr)}_{n_{\mathrm{obs}}=`r sum(!ex$masks$MAR)`\ \text{полных пар}}\;
-\underbrace{\prod_{i:\,\color{#006CC2}{M^{(i)}}=1}f\bigl(x^{(i)}\mid\mu_{\text{ИМТ}},\sigma^2_{\text{ИМТ}}\bigr)}_{n-n_{\mathrm{obs}}=`r sum(ex$masks$MAR)`\ \text{строк только с ИМТ}}$$
+\underbrace{\prod_{i:\,M^{(i)}=0}f\bigl(x^{(i)},y^{(i)}\mid\boldsymbol\mu,\Sigma\bigr)}_{n_{\mathrm{obs}}=`r sum(!ex$masks$MAR)`\ \text{полных пар}}\;
+\underbrace{\prod_{i:\,M^{(i)}=1}f\bigl(x^{(i)}\mid\mu_{\text{ИМТ}},\sigma^2_{\text{ИМТ}}\bigr)}_{n-n_{\mathrm{obs}}=`r sum(ex$masks$MAR)`\ \text{строк только с ИМТ}}$$
+
+[(1), (5)]{.eq-ref}
+:::
 
 ::: {.notes}
 x⁽ⁱ⁾ – ИМТ, y⁽ⁱ⁾ – САД; пропуски только в САД, механизм MAR (сквозная выборка).
@@ -1772,20 +1856,32 @@ when some observations are missing.
 
 [Регрессионная параметризация]{.ml-subhead}
 
+::: {.with-ref}
 $$f(x,y\mid\theta)=f\bigl(x\mid\mu_{\text{ИМТ}},\sigma^2_{\text{ИМТ}}\bigr)\,
 f\bigl(y\mid x,\beta_0,\beta_1,\sigma^2_{\text{САД}\mid\text{ИМТ}}\bigr),\qquad
 \theta=\bigl(\mu_{\text{ИМТ}},\sigma^2_{\text{ИМТ}},\beta_0,\beta_1,\sigma^2_{\text{САД}\mid\text{ИМТ}}\bigr)$$
 
+[(3)]{.eq-ref}
+:::
+
+::: {.with-ref}
 $$L(\theta;\color{#006CC2}{Y_{\mathrm{obs}}})=
 \underbrace{\prod_{i=1}^{n}f\bigl(x^{(i)}\mid\mu_{\text{ИМТ}},\sigma^2_{\text{ИМТ}}\bigr)}_{n=1000}\;
-\underbrace{\prod_{i:\,\color{#006CC2}{M^{(i)}}=0}f\bigl(y^{(i)}\mid x^{(i)},\beta_0,\beta_1,\sigma^2_{\text{САД}\mid\text{ИМТ}}\bigr)}_{n_{\mathrm{obs}}=`r sum(!ex$masks$MAR)`}$$
+\underbrace{\prod_{i:\,M^{(i)}=0}f\bigl(y^{(i)}\mid x^{(i)},\beta_0,\beta_1,\sigma^2_{\text{САД}\mid\text{ИМТ}}\bigr)}_{n_{\mathrm{obs}}=`r sum(!ex$masks$MAR)`}$$
+
+[(5)]{.eq-ref}
+:::
 
 - $\widehat\mu_{\text{ИМТ}},\widehat\sigma^2_{\text{ИМТ}}$ – по всем пациентам.
 - $\widehat\beta_0,\widehat\beta_1$ – регрессия $\mathrm{E}(\text{САД}\mid\text{ИМТ})$ на полных парах, как в CC; это параметры субстантивной модели.
 - $\widehat\sigma^2_{\text{САД}\mid\text{ИМТ}}$ – сумма квадратов остатков / $n_{\mathrm{obs}}$.
 
+::: {.with-ref}
 $$\widehat\mu_{\text{САД}}=\widehat\beta_0+\widehat\beta_1\widehat\mu_{\text{ИМТ}}
 =\bar y_{\mathrm{obs}}+\widehat\beta_1\bigl(\bar x_{\mathrm{all}}-\bar x_{\mathrm{obs}}\bigr)$$
+
+[(10)]{.eq-ref}
+:::
 
 ::: {.notes}
 Совместную модель записываем как f(x) f(y | x). Параметры θ = (μ_ИМТ, σ²_ИМТ, β₀, β₁, σ²_САД|ИМТ)
@@ -1801,6 +1897,60 @@ $$\widehat\mu_{\text{САД}}=\widehat\beta_0+\widehat\beta_1\widehat\mu_{\text{
 а не любых моделей. ММП-дисперсии имеют делители n и n_obs.
 θ здесь – параметры модели данных в регрессионной параметризации, как на слайде
 «Параметризации двумерного нормального распределения»; параметры пропусков – ψ.
+:::
+
+## Maximum likelihood estimation {#ml-bvn-regression2 .compact .left-math}
+
+[Вторая регрессионная параметризация]{.ml-subhead}
+
+::: {.with-ref}
+$$f(x,y\mid\theta)=f\bigl(y\mid\mu_{\text{САД}},\sigma^2_{\text{САД}}\bigr)\,
+f\bigl(x\mid y,\gamma_0,\gamma_1,\sigma^2_{\text{ИМТ}\mid\text{САД}}\bigr),\qquad
+\theta=\bigl(\mu_{\text{САД}},\sigma^2_{\text{САД}},\gamma_0,\gamma_1,\sigma^2_{\text{ИМТ}\mid\text{САД}}\bigr)$$
+
+[(3)]{.eq-ref}
+:::
+
+::: {.with-ref}
+$$\begin{aligned}
+L(\theta;\color{#006CC2}{Y_{\mathrm{obs}}})={}&\underbrace{\prod_{i:\,M^{(i)}=0}f\bigl(y^{(i)}\mid\mu_{\text{САД}},\sigma^2_{\text{САД}}\bigr)\,
+f\bigl(x^{(i)}\mid y^{(i)},\gamma_0,\gamma_1,\sigma^2_{\text{ИМТ}\mid\text{САД}}\bigr)}_{n_{\mathrm{obs}}=`r sum(!ex$masks$MAR)`\ \text{полных пар}}\\
+&\times\underbrace{\prod_{i:\,M^{(i)}=1}\int f\bigl(y\mid\mu_{\text{САД}},\sigma^2_{\text{САД}}\bigr)\,
+f\bigl(x^{(i)}\mid y,\gamma_0,\gamma_1,\sigma^2_{\text{ИМТ}\mid\text{САД}}\bigr)\,dy}_{n-n_{\mathrm{obs}}=`r sum(ex$masks$MAR)`\ \text{строк без САД}}
+\end{aligned}$$
+
+[(1), (5)]{.eq-ref}
+:::
+
+$$\int f(y)\,f\bigl(x^{(i)}\mid y\bigr)\,dy=
+f\bigl(x^{(i)}\mid\gamma_0+\gamma_1\mu_{\text{САД}},\;\gamma_1^2\sigma^2_{\text{САД}}+\sigma^2_{\text{ИМТ}\mid\text{САД}}\bigr)$$
+
+- Параметры входят в оба множителя: блоки не разделяются, явного решения нет –
+  численная оптимизация, EM или пересчет по инвариантности из регрессионной параметризации.
+
+::: {.with-ref}
+$$\widehat\mu_{\text{САД}}=\widehat\beta_0+\widehat\beta_1\widehat\mu_{\text{ИМТ}}
+=\bar y_{\mathrm{obs}}+\widehat\beta_1\bigl(\bar x_{\mathrm{all}}-\bar x_{\mathrm{obs}}\bigr)$$
+
+[(10)]{.eq-ref}
+:::
+
+::: {.notes}
+x⁽ⁱ⁾ – ИМТ, y⁽ⁱ⁾ – САД; пропуски только в САД, MAR по ИМТ. Здесь совместное распределение
+записано через маргинальное распределение САД и условное распределение ИМТ при САД
+(вторая регрессионная параметризация со слайда «Параметризации двумерного нормального
+распределения», параметры γ₀, γ₁, σ²_ИМТ|САД). Маргинальное среднее САД – сам параметр модели.
+Полные пары дают произведение двух плотностей; строка с пропущенным САД дает интеграл
+по неизвестному САД, то есть маргинальную плотность ИМТ, которая зависит сразу от μ_САД,
+σ²_САД и γ. Поэтому строки без САД не отбрасываются: через их ИМТ они влияют на оценку
+μ_САД. Явного решения в этой параметризации нет, но по инвариантности ММП оценки совпадают
+с пересчитанными из параметризации f(x) f(y | x): μ̂_САД = β̂₀ + β̂₁ μ̂_ИМТ. Так как
+ȳ_obs = β̂₀ + β̂₁ x̄_obs (свойство МНК), μ̂_САД = ȳ_obs + β̂₁ (x̄_all − x̄_obs): среднее полных
+случаев поправляется на разницу средних ИМТ во всей выборке и среди полных пар.
+При MAR по ИМТ полные пары смещены по ИМТ, но зависимость САД от ИМТ среди них та же,
+поэтому поправка убирает смещение CC. В нашей MAR-выборке x̄_all = `r fmt(mean(ex$complete$BMI),2)`,
+x̄_obs = `r fmt(mean(ex$complete$BMI[!ex$masks$MAR]),2)`, ȳ_obs = `r fmt(mean(ex$complete$SBP[!ex$masks$MAR]),2)`,
+μ̂_САД = `r fmt(adv$ml$parameters[['mean_SBP']],2)`.
 :::
 
 ## Maximum likelihood estimation {#ml-method .compact}
@@ -1840,7 +1990,11 @@ theta_table(ex, list(theta_column(adv$ml$parameters, 'ML',
 ## EM algorithm {#em-algorithm .compact .left-math visibility="hidden"}
 
 **E-шаг:** условное ожидание полного log-правдоподобия:
-$$Q(\theta\mid\theta^{[t]})=\mathrm{E}_{\color{#B61A51}{Y_{\mathrm{mis}}}\mid \color{#006CC2}{Y_{\mathrm{obs}}},\theta^{[t]}}\bigl[\log f(\color{#006CC2}{Y_{\mathrm{obs}}},\color{#B61A51}{Y_{\mathrm{mis}}}\mid\theta)\bigr]$$
+::: {.with-ref}
+$$Q(\theta\mid\theta^{[t]})=\mathrm{E}_{Y_{\mathrm{mis}}\mid Y_{\mathrm{obs}},\theta^{[t]}}\bigl[\log f(\color{#006CC2}{Y_{\mathrm{obs}}},\color{#B61A51}{Y_{\mathrm{mis}}}\mid\theta)\bigr]$$
+
+[(8)]{.eq-ref}
+:::
 
 **M-шаг:**
 $$\theta^{[t+1]}=\arg\max_\theta Q(\theta\mid\theta^{[t]})$$
@@ -1864,7 +2018,7 @@ $Y^{(i)}\sim\mathcal N(\mu,\sigma^2)$, $\sigma^2$ известна, пропус
 
 $$\begin{aligned}
 \mathrm{E}\bigl[Y^{(i)}\mid \color{#006CC2}{Y_{\mathrm{obs}}},\mu^{[t]}\bigr]&=\mu^{[t]}\quad\text{для пропусков}\\[.4em]
-\mu^{[t+1]}&=\frac{\sum_{i:\,\color{#006CC2}{M^{(i)}}=0}y^{(i)}+(n-n_{\mathrm{obs}})\mu^{[t]}}{n}
+\mu^{[t+1]}&=\frac{\sum_{i:\,M^{(i)}=0}y^{(i)}+(n-n_{\mathrm{obs}})\mu^{[t]}}{n}
 \end{aligned}$$
 
 В неподвижной точке: $\widehat\mu=\bar y_{\mathrm{obs}}$.
@@ -1887,10 +2041,14 @@ $$\mu^{[t+1]}-\bar y_{\mathrm{obs}}
 
 При пропуске САД вычисляем **два** условных момента:
 
+::: {.with-ref}
 $$\begin{aligned}
 \mathrm{E}\bigl[Y^{(i)}\mid X^{(i)},\theta^{[t]}\bigr]&=\widehat y^{(i)[t]}\\[.4em]
 \mathrm{E}\bigl[(Y^{(i)})^2\mid X^{(i)},\theta^{[t]}\bigr]&=\bigl(\widehat y^{(i)[t]}\bigr)^2+\bigl(\sigma_{Y\mid X}^2\bigr)^{[t]}
 \end{aligned}$$
+
+[(8), (9)]{.eq-ref}
+:::
 
 ::: {.takeaway}
 Регрессионная подстановка оставляет только квадрат прогноза.
@@ -1928,6 +2086,49 @@ Kenward & Molenberghs (1998); Meng & Rubin (1991).
 неполные траектории при соответствующем MAR; неполные ковариаты требуют отдельной работы.
 Поведение удаления строк зависит от na.action и настроек функции.
 Документация lavaan: https://lavaan.ugent.be/tutorial/est.html.
+:::
+
+## Maximum likelihood estimation {#ml-mechanism .widget-slide}
+
+::: {.widget-live}
+```{r}
+#| results: asis
+cat('\n```{=html}\n<script type="application/json" id="ml-mech-data">',
+    ml_mechanism_json(ex, adv$ml, digits = 4),
+    '</script>\n<div id="w-ml-mech"></div>\n```\n', sep = '')
+```
+:::
+
+::: {.widget-print}
+```{r}
+#| fig-width: 13
+#| fig-height: 5.2
+#| fig-alt: "ММП: строки без САД входят своими условными распределениями; маргинальная плотность САД смещается к истинной."
+plot_ml_mechanism(ex, adv)
+```
+:::
+
+::: {.notes}
+Интерактив показывает, за счет чего ММП исправляет оценки полных случаев на сквозной
+MAR-выборке. Синие точки – полные пары; толстые синие прямые – E(САД | ИМТ) по полным
+парам (она же у ММП и не меняется с λ) и обратная регрессия E(ИМТ | САД) при текущем λ:
+при λ = 0 это смещенная регрессия полных случаев, при движении к 1 ее наклон меняется
+и приходит к ММП, рядом с истиной; тонкие черные – истинные регрессии. Ползунок λ задает вклад строк без САД:
+при λ = 0 – только полные пары (полные случаи), при λ = 1 – оценки ММП.
+Строка без САД входит не отброшенной и не одним подставленным числом, а своим условным
+распределением N(β̂₀ + β̂₁ ИМТ, σ̂²_САД|ИМТ): красные кружки – условные средние на прямой,
+у пяти строк показаны их условные плотности. Это и есть интеграл по пропущенному САД
+в правдоподобии наблюдаемых данных (точка неподвижности EM: E-шаг делает то же самое).
+μ̂_САД = (1/n)[Σ_полные y⁽ⁱ⁾ + Σ_без САД (β̂₀ + β̂₁ x⁽ⁱ⁾)] = ȳ_obs + β̂₁ (x̄_all − x̄_obs);
+σ̂²_САД = (1/n)[Σ_полные (y⁽ⁱ⁾ − μ̂)² + Σ_без САД ((β̂₀ + β̂₁ x⁽ⁱ⁾ − μ̂)² + σ̂²_САД|ИМТ)].
+В отличие от регрессионной импутации остаточная дисперсия σ̂²_САД|ИМТ не теряется,
+поэтому σ̂_САД и корреляция не искажаются. При MAR по ИМТ зависимость САД от ИМТ среди
+полных пар та же, что и среди строк без САД, поэтому условные распределения верны.
+Справа: штриховая синяя – плотность САД по полным парам, толстая синяя – смесь при текущем λ,
+тонкая черная – истинная N(135, 15²); треугольники – средние (черный – истина, контурный – CC,
+залитый – текущее λ). В таблице θ, θ̂_CC и θ̂(λ) (столбец полных данных убран); θ̂_CC жирным – смещенные оценки (Monte Carlo, D40);
+θ̂(λ) при λ = 1 совпадает с ММП (проверено тестом tests/mlmech-model.test.js).
+Скрытые значения (красные крестики) известны только в симуляции.
 :::
 
 ## 95% ДИ, MCAR {#uncertainty-mcar .comparison}

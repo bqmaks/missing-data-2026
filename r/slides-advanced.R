@@ -137,3 +137,41 @@ plot_param_spaces <- function() {
   rect(0, 0, 1, 1, border = '#D5DAE0', lwd = 1)
   polygon(c(0, 1, 1), c(0, 0, 1), col = fill, border = edge, lwd = 1.5)
 }
+
+# Статичный вариант интерактива «Как ММП использует строки без САД» (D68) для печати:
+# состояние λ = 1 (ММП). Слева – полные пары, условные средние строк без САД на прямой
+# E(САД | ИМТ) и несколько условных плотностей; справа – плотности САД: полные пары (штрих),
+# смесь ММП (толстая синяя), истина (тонкая черная).
+plot_ml_mechanism <- function(ex, a) {
+  old <- par(no.readonly = TRUE); on.exit(par(old))
+  d <- ex$complete; m <- ex$masks$MAR; x <- d$BMI; y <- d$SBP
+  fit <- lm(y ~ x, subset = !m); b <- coef(fit); s <- sqrt(mean(residuals(fit)^2))
+  cm <- b[1] + b[2] * x
+  par(mfrow = c(1, 2), mar = c(4.2, 4.6, 1, 1), mgp = c(2.8, .8, 0), family = 'sans', cex = 1.05)
+  plot(x[!m], y[!m], pch = 16, cex = .55, col = adjustcolor(course_colors[['observed']], .45),
+       xlim = range(x), ylim = range(y) + c(-3, 3), xlab = 'ИМТ (кг/м²)', ylab = 'САД (мм рт. ст.)', bty = 'l', las = 1)
+  points(x[m], cm[m], pch = 1, cex = .6, col = course_colors[['missing']])
+  ord <- which(m)[order(x[m])]; reps <- ord[round(c(.1, .3, .5, .7, .9) * (length(ord) - 1)) + 1]
+  for (i in reps) {
+    v <- cm[i] + seq(-3, 3, .1) * s; w <- 1.6 * s * sqrt(2 * pi) * dnorm(v, cm[i], s)
+    polygon(c(x[i] + w, x[i], x[i]), c(v, cm[i] + 3 * s, cm[i] - 3 * s),
+            col = adjustcolor(course_colors[['missing']], .18), border = course_colors[['missing']])
+  }
+  abline(b, col = course_colors[['observed']], lwd = estimate_lwd)
+  abline(ex$truth[['intercept_SBP']], ex$truth[['slope_SBP']], col = truth_color, lwd = truth_lwd)
+  # Обратная регрессия E(ИМТ | САД): ММП (толстая синяя) и истина (тонкая черная).
+  mlp <- a$ml$parameters
+  abline(a = -mlp[['intercept_BMI']] / mlp[['slope_BMI']], b = 1 / mlp[['slope_BMI']],
+         col = course_colors[['observed']], lwd = estimate_lwd)
+  abline(a = -ex$truth[['intercept_BMI']] / ex$truth[['slope_BMI']], b = 1 / ex$truth[['slope_BMI']],
+         col = truth_color, lwd = truth_lwd)
+  g <- seq(min(y) - 3, max(y) + 3, .5); h <- 1.06 * sd(y[!m]) * sum(!m)^(-.2)
+  kd <- function(lambda) (rowSums(sapply(y[!m], function(v) dnorm(g, v, h))) +
+    lambda * rowSums(sapply(cm[m], function(v) dnorm(g, v, sqrt(s^2 + h^2))))) / (sum(!m) + lambda * sum(m))
+  tr <- dnorm(g, ex$truth[['mean_SBP']], ex$truth[['sd_SBP']])
+  plot(g, kd(1), type = 'n', ylim = c(0, 1.08 * max(kd(0), kd(1), tr)), xlab = 'САД (мм рт. ст.)',
+       ylab = 'Плотность', bty = 'l', las = 1)
+  lines(g, kd(0), col = course_colors[['observed']], lwd = 2, lty = 2)
+  lines(g, kd(1), col = course_colors[['observed']], lwd = estimate_lwd)
+  lines(g, tr, col = truth_color, lwd = truth_lwd)
+}

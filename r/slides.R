@@ -246,13 +246,12 @@ plot_binary_ipw <- function(ex, adv) {
   tri(adv$binary_ipw$mean_SBP, 2, course_colors[['observed']], course_colors[['observed']])
 }
 
-# Покрытие и средняя ширина 95% ДИ (D54) по data/simulation-intervals.csv:
-# строки – методы, столбцы – параметры × (покрытие, %; ширина). Цвет строки – цвет данных:
-# CD черный, CC и ML синие, импутации красные.
+# Покрытие и средняя ширина 95% ДИ (D54, D66) по data/simulation-intervals.csv:
+# строки – методы, столбцы – параметры × (покрытие, %; ширина); без цветового выделения.
 uncertainty_table <- function(iv, scenario) {
   methods <- c(Full = 'CD', CC = 'CC', mean = 'MI', regression = 'RI', stochastic = 'SRI', ML = 'ML')
-  cls <- c(Full = 'truth', CC = 'estimate-observed', mean = 'estimate-imputed',
-           regression = 'estimate-imputed', stochastic = 'estimate-imputed', ML = 'estimate-observed')
+  # Без цвета (D66): в таблицах ДИ методы и значения черные.
+  cls <- c(Full = 'truth', CC = 'truth', mean = 'truth', regression = 'truth', stochastic = 'truth', ML = 'truth')
   pars <- c(mean_SBP = '\\mu_{\\text{САД}}', correlation = '\\rho_{XY}',
             slope_SBP = '\\beta_{\\text{САД}\\mid\\text{ИМТ}}', slope_BMI = '\\beta_{\\text{ИМТ}\\mid\\text{САД}}')
   digits <- c(mean_SBP = 2, correlation = 3, slope_SBP = 3, slope_BMI = 4)
@@ -325,22 +324,17 @@ scatter <- function(ex, scenario = 'Full', method = 'CC', title = '', means = FA
     if (!observed_only) points(d$BMI[m], d$SBP[m], pch = 17, cex = .65,
                               col = palette['imputed'])
   }
-  # Rug-разметка по осям (D44, D60): ИМТ наблюдается всегда – синяя; САД – синие наблюдаемые
-  # значения и красные пропуски. Полные случаи и ММП – скрытые значения; импутация – скрытые
-  # значения (красные 50%) и поверх них подставленные (красные 100%, риски длиннее), как в D21.
-  # Иначе при импутации средним все подстановки – одна риска, сливающаяся с пунктиром среднего.
+  # Rug-разметка по осям (D44, D60, D67): ИМТ наблюдается всегда – синяя; САД – синие
+  # наблюдаемые значения и красные пропуски (на месте скрытых значений) на всех слайдах,
+  # включая импутацию; риски одной длины, подстановки отдельным слоем не рисуются.
   rug_col <- function(key, alpha) adjustcolor(palette[[key]], alpha)
   rug(full$BMI, side = 1, ticksize = .025, lwd = .6, col = rug_col('observed', .35))
   if (scenario == 'Full') {
     rug(full$SBP, side = 2, ticksize = .025, lwd = .6, col = rug_col('observed', .35))
   } else {
     rug(full$SBP[!m], side = 2, ticksize = .025, lwd = .6, col = rug_col('observed', .35))
-    if (observed_only) {
-      rug(full$SBP[m], side = 2, ticksize = .025, lwd = .6, col = rug_col('missing', .55))
-    } else {
-      rug(full$SBP[m], side = 2, ticksize = .025, lwd = .6, col = rug_col('missing', .35))
-      rug(d$SBP[m], side = 2, ticksize = .045, lwd = .7, col = rug_col('imputed', .8))
-    }
+    # D67: только цветовое различие, риски одной длины, без второго слоя подстановок.
+    rug(full$SBP[m], side = 2, ticksize = .025, lwd = .6, col = rug_col('missing', .55))
   }
   tr <- ex$truth
   # Оценки по показанным данным; обе регрессии на общих осях X=ИМТ, Y=САД.

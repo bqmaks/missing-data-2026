@@ -1,4 +1,7 @@
 <script type="module">
 import { patternsWidget } from './widgets/patterns.js';
+import { mlMechanismWidget } from './widgets/mlmech.js';
 document.getElementById('w-patterns')?.append(patternsWidget(window.d3));
+const mlData = document.getElementById('ml-mech-data');
+if (mlData) document.getElementById('w-ml-mech')?.append(mlMechanismWidget(window.d3, JSON.parse(mlData.textContent)));
 </script>

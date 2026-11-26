@@ -26,3 +26,12 @@
 html.print-pdf .widget-live, html.print-pdf .widget-context { display: none !important; }
 html.print-pdf .widget-print { display: block; }
 @media print { .widget-live,.widget-context { display: none !important; } .widget-print { display:block; } }
+/* Интерактив «Как ММП использует строки без САД» (D68). */
+.mdw-mlmech > svg { height: 372px; }
+.mdw-mlmech > svg text { font-size: 18px; }
+.mdw-mlmech-controls { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 24px; margin: 2px 0 4px; font-size: 20px; }
+.mdw-mlmech-lambda { white-space: nowrap; }
+.mdw-mlmech-ends { display: flex; justify-content: space-between; font-size: 15px; color: #536574; }
+.reveal .mdw-mlmech-table { font-size: 17px; margin: 2px auto 0; }
+.reveal .mdw-mlmech-table :is(th, td) { padding: .12em .7em; text-align: right; }
+.reveal .mdw-mlmech-table td.estimate-observed { color: var(--course-observed); }

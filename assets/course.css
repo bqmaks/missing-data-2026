@@ -316,17 +316,19 @@
 /* Основные формулы теории вероятностей: название слева, формула справа. */
 .reveal :is(#prob-distributions, #prob-moments) .formula-list {
   display: grid;
-  grid-template-columns: 340px minmax(0, 1fr);
+  grid-template-columns: 340px minmax(0, 1fr) 64px;
   column-gap: 32px;
   align-items: center;
   font-size: 26px;
   line-height: 1.35;
 }
-.reveal :is(#prob-distributions, #prob-moments) :is(.formula-term, .formula-body) {
+.reveal :is(#prob-distributions, #prob-moments) :is(.formula-term, .formula-body, .formula-no) {
   padding: 9px 0;
   border-bottom: 1px solid #e3e8ee;
 }
-.reveal :is(#prob-distributions, #prob-moments) :is(.formula-term, .formula-body) p { margin: 0; }
+.reveal :is(#prob-distributions, #prob-moments) :is(.formula-term, .formula-body, .formula-no) p { margin: 0; }
+/* Номера формул (1)–(11) (D69): справа, серым, как ссылки в выводах. */
+.reveal :is(#prob-distributions, #prob-moments) .formula-no { text-align: right; color: #8A94A0; align-self: stretch; display: flex; align-items: center; justify-content: flex-end; }
 
 /* Параметризации двумерного нормального: совместная сверху, две регрессионные снизу. */
 .reveal #bvn-parametrizations :is(.param-joint, .param-box) {
@@ -767,5 +769,12 @@ html.print-pdf .reveal .widget-print .cell-output-display { text-align: center; 
 .reveal #ml-limitations li.fragment.current-fragment { color: #1a1a1a; }
 .reveal #mar-factorization .MathJax_Display { margin: .25em 0 !important; }
 .reveal #mar-factorization .ml-final-line { margin-top: .9em; }
-.reveal :is(#ml-bvn-canonical, #ml-bvn-regression) :is(p, ul) { font-size: 27px; }
-.reveal :is(#ml-bvn-canonical, #ml-bvn-regression) .MathJax_Display { margin: .45em 0 !important; }
+.reveal :is(#ml-bvn-canonical, #ml-bvn-regression, #ml-bvn-regression2) :is(p, ul) { font-size: 27px; }
+.reveal :is(#ml-bvn-canonical, #ml-bvn-regression, #ml-bvn-regression2) .MathJax_Display { margin: .45em 0 !important; }
+
+/* Ссылки на формулы «необходимого минимума» (D69): серым у правого края строки формулы. */
+.reveal .with-ref { position: relative; }
+.reveal .with-ref .MathJax_Display { padding-right: 7.5em; box-sizing: border-box; }
+.reveal .with-ref p:has(> .eq-ref) { position: absolute; right: 0; top: 50%; transform: translateY(-50%); margin: 0 !important; }
+.reveal .eq-ref { color: #8A94A0; font-size: 24px; white-space: nowrap; }
+.reveal .fno { color: #8A94A0; }
