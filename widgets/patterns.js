@@ -6,7 +6,7 @@ export function patternsWidget(d3, options = {}) {
   const datasets = options.datasets || [
     // Y1...Y8 обозначают исходные переменные, а не хронологию визитов.
     // Маска уже переставлена; имена закрепляем за столбцами один раз.
-    {...monotonic, label:'Monotonic', columns:monotonic.columns.map((_,j)=>`Y${j+1}`)},
+    {...monotonic, label:'Monotone', columns:monotonic.columns.map((_,j)=>`Y${j+1}`)},
     {...makeGeneral({n:10,p:8,q:0.5}), label:'General'}
   ];
   const root = element('div', undefined, {class:'mdw mdw-patterns'});
@@ -14,9 +14,7 @@ export function patternsWidget(d3, options = {}) {
   const svg = d3.select(root).append('svg').attr('viewBox','0 0 1000 490')
     .attr('role','img').attr('aria-label','Паттерн пропущенных значений: сортировка строк и столбцов');
   svg.append('title').text('Синий – наблюдено; красный – пропущено.');
-  const frame = svg.append('g').attr('class','pattern-frame');
-  frame.append('rect').attr('class','pattern-border').attr('x',7).attr('y',4).attr('fill','white').attr('stroke','#1a1a1a').attr('stroke-width',1.5);
-  frame.append('rect').attr('class','pattern-heading').attr('x',7).attr('y',4).attr('height',50).attr('fill','#f0f0f0').attr('stroke','#1a1a1a').attr('stroke-width',1.5);
+  // Без общей рамки и серой полосы: фон панели прозрачный, как у статичных сеток.
   const headers = svg.append('g'), cells = svg.append('g').attr('class','pattern-cells');
   const panel = element('div', undefined, {class:'mdw-pattern-panel'});root.append(panel);
   const label = element('label','Тип паттерна');
@@ -32,8 +30,6 @@ export function patternsWidget(d3, options = {}) {
   select.addEventListener('change',selectPattern);
   function render() {
     const rowHeight=Math.min(56,420/rows.length), colWidth=Math.min(110,600/cols.length), gap=4;
-    frame.select('.pattern-border').attr('width',cols.length*colWidth-gap+10).attr('height',56+rows.length*rowHeight-gap+5);
-    frame.select('.pattern-heading').attr('width',cols.length*colWidth-gap+10);
     const rendered=rows.flatMap((i,r)=>cols.map((j,c)=>({key:`${i}-${j}`,i,j,r,c,value:data.M[i][j]})));
     cells.selectAll('rect').data(rendered,d=>d.key).join(
       enter=>enter.append('rect').attr('class','pattern-cell').attr('x',d=>12+d.c*colWidth).attr('y',d=>60+d.r*rowHeight),

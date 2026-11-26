@@ -20,9 +20,13 @@
 .reveal .takeaway > p, .reveal .warning-note > p { margin: 0; }
 .reveal .estimates { font-size: 27px; width: 100%; margin: .4em 0; font-variant-numeric: tabular-nums; }
 .reveal .estimates th, .reveal .estimates td { padding: .32em .4em; border-bottom: 1px solid #dbe4ed; white-space: nowrap; }
-.reveal .estimates thead th { color: var(--course-observed); background: #edf5fd; font-weight: 600; text-align: center; white-space: normal; }
+.reveal .estimates thead th { color: #1a1a1a; background: none; font-weight: 700; text-align: center; white-space: normal; border-bottom: 2px solid #1a1a1a; }
 .reveal .estimates td { text-align: right; }
-.reveal .estimates tbody th { font-weight: 400; }
+.reveal .estimates tbody th { font-weight: 400; color: #1a1a1a; text-align: left; }
+.reveal .estimates td { color: #1a1a1a; }
+/* Цвет оценки – цвет данных (D39): наблюдаемые синие, заполненные импутацией красные. */
+.reveal .estimates td.estimate-observed { color: var(--course-observed); }
+.reveal .estimates td.estimate-imputed { color: var(--course-missing); }
 .reveal .estimates tbody tr:nth-child(even) { background: #f6f8fa; }
 .reveal .comparison .estimates { font-size: 28px; }
 .reveal .comparison .estimates th, .reveal .comparison .estimates td { padding: .28em .38em; }
@@ -58,13 +62,13 @@
 }
 .reveal .pattern-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
 .reveal .pattern-panel { display: block; width: 100%; height: auto; }
-.reveal .pattern-panel :is(.pattern-frame, .pattern-heading) { stroke: #1a1a1a; stroke-width: 1.5px; }
 .reveal .pattern-panel .pattern-title { font-family: inherit; font-size: 31px; fill: #1a1a1a; }
 .reveal .pattern-grid :is(.cell, .cell-output-display) { display: contents; }
 .reveal .pattern-grid-print { grid-template-columns: repeat(2, 344px); justify-content: center; }
 .reveal .mechanism { display: grid; grid-template-columns: 170px 1fr; gap: 25px; margin-bottom: .65em; padding: .3em .5em; background: #f5f8fc; }
 .reveal .mechanism-label { color: var(--course-observed); font-size: 34px; padding-top: .3em; }
 .reveal .mechanism p { margin: .1em 0 .3em; }
+.reveal .mechanism-label .mechanism-alt { font-size: 24px; color: #536574; }
 .reveal .mechanism .math { font-size: 31px; }
 .reveal .figure-note { font-size: 24px; color: #536574; margin: 0; }
 .reveal .cell-output-display p { margin: 0; }
@@ -287,6 +291,141 @@
   box-shadow: none;
 }
 
+/* Многомерное нормальное распределение: формулы слева, плотность справа. */
+.reveal #mvn-density .mvn-layout { align-items: center; }
+.reveal #mvn-density .mvn-formulas { font-size: 26px; }
+.reveal #mvn-density .column > p { margin: .15em 0 .1em; }
+.reveal #mvn-density .mvn-formulas .MathJax_Display { text-align: left !important; margin: .35em 0 !important; }
+.reveal #mvn-density .mvn-formulas > p:has(strong) { margin-top: .55em; }
+.reveal #mvn-density .mvn-formulas > p:first-child { margin-top: 0; }
+.reveal #mvn-density .cell-output-display { text-align: center; }
+.reveal #mvn-density .mvn-caption { margin: .2em 0 0 18.7%; width: 75%; font-size: 22px; text-align: center; }
+
+/* Слайды с формулами по левому краю (DGP). */
+.reveal #dgp p:has(> .dgp-params) { margin-top: 1.1em; }
+.reveal .left-math .MathJax_Display { text-align: left !important; }
+
+/* Таблицы θ / θ̂: стиль задан общими правилами .estimates (D36, D39). */
+.reveal :is(#mcar, #mar, #mnar) .theta-table { font-size: 21px; }
+.reveal :is(#mcar, #mar, #mnar) .theta-table :is(th, td) { padding: .3em .32em; }
+.reveal .comparison .theta-table { font-size: 20px; }
+.reveal .comparison .theta-table :is(th, td) { padding: .3em .3em; }
+
+/* Основные формулы теории вероятностей: название слева, формула справа. */
+.reveal :is(#prob-distributions, #prob-moments) .formula-list {
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr);
+  column-gap: 32px;
+  align-items: center;
+  font-size: 26px;
+  line-height: 1.35;
+}
+.reveal :is(#prob-distributions, #prob-moments) :is(.formula-term, .formula-body) {
+  padding: 9px 0;
+  border-bottom: 1px solid #e3e8ee;
+}
+.reveal :is(#prob-distributions, #prob-moments) :is(.formula-term, .formula-body) p { margin: 0; }
+
+/* Параметризации двумерного нормального: совместная сверху, две регрессионные снизу. */
+.reveal #bvn-parametrizations :is(.param-joint, .param-box) {
+  box-sizing: border-box;
+  padding: 6px 22px 10px;
+  background: #f5f8fc;
+  text-align: left;
+}
+.reveal #bvn-parametrizations .MathJax_Display { text-align: left !important; }
+.reveal #bvn-parametrizations .param-joint { width: 820px; margin: 4px auto 0; font-size: 26px; }
+.reveal #bvn-parametrizations .param-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 48px;
+}
+.reveal #bvn-parametrizations .param-box { font-size: 24px; }
+.reveal #bvn-parametrizations :is(.param-joint, .param-box) p { margin: .1em 0; }
+.reveal #bvn-parametrizations .param-list { font-size: 22px; color: #536574; }
+.reveal #bvn-parametrizations .param-box > p:first-child { padding-bottom: .6em; }
+.reveal #bvn-parametrizations svg.param-arrows {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+}
+
+/* Термины Hand рядом с классификацией Рубина: Seen синий, Unseen красный (D21). */
+.reveal #hand-terms .hand-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 48px;
+  align-items: start;
+  margin-top: 12px;
+}
+.reveal #hand-terms .hand-table {
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 28px;
+  line-height: 1.25;
+}
+.reveal #hand-terms .hand-col-rubin { width: 36%; }
+.reveal #hand-terms .hand-col-hand { width: 30%; }
+.reveal #hand-terms .hand-full { white-space: nowrap; }
+.reveal #hand-terms .hand-table th {
+  padding: 12px 18px;
+  border: 0;
+  background: #f0f0f0;
+  color: #536574;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: left;
+  vertical-align: bottom;
+}
+.reveal #hand-terms .hand-table td {
+  padding: 18px;
+  border: 0;
+  border-bottom: 1px solid #dbe4ed;
+  color: #1a1a1a;
+  text-align: left;
+  vertical-align: top;
+}
+.reveal #hand-terms .hand-abbr {
+  display: block;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.reveal #hand-terms .hand-full {
+  display: block;
+  margin-top: 6px;
+  font-size: 24px;
+  color: #536574;
+}
+.reveal #hand-terms .hand-seen { color: var(--course-observed); font-weight: 700; }
+.reveal #hand-terms .hand-unseen { color: var(--course-missing); font-weight: 700; }
+.reveal #hand-terms .hand-source {
+  margin: 24px 0 0;
+  font-size: 24px;
+  line-height: 1.4;
+  color: #536574;
+}
+.reveal #hand-terms .hand-figure { margin: 0; }
+.reveal #hand-terms .hand-figure figcaption {
+  margin-top: 10px;
+  font-size: 19px;
+  line-height: 1.35;
+  color: #536574;
+}
+.reveal #hand-terms img.hand-cover {
+  display: block;
+  width: 380px;
+  height: auto;
+  max-height: none;
+  margin: 0;
+  border: 1px solid #d5dbe1;
+  box-shadow: none;
+}
+
 /* Пробный титульный слайд и поля колонтитулов, 2026-11-25. */
 .reveal .slides > .mat-nav,
 .reveal .slides > .mat-footer { padding-right: 16px; padding-left: 16px; }
@@ -355,3 +494,112 @@ html.print-pdf .reveal .references li { margin-bottom: .5em !important; line-hei
 html.print-pdf .reveal .references li p { margin: 0 !important; line-height: 1.25 !important; }
 html.print-pdf .reveal .widget-print img { max-height: 550px; width: auto !important; margin: 0 auto; }
 html.print-pdf .reveal .widget-print .cell-output-display { text-align: center; }
+
+/* Missingness mechanisms: определение и две записи механизма. */
+.reveal #mechanisms .math.display { font-size: 34px; }
+
+/* Rubin's Typology (о Рубине): фото слева, работы и цитирования справа. */
+.reveal #rubin-bio .rubin-layout {
+  display: grid;
+  grid-template-columns: 330px minmax(0, 1fr);
+  gap: 44px;
+  align-items: start;
+}
+.reveal #rubin-bio .rubin-photo { margin: 0; }
+.reveal #rubin-bio .rubin-photo img {
+  display: block;
+  width: 330px;
+  height: auto;
+  max-height: none;
+  margin: 0;
+}
+.reveal #rubin-bio .rubin-photo figcaption {
+  margin-top: 10px;
+  font-size: 18px;
+  line-height: 1.35;
+  color: #536574;
+}
+.reveal #rubin-bio .rubin-photo figcaption strong { font-size: 22px; color: #1a1a1a; }
+.reveal #rubin-bio .rubin-table {
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+  font-size: 19px;
+  line-height: 1.25;
+}
+.reveal #rubin-bio .rubin-table th,
+.reveal #rubin-bio .rubin-table td {
+  padding: 3px 8px;
+  border: 0;
+  border-bottom: 1px solid #e3e8ee;
+  color: #1a1a1a;
+  text-align: left;
+  vertical-align: top;
+}
+.reveal #rubin-bio .rubin-table thead th { font-weight: 700; border-bottom: 2px solid #1a1a1a; }
+.reveal #rubin-bio .rubin-table :is(thead th, td):last-child {
+  width: 108px;
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.reveal #rubin-bio .rubin-group th {
+  padding-top: 9px;
+  font-weight: 700;
+  color: var(--course-observed);
+}
+.reveal #rubin-bio :is(.rubin-note, .rubin-interview) { margin: 8px 0 0; font-size: 18px; color: #536574; }
+.reveal #rubin-bio .rubin-ref { color: #536574; }
+.reveal #rubin-bio .rubin-table a { color: var(--course-observed); text-decoration: none; }
+.reveal #rubin-bio .rubin-interview { margin: 30px 0 0; font-size: 20px; color: #1a1a1a; }
+
+/* Rubin's Typology (определения): три блока по левому краю. */
+.reveal #rubin-typology .typology-block {
+  margin-bottom: 14px;
+  padding: 8px 20px 10px;
+  background: #f5f8fc;
+}
+.reveal #rubin-typology .typology-block p { margin: .1em 0; }
+.reveal #rubin-typology .typology-abbr { font-size: 30px; font-weight: 700; color: var(--course-observed); }
+.reveal #rubin-typology .typology-full { font-size: 23px; color: #536574; }
+.reveal #rubin-typology .typology-block .MathJax_Display { margin: .25em 0 !important; }
+.reveal #rubin-typology .mechanism-alt { font-size: 22px; color: #536574; }
+
+/* Слайд о названиях: без видимого заголовка, цитата и скриншот Википедии. */
+.reveal .slides section#naming {
+  top: 0 !important;
+  height: var(--slide-height, 900px);
+  padding: 80px 76px 84px !important;
+}
+.reveal .slides #naming > h2 { display: none; }
+.reveal #naming .naming-quote {
+  box-sizing: border-box;
+  margin: 40px 0 0;
+  padding: 28px 44px;
+  background: #f0f0f0;
+}
+.reveal #naming .naming-quote blockquote {
+  width: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+  font-size: 36px;
+  line-height: 1.3;
+  font-style: normal;
+  color: #1a1a1a;
+}
+.reveal #naming .naming-quote blockquote p { margin: 0; }
+.reveal #naming .definition-source { margin-top: 14px; font-size: 22px; line-height: 1.4; color: #536574; }
+.reveal #naming .definition-source p { margin: 0; }
+.reveal #naming .naming-wiki { margin-top: 24px; }
+.reveal #naming .naming-wiki img {
+  display: block;
+  width: 960px;
+  max-width: 100%;
+  height: auto;
+  margin: 0;
+  border: 1px solid #d5dbe1;
+  box-shadow: none;
+}
+.reveal #naming .naming-credit { display: block; margin-top: 8px; font-size: 18px; color: #536574; }

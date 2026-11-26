@@ -179,8 +179,8 @@ $$
 - Средняя таблица показывает расположение наблюдаемых значений и пропусков. Это не прямоугольная матрица, состоящая только из наблюдаемых значений.
 - Полные данные разбиваются на наблюдаемую часть $Y_{\mathrm{obs}}$ и пропущенную часть $Y_{\mathrm{mis}}$ с учетом матрицы индикаторов $M$.
 - В реальном анализе нам доступны $Y_{\mathrm{obs}}$ и $M$. Значения $Y_{\mathrm{mis}}$ неизвестны.
-- Значения матрицы $M$ сначала показаны серым, а при нажатии пробела становятся синими. И нули, и единицы наблюдаемы: нам известно, пропущена ли каждая ячейка. Единица указывает на пропуск в $Y$, но сама не является пропущенным значением.
-- Здесь $m_{ij}=1$ обозначает пропуск, а $m_{ij}=0$ – наблюдаемое значение. В литературе часто используют обратное соглашение: матрицу $R=1-M$, где 1 означает наблюдаемое значение, а 0 – пропуск. В обозначениях курса индикатор наблюдения также может обозначаться $C=1-M$.
+- Значения матрицы $M$ сначала показаны серым, а при нажатии пробела становятся синими. Обычно предполагают, что M известна полностью: про каждую ячейку известно, пропущена ли она. Это допущение нарушается, если пропуск записан правдоподобным значением, например недокументированным 0 в САД на слайде 2; тогда неизвестна и сама M (Little и Rubin, 2019, с. 27; van Buuren, FIMD, разд. 2.2.3). Единица указывает на пропуск в $Y$, но сама не является пропущенным значением.
+- Здесь $m_{ij}=1$ обозначает пропуск, а $m_{ij}=0$ – наблюдаемое значение. В литературе часто используют обратное соглашение: матрицу $R=1-M$, где 1 означает наблюдаемое значение, а 0 – пропуск.
 :::
 
 ## Паттерны пропущенных значений (где находятся пропуски?) {#patterns}
@@ -206,12 +206,12 @@ for (name in names(pattern_masks)) pattern_panel(pattern_masks[[name]], name)
 хотя число пропусков в каждой строке одинаково. Поэтому важно уточнять,
 говорим ли мы о структуре всей таблицы или о конфигурации отдельного наблюдения.
 
-Univariate: пропуски только в одной переменной. Monotonic: после подходящего
+Univariate: пропуски только в одной переменной. Monotone: после подходящего
 упорядочивания столбцов пропуск означает пропуски во всех следующих столбцах;
 пример – выбывание из лонгитудинального исследования. General: общий паттерн,
 который нельзя привести к монотонному перестановкой столбцов.
 
-Unidentified: на схеме показано небольшое перекрытие – последние две переменные
+Underidentified: на схеме показано небольшое перекрытие – последние две переменные
 наблюдаются совместно только у одного участника. Здесь возникают ограничения
 оценивания ковариации: по одной полной паре обычная выборочная ковариация
 не определена. При малом числе полных пар ее оценка может быть крайне неточной;
@@ -254,13 +254,13 @@ Flexible Imputation of Missing Data: https://stefvanbuuren.name/fimd/missing-dat
 ::: {.pattern-grid .pattern-grid-print}
 ```{r}
 #| results: asis
-for (name in c('Monotonic', 'General')) pattern_panel(pattern_masks[[name]], name)
+for (name in c('Monotone', 'General')) pattern_panel(pattern_masks[[name]], name)
 ```
 :::
 ::::
 
 ::: {.notes}
-В интерактиве два варианта: Monotonic и General. В обоих вариантах строки
+В интерактиве два варианта: Monotone и General. В обоих вариантах строки
 сначала перемешаны, а столбцы идут в исходном порядке Y1, Y2, …, Y8.
 Номер Y обозначает переменную в исходной таблице, а не момент измерения.
 
@@ -279,17 +279,19 @@ for (name in c('Monotonic', 'General')) pattern_panel(pattern_masks[[name]], nam
 Например, это позволяет выполнять последовательную регрессионную импутацию;
 лонгитудинальная структура для нее не обязательна.
 
-Есть и методы для лонгитудинальных исследований, рассчитанные на монотонное
-выбывание именно в хронологическом порядке визитов. Для таких методов
-перемежающихся пропусков быть не должно: если участник пропустил визит,
-то на всех последующих визитах его значения также отсутствуют.
-Пропущенный визит с последующим возвращением нарушает это условие.
+Есть и методы для лонгитудинальных исследований, которые моделируют монотонное
+выбывание в хронологическом порядке визитов: после выбывания наблюдения
+не возобновляются. Перемежающиеся пропуски – пропущенный визит с последующим
+возвращением – такой процесс не описывает. В классических моделях выбывания
+их обычно обрабатывают отдельно, например кодируют как у завершивших исследование
+(Enders, 2022, с. 381, 390). Некоторые реализации, например взвешенные GEE в SAS,
+требуют строгой монотонности и перемежающихся пропусков не допускают.
 Перестановка столбцов сама по себе не делает такой метод применимым.
 Допущения о механизме пропусков рассматриваются отдельно: монотонность
 сама по себе ничего не говорит об информативности выбывания.
 
 Выбрать вариант, затем отсортировать строки и столбцы, чтобы увидеть структуру.
-У Monotonic после сортировки
+У Monotone после сортировки
 в каждой строке за первым пропуском следуют только пропуски. У General
 перестановки не устраняют нарушения этого порядка.
 В интерфейсе только выбор типа паттерна и две кнопки сортировки.
@@ -304,7 +306,206 @@ for (name in c('Monotonic', 'General')) pattern_panel(pattern_masks[[name]], nam
 и [реализация взвешенных GEE для выбывания, без перемежающихся пропусков](https://support.sas.com/documentation/cdl/en/statug/67523/HTML/default/statug_gee_syntax05.htm).
 :::
 
-## Сквозной пример: генеративный процесс {#dgp .compact}
+## Необходимый минимум из теории вероятностей {#prob-distributions .compact}
+
+:::: {.formula-list}
+::: {.formula-term}
+**Обозначение**
+:::
+::: {.formula-body}
+$f(y)$ – функция вероятности или плотность<br>
+$f(y\mid\theta)$ – функция вероятности или плотность при заданных параметрах $\theta$<br>
+для дискретных величин $\int$ заменяется на $\sum$
+:::
+::: {.formula-term}
+**Маргинальное распределение**
+:::
+::: {.formula-body}
+$f(y_1)=\displaystyle\int f(y_1,y_2)\,dy_2$
+:::
+::: {.formula-term}
+**Условное распределение**
+:::
+::: {.formula-body}
+$f(y_2\mid y_1)=\dfrac{f(y_1,y_2)}{f(y_1)},\qquad f(y_1)>0$
+:::
+::: {.formula-term}
+**Цепное правило**
+:::
+::: {.formula-body}
+$f(y_1,y_2)=f(y_1)\,f(y_2\mid y_1)$<br>
+$f(y_1,\dots,y_p)=f(y_1)\,f(y_2\mid y_1)\cdots f(y_p\mid y_1,\dots,y_{p-1})$
+:::
+::: {.formula-term}
+**Формула Байеса**
+:::
+::: {.formula-body}
+$f(y_2\mid y_1)=\dfrac{f(y_1\mid y_2)\,f(y_2)}{f(y_1)}$
+:::
+::: {.formula-term}
+**Независимость**
+:::
+::: {.formula-body}
+$Y_1\perp Y_2\iff f(y_1,y_2)=f(y_1)\,f(y_2)$<br>
+$f(\mathbf y_1,\dots,\mathbf y_n\mid\theta)=\prod_{i=1}^{n}f(\mathbf y_i\mid\theta)$
+:::
+::: {.formula-term}
+**Условная независимость**
+:::
+::: {.formula-body}
+$Y_1\perp Y_2\mid Y_3\iff f(y_1\mid y_2,y_3)=f(y_1\mid y_3)$
+:::
+::::
+
+::: {.notes}
+- Обозначение f(·). На слайде «Missingness mechanisms» механизм записан как Pr(M | …) и как f(M | …), на слайдах правдоподобия – как f(M | …). Для индикаторов пропусков это одна и та же функция вероятности.
+- Маргинальное распределение. Наблюдаемое правдоподобие получается интегрированием по Y_mis: слайды «Полная модель и наблюдаемое правдоподобие» и «При MAR механизм выносится из интеграла».
+- Условное распределение и цепное правило. Разложения f(Y, M) = f(Y) f(M | Y) (модель отбора) и f(Y | M) f(M) (смесь по паттернам) – слайд «Полная модель и наблюдаемое правдоподобие». Факторизация f(y₁) f(y₂ | y₁) – слайды «Параметризации двумерного нормального распределения», «Двумерная нормальная модель: факторизация», «ММП использует все значения ИМТ».
+- Формула Байеса. Из нее при MAR следует f(Y_mis | Y_obs, M) = f(Y_mis | Y_obs): распределение пропущенных значений при данных наблюдаемых не зависит от паттерна пропусков. На этом основана импутация по наблюдаемым данным – слайд «От стохастической регрессии к MI» (Little и Rubin, 2019, с. 14).
+- Независимость. Правдоподобие выборки – произведение по наблюдениям: слайды «Одномерная нормальная выборка: MCAR» и «ММП использует все значения ИМТ». Здесь 𝐲ᵢ – i-я строка данных, то есть одно наблюдение. MCAR означает независимость M и Y.
+- Условная независимость. MAR – это M ⊥ Y_mis | Y_obs (слайд «Rubin's Typology» с определениями). Условие корректности анализа полных случаев M ⊥ Y | X – слайд «Complete Case Analysis».
+:::
+
+## Необходимый минимум из теории вероятностей {#prob-moments .compact}
+
+:::: {.formula-list}
+::: {.formula-term}
+**Математическое ожидание**
+:::
+::: {.formula-body}
+$\mathrm E\,g(Y)=\displaystyle\int g(y)\,f(y)\,dy$
+:::
+::: {.formula-term}
+**Условное ожидание**
+:::
+::: {.formula-body}
+$\mathrm E(Y_2\mid Y_1=y_1)=\displaystyle\int y_2\,f(y_2\mid y_1)\,dy_2$ – функция от $y_1$
+:::
+::: {.formula-term}
+**Дисперсия**
+:::
+::: {.formula-body}
+$\operatorname{Var}(Y)=\mathrm E(Y^2)-(\mathrm E\,Y)^2$<br>
+$\mathrm E(Y_2^2\mid Y_1)=\operatorname{Var}(Y_2\mid Y_1)+\mathrm E(Y_2\mid Y_1)^2$
+:::
+::: {.formula-term}
+**Закон повторного ожидания**
+:::
+::: {.formula-body}
+$\mathrm E(Y_2)=\mathrm E\big[\mathrm E(Y_2\mid Y_1)\big]$
+:::
+::: {.formula-term}
+**Разложение дисперсии**
+:::
+::: {.formula-body}
+$\operatorname{Var}(Y_2)=\mathrm E\big[\operatorname{Var}(Y_2\mid Y_1)\big]+\operatorname{Var}\big[\mathrm E(Y_2\mid Y_1)\big]$
+:::
+::::
+
+::: {.notes}
+- Условное ожидание. Регрессия – это условное среднее E(Y | X): слайды «Параметризации двумерного нормального распределения» и «Сквозной пример: генеративный процесс». Q-функция EM – условное ожидание логарифма правдоподобия полных данных по Y_mis при данных Y_obs: слайд «EM: итеративный поиск оценки ММП».
+- Дисперсия. Равенство E(Y² | X) = Var(Y | X) + E(Y | X)² используется на E-шаге для второго момента: слайд «EM учитывает условную дисперсию».
+- Закон повторного ожидания. Обоснование IPW: если π(X) = Pr(M = 0 | X) и M ⊥ Y | X, то E[(1 − M) × Y / π(X)] = E[Y] – слайд «Взвешивание по обратной вероятности». Он же объясняет, почему подстановка условного среднего сохраняет среднее.
+- Разложение дисперсии. Регрессионная импутация подставляет E(Y | X) и теряет слагаемое E[Var(Y | X)], поэтому разброс занижен – слайд «Одиночная импутация: регрессия». Стохастическая импутация возвращает остаточный разброс – слайд «Стохастическая регрессионная импутация». Правило Рубина T = W + (1 + 1/m)B по структуре повторяет это разложение: средняя дисперсия внутри импутаций плюс разброс между ними – слайд «От стохастической регрессии к MI».
+:::
+
+## Нормальное распределение {#mvn-density .compact}
+
+:::: {.columns .mvn-layout}
+::: {.column .mvn-formulas width="55%"}
+**Одномерное**
+
+$$Y\sim\mathcal N(\mu,\sigma^2)$$
+$$f(y)=\frac{1}{\sqrt{2\pi}\,\sigma}\exp\!\left(-\frac{(y-\mu)^2}{2\sigma^2}\right)$$
+
+**Многомерное**
+
+$$Y=(Y_1,\dots,Y_p)^{\top}\sim\mathcal N_p(\mu,\Sigma)$$
+$$f(y)=\frac{1}{(2\pi)^{p/2}\,|\Sigma|^{1/2}}\exp\!\left(-\frac12\,(y-\mu)^{\top}\Sigma^{-1}(y-\mu)\right)$$
+
+**Двумерное**
+
+$$p=2$$
+$$\mu=\begin{pmatrix}\mu_1\\\mu_2\end{pmatrix},\qquad
+\Sigma=\begin{pmatrix}\sigma_1^2&\rho\sigma_1\sigma_2\\\rho\sigma_1\sigma_2&\sigma_2^2\end{pmatrix}$$
+:::
+::: {.column width="45%"}
+```{r}
+#| label: plot-bivariate-density
+#| fig-width: 5.4
+#| fig-height: 5.4
+#| out-width: "93%"
+#| fig-alt: "Плотность двумерного нормального распределения: цвет от белого к синему, эллипсы равной плотности вытянуты вдоль положительной корреляции y1 и y2."
+plot_bivariate_density(ex$config)
+```
+::: {.small .muted .mvn-caption}
+$\mu_1=`r ex$config$mu[["BMI"]]`$, $\mu_2=`r ex$config$mu[["SBP"]]`$,
+$\sigma_1=`r ex$config$sigma[["BMI"]]`$, $\sigma_2=`r ex$config$sigma[["SBP"]]`$,
+$\rho=`r ex$config$rho`$
+:::
+:::
+::::
+
+::: {.notes}
+- Одномерное нормальное распределение задается средним μ и дисперсией σ². Многомерное – вектором средних μ и ковариационной матрицей Σ; |Σ| – ее определитель.
+- Выражение (y − μ)ᵀΣ⁻¹(y − μ) – квадрат расстояния Махаланобиса от точки y до центра μ. Линии постоянной плотности – эллипсы с центром μ.
+- На рисунке μ₁ = 27, μ₂ = 135, σ₁ = 4, σ₂ = 15, ρ = 0.6. Чем темнее цвет, тем выше плотность. Линии – эллипсы с расстоянием Махаланобиса 1, 2 и 3, крестик – вектор средних. Наклон эллипсов отражает положительную корреляцию.
+- Рисунок построен по формуле плотности с заданными параметрами, а не по выборке.
+:::
+
+## Параметризации двумерного нормального распределения {#bvn-parametrizations .compact}
+
+::: {.param-joint}
+$$\begin{pmatrix}Y_1\\Y_2\end{pmatrix}\sim\mathcal N_2\!\left(
+\begin{pmatrix}\mu_1\\\mu_2\end{pmatrix},
+\begin{pmatrix}\sigma_1^2&\rho\sigma_1\sigma_2\\\rho\sigma_1\sigma_2&\sigma_2^2\end{pmatrix}\right)$$
+
+[Параметры ($\theta$): $(\mu_1,\mu_2,\sigma_1^2,\sigma_2^2,\rho)$]{.param-list}
+:::
+
+```{=html}
+<svg class="param-arrows" viewBox="0 0 1448 104" aria-hidden="true">
+  <defs>
+    <marker id="param-arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#B8C2CC"/>
+    </marker>
+  </defs>
+  <line x1="452" y1="6" x2="358" y2="96" stroke="#B8C2CC" stroke-width="2" marker-end="url(#param-arrowhead)"/>
+  <line x1="996" y1="6" x2="1090" y2="96" stroke="#B8C2CC" stroke-width="2" marker-end="url(#param-arrowhead)"/>
+</svg>
+```
+
+:::: {.param-row}
+::: {.param-box}
+$$f(y_1,y_2)=f(y_1)\,f(y_2\mid y_1)$$
+
+$$Y_1\sim\mathcal N(\mu_1,\sigma_1^2),\quad
+Y_2\mid Y_1\sim\mathcal N(\beta_0+\beta_1Y_1,\ \sigma_{2\mid1}^2)$$
+$$\mathrm E(Y_2\mid Y_1)=\beta_0+\beta_1Y_1=\mu_2+\rho\,\frac{\sigma_2}{\sigma_1}\,(Y_1-\mu_1)$$
+$$\operatorname{Var}(Y_2\mid Y_1)=\sigma_{2\mid1}^2=\sigma_2^2\,(1-\rho^2)$$
+
+[Параметры ($\theta$): $(\mu_1,\sigma_1^2,\beta_0,\beta_1,\sigma_{2\mid1}^2)$]{.param-list}
+:::
+::: {.param-box}
+$$f(y_1,y_2)=f(y_2)\,f(y_1\mid y_2)$$
+
+$$Y_2\sim\mathcal N(\mu_2,\sigma_2^2),\quad
+Y_1\mid Y_2\sim\mathcal N(\gamma_0+\gamma_1Y_2,\ \sigma_{1\mid2}^2)$$
+$$\mathrm E(Y_1\mid Y_2)=\gamma_0+\gamma_1Y_2=\mu_1+\rho\,\frac{\sigma_1}{\sigma_2}\,(Y_2-\mu_2)$$
+$$\operatorname{Var}(Y_1\mid Y_2)=\sigma_{1\mid2}^2=\sigma_1^2\,(1-\rho^2)$$
+
+[Параметры ($\theta$): $(\mu_2,\sigma_2^2,\gamma_0,\gamma_1,\sigma_{1\mid2}^2)$]{.param-list}
+:::
+::::
+
+::: {.notes}
+- Одно и то же двумерное нормальное распределение можно задать тремя наборами из пяти параметров. Сверху – моментная параметризация: средние, дисперсии и корреляция.
+- Снизу – две регрессионные параметризации: маргинальное распределение одной переменной и линейная регрессия другой переменной на нее. Условное среднее линейно, условная дисперсия постоянна и не зависит от значения условной переменной.
+- Наклоны связаны с моментами: β₁ = ρσ₂/σ₁, γ₁ = ρσ₁/σ₂; свободные члены β₀ = μ₂ − β₁μ₁, γ₀ = μ₁ − γ₁μ₂. При |ρ| < 1 и положительных дисперсиях переходы между параметризациями взаимно однозначны.
+- Две регрессии не являются обратными друг другу: β₁γ₁ = ρ², поэтому γ₁ ≠ 1/β₁, если |ρ| < 1.
+:::
+
+## Данные для примера: генеративный процесс (DGP) {#dgp .compact .left-math}
 
 $$
 \begin{bmatrix}X_i\\Y_i\end{bmatrix}
@@ -314,116 +515,218 @@ $$
 \begin{bmatrix}16&36\\36&225\end{bmatrix}\right),\qquad n=1000.
 $$
 
-:::: {.columns}
-::: {.column width="48%"}
-### Истинные параметры
+[**Параметры**]{.dgp-params}
 
 - $\mu_X=27$, $\sigma_X=4$ кг/м².
 - $\mu_Y=135$, $\sigma_Y=15$ мм рт. ст.
-- Корреляция $\rho=0.60$.
-- Пропуски далее возникают **только в САД**.
-:::
-::: {.column width="52%"}
-### Две регрессии
-
-$$E(Y\mid X)=74.25+2.25X.$$
-$$E(X\mid Y)=5.40+0.160Y.$$
-
-$\beta_{Y\mid X}=\rho\,\sigma_Y/\sigma_X$,
-$\beta_{X\mid Y}=\rho\,\sigma_X/\sigma_Y$.
-:::
-::::
-
-::: {.takeaway .small}
-Одна выборка, один seed: **`r ex$config$seed_data`**. Те же люди и те же маски пропусков
-используются при сравнении всех методов. Seed выбран заранее, без подбора результата.
-:::
+- $\rho=0.60$.
+- $\mathrm{E}(Y\mid X)=74.25+2.25X$, $\quad\beta_{Y\mid X}=\rho\,\sigma_Y/\sigma_X$.
+- $\mathrm{E}(X\mid Y)=5.40+0.160Y$, $\quad\beta_{X\mid Y}=\rho\,\sigma_X/\sigma_Y$.
 
 ::: {.notes}
+DGP – data-generating process, процесс порождения данных.
 Данные генерируются через независимые Z1,Z2~N(0,1): X=27+4Z1,
 Y=135+15(0.6Z1+0.8Z2). Это в точности указанное двумерное нормальное распределение.
 Коэффициенты регрессий – параметры условных средних, а не детерминированные равенства
 между ИМТ и САД. Остаточные SD равны 12 для Y|X и 3.2 для X|Y.
+Одна выборка, один seed: `r ex$config$seed_data`. Те же люди и те же маски пропусков
+используются при сравнении всех методов. Seed выбран заранее, без подбора результата.
 RNGkind фиксирован; seed полной выборки, каждой маски и каждого стохастического
 заполнения сохранены в data/metadata.R. Исходные числа PPTX заменены расчетом этой выборки.
 :::
 
-## Сквозной пример: полные данные {#full-data .compact}
+## Данные для примера (n = `r nrow(ex$complete)`) {#full-data .compact}
 
 :::: {.columns}
 ::: {.column width="49%"}
 ```{r}
 #| label: plot-full
-#| fig-alt: "1000 полных пар ИМТ–САД и две регрессионные прямые на одних осях."
-plot_example(ex)
+#| fig-width: 5.6
+#| fig-height: 5.6
+#| out-width: "90%"
+#| fig-alt: "1000 полных пар ИМТ–САД. Тонкие черные прямые – истинные регрессии из параметров DGP, толстые синие – оценки по полным данным; точки средних с пунктиром до осей."
+plot_example(ex, square = TRUE, means = TRUE)
 ```
 :::
 ::: {.column width="51%"}
 ```{r}
 #| results: asis
-results_table(ex)
+truth_cd_table(ex)
 ```
-::: {.small}
-$x$ – ИМТ; $y$ – САД. **n = `r nrow(ex$complete)`**.
-SD рассчитано со знаменателем $n-1$.
-:::
 :::
 ::::
 
-::: {.takeaway}
-Истинные параметры распределения и оценки по конкретной выборке различаются
-из-за случайности выборки.
+::: {.notes}
+График и таблица получены из одного объекта ex$complete. Тонкие черные прямые –
+истинные регрессии E(САД | ИМТ) и E(ИМТ | САД), вычисленные из параметров DGP;
+тонкая черная линия обозначает истину на всех графиках. Синие прямые и синий столбец θ̂_CD – оценки
+по полным данным (complete data); коэффициенты, включая свободные члены, рассчитаны lm().
+Вторая регрессия, E(ИМТ | САД), изображена на тех же осях; две прямые не обязаны совпадать.
+SD рассчитано со знаменателем n − 1. Истинные параметры и оценки по конкретной выборке
+различаются из-за случайности выборки.
+:::
+
+## Missingness mechanisms {#mechanisms .left-math}
+
+Механизм пропусков – распределение индикаторов $M$:
+
+$$\Pr(M\mid Y,\psi)=\Pr(M\mid Y_{\mathrm{obs}},Y_{\mathrm{mis}},\psi)$$
+
+$$f(M\mid Y,\psi)=f(M\mid Y_{\mathrm{obs}},Y_{\mathrm{mis}},\psi)$$
+
+::: {.notes}
+- Механизм пропусков – условное распределение матрицы индикаторов M при полных данных Y = (Y_obs, Y_mis).
+- Pr и f обозначают одну и ту же функцию вероятности для индикаторов M; запись через f используется дальше на слайдах правдоподобия.
+- ψ – параметры механизма пропусков, в отличие от параметров модели данных θ. В исходном PPTX они обозначены phi; в проекте используется ψ.
+:::
+
+## Rubin's Typology {#rubin-bio .compact}
+
+```{=html}
+<div class="rubin-layout">
+  <figure class="rubin-photo">
+    <img src="assets/don-rubin.png" alt="Портрет Donald B. Rubin" width="480" height="600">
+    <figcaption><strong>Donald B. Rubin</strong><br>Department of Statistics, Harvard University</figcaption>
+  </figure>
+  <div class="rubin-works" lang="en">
+    <table class="rubin-table">
+      <thead><tr><th scope="col">Selected works</th><th scope="col">Citations</th></tr></thead>
+      <tbody>
+        <tr class="rubin-group"><th colspan="2" scope="rowgroup">Missing data</th></tr>
+        <tr><td><a href="https://doi.org/10.1093/biomet/63.3.581">Missingness mechanisms and ignorability</a> <span class="rubin-ref">– Rubin (1976), <em>Biometrika</em></span></td><td>16&#8239;954</td></tr>
+        <tr><td><a href="https://doi.org/10.1111/j.2517-6161.1977.tb01600.x">EM algorithm</a> <span class="rubin-ref">– Dempster, Laird, Rubin (1977), <em>JRSS B</em></span></td><td>80&#8239;209</td></tr>
+        <tr><td><a href="https://doi.org/10.1093/biomet/80.2.267">ECM algorithm</a> <span class="rubin-ref">– Meng, Rubin (1993), <em>Biometrika</em></span></td><td>2&#8239;734</td></tr>
+        <tr><td><a href="https://doi.org/10.1080/01621459.1996.10476908">Multiple imputation after 18+ years</a> <span class="rubin-ref">– Rubin (1996), <em>JASA</em></span></td><td>5&#8239;915</td></tr>
+        <tr><td><a href="https://doi.org/10.1002/9781119482260"><em>Statistical Analysis with Missing Data</em></a> <span class="rubin-ref">– Little, Rubin (1987; 3rd ed. 2019)</span></td><td>44&#8239;275</td></tr>
+        <tr class="rubin-group"><th colspan="2" scope="rowgroup">Causal inference</th></tr>
+        <tr><td><a href="https://doi.org/10.1037/h0037350">Potential outcomes</a> <span class="rubin-ref">– Rubin (1974), <em>J Educ Psychol</em></span></td><td>15&#8239;682</td></tr>
+        <tr><td><a href="https://doi.org/10.1214/aos/1176344064">Bayesian inference for causal effects</a> <span class="rubin-ref">– Rubin (1978), <em>Ann Stat</em></span></td><td>4&#8239;010</td></tr>
+        <tr><td><a href="https://doi.org/10.1093/biomet/70.1.41">Propensity score</a> <span class="rubin-ref">– Rosenbaum, Rubin (1983), <em>Biometrika</em></span></td><td>47&#8239;928</td></tr>
+        <tr><td><a href="https://doi.org/10.1080/01621459.1996.10476902">Instrumental variables</a> <span class="rubin-ref">– Angrist, Imbens, Rubin (1996), <em>JASA</em></span></td><td>9&#8239;537</td></tr>
+        <tr><td><a href="https://doi.org/10.1017/CBO9781139025751"><em>Causal Inference for Statistics, Social, and Biomedical Sciences</em></a> <span class="rubin-ref">– Imbens, Rubin (2015)</span></td><td>9&#8239;682</td></tr>
+        <tr class="rubin-group"><th colspan="2" scope="rowgroup">Bayesian statistics</th></tr>
+        <tr><td><a href="https://doi.org/10.1214/aos/1176345338">Bayesian bootstrap</a> <span class="rubin-ref">– Rubin (1981), <em>Ann Stat</em></span></td><td>2&#8239;165</td></tr>
+        <tr><td><a href="https://doi.org/10.1214/aos/1176346785">Posterior predictive checks</a> <span class="rubin-ref">– Rubin (1984), <em>Ann Stat</em></span></td><td>2&#8239;150</td></tr>
+        <tr><td><a href="https://doi.org/10.1214/ss/1177011136">R̂ convergence diagnostic</a> <span class="rubin-ref">– Gelman, Rubin (1992), <em>Stat Sci</em></span></td><td>23&#8239;787</td></tr>
+        <tr><td><a href="https://doi.org/10.1201/b16018"><em>Bayesian Data Analysis</em></a> <span class="rubin-ref">– Gelman, Carlin, Stern, Rubin (1995; 3rd ed. 2013)</span></td><td>47&#8239;611</td></tr>
+      </tbody>
+    </table>
+    <p class="rubin-note">Citations: Google Scholar, 26 Nov 2026.</p>
+  </div>
+</div>
+<p class="rubin-interview" lang="en"><a href="https://www.youtube.com/watch?v=eF12bVsvq2Q&amp;t=117s">Trevor Hastie and Rob Tibshirani with Don Rubin</a> (2024)</p>
+```
+
+::: {.notes}
+- Donald B. Rubin – автор типологии механизмов пропусков (Rubin, 1976), EM-алгоритма вместе с Dempster и Laird (1977) и множественной импутации (1987). Ему же принадлежат модель потенциальных исходов для причинного вывода (1974), propensity score вместе с Rosenbaum (1983) и диагностика сходимости MCMC вместе с Gelman (1992).
+- Число цитирований взято со скриншотов поиска Google Scholar 26.11.2026 (страницы 1–6 выдачи по запросу «donald rubin»). Книга Rubin (1987) *Multiple Imputation for Nonresponse in Surveys* в таблицу не включена: основной записи в выдаче нет (ее цитирования, по-видимому, попали в запись «Multiple imputation», 35 391, связанную Scholar с книгой van Buuren 2018 года), а найденная запись-дубль «DB Rubio» с 79 цитированиями ошибочна. Для книг Scholar объединяет цитирования разных изданий.
+- Подписи в таблице – краткие описания вклада, а не названия статей; книги даны полным названием курсивом. Каждая подпись – ссылка на работу по DOI (проверены через Crossref). Rubin (1984) обычно цитируют как работу, сформулировавшую апостериорные предсказательные проверки; Gelman и Rubin (1992) – как источник диагностики сходимости R̂.
+- Интервью: Trevor Hastie и Rob Tibshirani беседуют с Don Rubin о propensity score (YouTube, канал Leda Liang, 11.04.2024); ссылка открывает запись с 1:57.
+:::
+
+## Rubin's Typology {#rubin-typology .compact .left-math}
+
+::: {.typology-block}
+[MCAR]{.typology-abbr}<br>[Missing Completely at Random]{.typology-full}
+
+$$\Pr(M\mid Y_{\mathrm{obs}},Y_{\mathrm{mis}},\psi)=\Pr(M\mid\psi)$$
+:::
+
+::: {.typology-block}
+[MAR]{.typology-abbr}<br>[Missing at Random]{.typology-full}
+
+$$\Pr(M\mid Y_{\mathrm{obs}},Y_{\mathrm{mis}},\psi)=\Pr(M\mid Y_{\mathrm{obs}},\psi)$$
+:::
+
+::: {.typology-block}
+[MNAR]{.typology-abbr} [(NMAR)]{.mechanism-alt}<br>[Missing Not at Random]{.typology-full}
+
+$$\Pr(M\mid Y_{\mathrm{obs}},Y_{\mathrm{mis}},\psi)\neq\Pr(M\mid Y_{\mathrm{obs}},\psi)$$
 :::
 
 ::: {.notes}
-График и таблица получены из одного объекта ex$complete. На графике синяя сплошная
-линия – САД~ИМТ, фиолетовая пунктирная – ИМТ~САД, переизображенная на тех же осях.
-Они не обязаны совпадать. Все коэффициенты, включая свободные члены, рассчитаны lm().
-:::
-
-## Механизмы пропусков {#mechanisms .compact}
-
-Механизм – распределение индикаторов $\Pr(M\mid Y_{\mathrm{obs}},Y_{\mathrm{mis}},\psi)$.
-
-:::: {.mechanism}
-::: {.mechanism-label}
-**MCAR**
-:::
-::: {.mechanism-body}
-$$\Pr(M\mid Y_{\mathrm{obs}},Y_{\mathrm{mis}},\psi)=\Pr(M\mid\psi)$$
-Missing Completely at Random: пропуски не зависят от значений данных.
-:::
-::::
-:::: {.mechanism}
-::: {.mechanism-label}
-**MAR**
-:::
-::: {.mechanism-body}
-$$\Pr(M\mid Y_{\mathrm{obs}},Y_{\mathrm{mis}},\psi)=\Pr(M\mid Y_{\mathrm{obs}},\psi)$$
-Missing at Random: после учета наблюдаемого зависимость от скрытого исчезает.
-:::
-::::
-:::: {.mechanism}
-::: {.mechanism-label}
-**MNAR**
-:::
-::: {.mechanism-body}
-$$\Pr(M\mid Y_{\mathrm{obs}},Y_{\mathrm{mis}},\psi)\text{ зависит от }Y_{\mathrm{mis}}$$
-Missing Not at Random: зависимость сохраняется после учета наблюдаемого.
-:::
-::::
-
-::: {.small}
+MCAR: пропуски не зависят от значений данных.
+MAR: после учета наблюдаемого зависимость от скрытого исчезает.
+MNAR: зависимость сохраняется после учета наблюдаемого. Неравенство в формуле MNAR означает, что равенство MAR нарушается хотя бы для некоторых значений Y_mis: вероятность пропуска зависит от ненаблюдаемых значений и после учета Y_obs.
 MCAR – частный случай MAR. MAR и MNAR нельзя различить только по наблюдаемым данным
 без дополнительных предположений. Типология Рубина (1976).
+Потеря пробирки независимо от измеряемых характеристик иллюстрирует MCAR. Для MAR
+важно условие «после учета Y_obs», а не отсутствие любой связи с пропущенной
+переменной.
+Вместо MNAR в литературе встречается обозначение NMAR; Little и Rubin
+в третьем издании перешли от NMAR к MNAR (2019, примечание 1 к главе 1, с. 28).
+:::
+
+## О названиях {#naming .naming-slide}
+
+::: {.naming-wiki}
+![](assets/wikipedia-mar.png){fig-alt="Фрагмент статьи Wikipedia «Missing data», раздел «Missing at random»: MAR occurs when the missingness is not random…"}
+
+[Wikipedia, “Missing data”, section “Missing at random”, CC BY-SA 4.0.]{.naming-credit}
+:::
+
+::: {.naming-quote .fragment}
+> As a field, statistics is really bad at naming things.
+
+::: {.definition-source}
+Heiss, A. (2022). *Marginal and conditional effects for GLMMs with {marginaleffects}*.
+:::
 :::
 
 ::: {.notes}
-Потеря пробирки независимо от измеряемых характеристик иллюстрирует MCAR. Для MAR
-важно условие «после учета Y_obs», а не отсутствие любой связи с пропущенной
-переменной. В примере ИМТ полностью наблюдается, пропуски есть только в САД.
-Параметры механизма обозначены psi, в отличие от phi в исходном PPTX, для
-согласованности с проектом.
+- Цитата – первая фраза записи Andrew Heiss в блоге (29.11.2022, DOI 10.59350/xwnfm-x1827). Дальше он разбирает путаницу с термином «fixed effects».
+- Скриншот Википедии показывает ту же проблему на нашей теме: «missing at random» определяется как ситуация, когда «the missingness is not random». Название MAR не означает, что пропуски случайны в бытовом смысле.
+- Фрагмент статьи «Missing data» английской Википедии (правка 1374926965), лицензия CC BY-SA 4.0; оставлены первые два предложения раздела.
+:::
+
+## Hand’s Typology {#hand-terms}
+
+```{=html}
+<div class="hand-layout">
+  <div class="hand-main">
+    <table class="hand-table" data-quarto-disable-processing="true" lang="en">
+      <colgroup><col class="hand-col-rubin"><col class="hand-col-hand"><col class="hand-col-depends"></colgroup>
+      <thead>
+        <tr><th scope="col">Rubin</th><th scope="col">Hand</th><th scope="col">Probability of missingness depends on</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="hand-abbr">MCAR</span><span class="hand-full">Missing Completely at Random</span></td>
+          <td><span class="hand-abbr">NDD</span><span class="hand-full">Not Data Dependent</span></td>
+          <td class="hand-depends">neither observed nor unobserved values</td>
+        </tr>
+        <tr>
+          <td><span class="hand-abbr">MAR</span><span class="hand-full">Missing at Random</span></td>
+          <td><span class="hand-abbr">SDD</span><span class="hand-full"><span class="hand-seen">Seen</span> Data Dependent</span></td>
+          <td class="hand-depends">observed values only</td>
+        </tr>
+        <tr>
+          <td><span class="hand-abbr">MNAR</span><span class="hand-full">Missing Not at Random</span></td>
+          <td><span class="hand-abbr">UDD</span><span class="hand-full"><span class="hand-unseen">Unseen</span> Data Dependent</span></td>
+          <td class="hand-depends">unobserved values, even given observed ones</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="hand-source" lang="en">Hand, D. J. (2020).<br><em>Dark Data: Why What You Don’t Know Matters</em>.<br>Princeton University Press, ch. 8.</p>
+  </div>
+  <figure class="hand-figure">
+    <img class="hand-cover" src="assets/hand-dark-data-cover.jpg" alt="Cover of Dark Data: Why What You Don’t Know Matters by David J. Hand" width="800" height="1208">
+    <figcaption lang="en"><a href="https://www.youtube.com/watch?v=0_pW_f_l8IA">Dark Data: Why What You Don’t Know Matters</a> (Royal Statistical Society, 2021)</figcaption>
+  </figure>
+</div>
+```
+
+::: {.notes}
+- Хэнд предложил описательные названия для трех механизмов Рубина: по его словам, терминологию Рубина трудно запомнить людям, далеким от статистики. Новые названия прямо указывают, от каких данных зависит вероятность пропуска: ни от каких (NDD), от наблюдаемых – seen (SDD) или от ненаблюдаемых – unseen (UDD).
+
+- Пример Хэнда – исследование диеты для снижения веса: ИМТ измеряли еженедельно в течение полугода, часть участников выбыла.
+  - Кто не смог соблюдать программу питания и не вернулся, выбывал из-за высокого итогового ИМТ, который так и не измерили: UDD, MNAR.
+  - Участники с небольшим избыточным весом худели медленно, теряли мотивацию и выбывали. Выбывание связано с наблюдаемым исходным ИМТ: SDD, MAR.
+  - Кто переехал или был слишком занят, выбыл по причинам, не связанным с данными: NDD, MCAR.
+
+- В одном исследовании одновременно встречаются причины выбывания всех трех типов.
+
+- Хэнд описывает UDD как зависимость от еще неизвестных значений. В строгом смысле MNAR означает, что зависимость от ненаблюдаемых значений сохраняется и после учета наблюдаемых; так сформулирована третья строка таблицы.
 :::
 
 ## MCAR: случайная потеря измерений САД {#mcar .compact}
@@ -433,17 +736,17 @@ $\Pr(M_{i,Y}=1)=0.35$.
 $n_{\mathrm{obs}}=\,$**`r sum(!ex$masks$MCAR)`** полных пар.
 
 :::: {.columns}
-::: {.column width="49%"}
+::: {.column width="40%"}
 ```{r}
 #| label: plot-mcar
 #| fig-alt: "MCAR: полные случаи и скрытые значения исходной выборки."
-plot_example(ex, "MCAR")
+plot_example(ex, "MCAR", square = TRUE, means = TRUE)
 ```
 :::
-::: {.column width="51%"}
+::: {.column width="60%"}
 ```{r}
 #| results: asis
-results_table(ex, 'MCAR')
+theta_table(ex, list(cc_column(ex, 'MCAR')))
 ```
 :::
 ::::
@@ -469,24 +772,24 @@ $\operatorname{logit}\Pr(M_{i,Y}=1\mid X_i)=-13+0.45X_i$.
 Пропущено **`r fmt(100*mean(ex$masks$MAR),1)`%**; $n_{\mathrm{obs}}=\,$**`r sum(!ex$masks$MAR)`**.
 
 :::: {.columns}
-::: {.column width="49%"}
+::: {.column width="40%"}
 ```{r}
 #| label: plot-mar
 #| fig-alt: "MAR: вероятность пропуска САД повышается с ИМТ; отбор идет по горизонтальной оси."
-plot_example(ex, "MAR")
+plot_example(ex, "MAR", square = TRUE, means = TRUE)
 ```
 :::
-::: {.column width="51%"}
+::: {.column width="60%"}
 ```{r}
 #| results: asis
-results_table(ex, 'MAR')
+theta_table(ex, list(cc_column(ex, 'MAR')))
 ```
 :::
 ::::
 
 ::: {.takeaway .small}
-Для **САД ~ ИМТ** отбор зависит только от предиктора: условная модель сохраняется.
-Для **ИМТ ~ САД** отбор зависит от отклика: модель меняется.
+Для **E(САД | ИМТ)** отбор зависит только от предиктора: условная модель сохраняется.
+Для **E(ИМТ | САД)** отбор зависит от отклика: модель меняется.
 :::
 
 ::: {.notes}
@@ -503,23 +806,23 @@ $\operatorname{logit}\Pr(M_{i,Y}=1\mid Y_i)=-17.1+0.12Y_i$.
 Пропущено **`r fmt(100*mean(ex$masks$MNAR),1)`%**; $n_{\mathrm{obs}}=\,$**`r sum(!ex$masks$MNAR)`**.
 
 :::: {.columns}
-::: {.column width="49%"}
+::: {.column width="40%"}
 ```{r}
 #| label: plot-mnar
 #| fig-alt: "MNAR: высокие значения САД чаще скрыты; отбор идет по вертикальной оси."
-plot_example(ex, "MNAR")
+plot_example(ex, "MNAR", square = TRUE, means = TRUE)
 ```
 :::
-::: {.column width="51%"}
+::: {.column width="60%"}
 ```{r}
 #| results: asis
-results_table(ex, 'MNAR')
+theta_table(ex, list(cc_column(ex, 'MNAR')))
 ```
 :::
 ::::
 
 ::: {.takeaway .small}
-Для **САД ~ ИМТ** отбор идет по отклику. Для **ИМТ ~ САД** – только по предиктору:
+Для **E(САД | ИМТ)** отбор идет по отклику. Для **E(ИМТ | САД)** – только по предиктору:
 в данном примере обратная регрессия остается корректной.
 :::
 
@@ -576,7 +879,7 @@ MAR зависит от того, какие переменные доступн
 ### Когда регрессия корректна
 
 Для корректной модели $Y\sim X$ достаточно
-$$C\perp Y\mid X.$$
+$$M\perp Y\mid X.$$
 
 - Полнота строки зависит только от предикторов, а не от отклика при фиксированном $X$.
 - Если отсутствует только отклик и выполняется MAR, CC совпадает с ММП условной регрессии.
@@ -585,12 +888,12 @@ $$C\perp Y\mid X.$$
 ::::
 
 ::: {.takeaway .small}
-В нашей выборке: MAR, САД ~ ИМТ → **`r equation(estimate(ex,'MAR','CC'))`**;
-MNAR, ИМТ ~ САД → **`r equation(estimate(ex,'MNAR','CC'),'BMI')`**.
+В нашей выборке: MAR, E(САД | ИМТ) → **`r equation_named(estimate(ex,'MAR','CC'))`**;
+MNAR, E(ИМТ | САД) → **`r equation_named(estimate(ex,'MNAR','CC'),'BMI')`**.
 :::
 
 ::: {.notes}
-Условие C независимо от отклика при условии X – достаточное при корректной
+Здесь M – индикатор неполноты строки (M = 1, если в переменных анализа есть пропуск). Условие M независимо от отклика при условии X – достаточное при корректной
 спецификации модели и наличии достаточного числа полных наблюдений. Оно не
 равнозначно требованию MCAR. Оценка дисперсии и SE требует также соответствующих
 предположений об ошибках. Совпадение CC с ММП относится к условной модели Y|X без
@@ -604,7 +907,7 @@ MNAR, ИМТ ~ САД → **`r equation(estimate(ex,'MNAR','CC'),'BMI')`**.
 :::: {.columns}
 ::: {.column width="45%"}
 При **независимых** пропусках доли $q$ в каждой из $p$ переменных:
-$$\Pr(C_i=1)=(1-q)^p.$$
+$$\Pr(M_{i1}=\dots=M_{ip}=0)=(1-q)^p.$$
 
 - $p=20,\ q=10\%$: **`r fmt(100*.9^20,1)`%** полных строк.
 - $p=10,\ q=5\%$: **`r fmt(100*.95^10,1)`%** полных строк.
@@ -636,9 +939,12 @@ plot_cc_loss()
 ```{r}
 #| results: asis
 g <- adv$binary$groups
-html_table(list('Группа'=g$group, 'n'=g$n, 'n_obs'=g$n_obs,
+html_table(list('Группа'=g$group, '\\(n\\)'=g$n, '\\(n_{\\mathrm{obs}}\\)'=g$n_obs,
  'Наблюдено'=paste0(fmt(100*g$observed_fraction,1),'%'),
- 'Истинное среднее'=fmt(g$truth,1),'Полные данные'=fmt(g$full,1),'CC'=fmt(g$CC,1)))
+ '\\(\\boldsymbol{\\theta}\\)'=fmt(g$truth,1),
+ '\\(\\boldsymbol{\\hat\\theta}_{\\mathbf{CD}}\\)'=fmt(g$full,1),
+ '\\(\\boldsymbol{\\hat\\theta}_{\\mathbf{CC}}\\)'=fmt(g$CC,1)),
+ col_class=c('','','','','truth','estimate-observed','estimate-observed'))
 ```
 
 Доля людей с ожирением: **`r fmt(100*adv$binary$obese_full,1)`%** в полной выборке
@@ -661,8 +967,8 @@ html_table(list('Группа'=g$group, 'n'=g$n, 'n_obs'=g$n_obs,
 
 ## Взвешивание по обратной вероятности {#ipw .compact}
 
-$$\widehat\pi_i=\Pr(C_i=1\mid X_i),\qquad w_i=1/\widehat\pi_i,\qquad
-\widehat\mu_{Y,\mathrm{IPW}}=\frac{\sum_i C_iw_iY_i}{\sum_i C_iw_i}.$$
+$$\widehat\pi_i=\Pr(M_{i,Y}=0\mid X_i),\qquad w_i=1/\widehat\pi_i,\qquad
+\widehat\mu_{Y,\mathrm{IPW}}=\frac{\sum_{i:M_{i,Y}=0}w_iY_i}{\sum_{i:M_{i,Y}=0}w_i}.$$
 
 В нашей MAR-маске оцениваем $\pi_i$ логистической регрессией наблюдаемости САД на ИМТ.
 
@@ -691,7 +997,7 @@ plot_ipw(ex,adv)
 
 ```{r}
 #| results: asis
-advanced_table(ex,adv$ipw$parameters,'IPW',rows=3:7)
+theta_table(ex, list(cc_column(ex, 'MAR'), theta_column(adv$ipw$parameters, 'IPW')), rows = 3:7)
 ```
 
 - Большие веса увеличивают вариабельность оценок.
@@ -746,7 +1052,7 @@ R: https://stat.ethz.ch/R-manual/R-devel/library/stats/html/cor.html.
 ### Матрица корреляций
 ```{r}
 #| results: asis
-latex_matrix(ex$pairwise$correlation, '\\widehat R = ')
+latex_matrix(ex$pairwise$correlation, '\\widehat{\\mathrm{Corr}} = ')
 ```
 :::
 ::: {.column width="52%"}
@@ -785,7 +1091,7 @@ $$\widetilde Y_i=\overline Y_{\mathrm{obs}}\quad\text{для }M_{i,Y}=1.$$
 #| fig-width: 14
 #| fig-height: 4.1
 #| fig-alt: "Импутация средним при MCAR, MAR и MNAR: заполненные точки лежат на горизонтали."
-plot_example(ex, method='mean', panels=TRUE)
+plot_example(ex, method='mean', panels=TRUE, square=TRUE, means=TRUE)
 ```
 
 ::: {.figure-note}
@@ -810,14 +1116,14 @@ plot_example(ex, method='mean', panels=TRUE)
 
 ```{r}
 #| results: asis
-results_table(ex, c('MCAR','MAR','MNAR'), method='mean')
+theta_table(ex, imputation_columns(ex, 'mean'))
 ```
 
 $$s^2_{Y,\mathrm{mean}}=\frac{n_{\mathrm{obs}}-1}{n-1}\,s^2_{Y,\mathrm{obs}}.$$
 
 ::: {.small}
 В каждой заполненной таблице $n=1000$, но число реально наблюденных САД не увеличилось.
-$x$ – ИМТ; $y$ – САД. ИМТ остается неизменным.
+ИМТ остается неизменным.
 :::
 
 ::: {.notes}
@@ -837,7 +1143,7 @@ $$\widetilde Y_i=\widehat\beta_0+\widehat\beta_1X_i\quad\text{для }M_{i,Y}=1.
 #| fig-width: 14
 #| fig-height: 4.1
 #| fig-alt: "Детерминированная регрессионная импутация: заполненные точки лежат точно на регрессионной прямой."
-plot_example(ex, method='regression', panels=TRUE)
+plot_example(ex, method='regression', panels=TRUE, square=TRUE, means=TRUE)
 ```
 
 ::: {.takeaway}
@@ -857,16 +1163,16 @@ plot_example(ex, method='regression', panels=TRUE)
 
 ```{r}
 #| results: asis
-results_table(ex, c('MCAR','MAR','MNAR'), method='regression')
+theta_table(ex, imputation_columns(ex, 'regression'))
 ```
 
 ::: {.takeaway}
-Наклон **САД ~ ИМТ** совпадает с CC для каждой маски.
+Наклон **E(САД | ИМТ)** совпадает с CC для каждой маски.
 Обратная регрессия и корреляция меняются из-за искусственного уменьшения остаточной дисперсии.
 :::
 
 ::: {.small}
-$x$ – ИМТ; $y$ – САД. Числа одной реализации не доказывают несмещенность метода.
+Числа одной реализации не доказывают несмещенность метода.
 :::
 
 ::: {.notes}
@@ -878,14 +1184,14 @@ $x$ – ИМТ; $y$ – САД. Числа одной реализации не 
 ## Стохастическая регрессионная импутация {#stochastic-imputation .compact}
 
 $$\widetilde Y_i=\widehat\beta_0+\widehat\beta_1X_i+\varepsilon_i^*,\qquad
-\varepsilon_i^*\sim\mathcal N(0,\widehat\sigma_e^2).$$
+\varepsilon_i^*\sim\mathcal N(0,\widehat\sigma_{Y\mid X}^2).$$
 
 ```{r}
 #| label: plot-stochastic
 #| fig-width: 14
 #| fig-height: 4.1
 #| fig-alt: "Стохастическая регрессионная импутация: заполненные значения имеют остаточный разброс около прогнозной прямой."
-plot_example(ex, method='stochastic', panels=TRUE)
+plot_example(ex, method='stochastic', panels=TRUE, square=TRUE, means=TRUE)
 ```
 
 ::: {.takeaway}
@@ -905,7 +1211,7 @@ plot_example(ex, method='stochastic', panels=TRUE)
 
 ```{r}
 #| results: asis
-results_table(ex, c('MCAR','MAR','MNAR'), method='stochastic')
+theta_table(ex, imputation_columns(ex, 'stochastic'))
 ```
 
 ::: {.takeaway}
@@ -914,7 +1220,7 @@ results_table(ex, c('MCAR','MAR','MNAR'), method='stochastic')
 :::
 
 ::: {.small}
-$x$ – ИМТ; $y$ – САД. Это одно заполнение ($m=1$), не множественная импутация.
+Это одно заполнение ($m=1$), не множественная импутация.
 Данные, индикаторы и оценки доступны в [каталоге данных](data/estimates.csv).
 :::
 
@@ -934,7 +1240,7 @@ coverage_table(sim)
 
 ::: {.small}
 В ячейках: **покрытие ± MCSE, процентные пункты**. $n=1000$, **3000 репликаций**,
-seed **20261153**. ДИ: обычные $t$-интервалы для среднего и наклона САД ~ ИМТ.
+seed **20261153**. ДИ: обычные $t$-интервалы для среднего и наклона E(САД | ИМТ).
 :::
 
 ::: {.takeaway}
@@ -1143,9 +1449,10 @@ plot_category(adv)
 ```{r}
 #| results: asis
 html_table(list('Коэффициент'=c('Свободный член','ИМТ','Мужчины'),
-  'Истина'=fmt(adv$category$truth,3),
-  'Полные данные'=fmt(coef(adv$category$full),3),
-  'Missing-category'=fmt(coef(adv$category$missing)[1:3],3)))
+  '\\(\\boldsymbol{\\theta}\\)'=fmt(adv$category$truth,3),
+  '\\(\\boldsymbol{\\hat\\theta}_{\\mathbf{CD}}\\)'=fmt(coef(adv$category$full),3),
+  'Missing-category'=fmt(coef(adv$category$missing)[1:3],3)),
+  col_class=c('','truth','estimate-observed',''))
 ```
 
 Модель с категориями «Женщины», «Мужчины», «Missing» задает общий наклон ИМТ.
@@ -1165,7 +1472,7 @@ Greenland & Finkle (1995), Jones (1996). Точный исходный код п
 
 ## Итог: какие параметры восстанавливаются {#simple-summary .compact}
 
-| Метод | Среднее САД | Наклон САД ~ ИМТ | Наклон ИМТ ~ САД |
+| Метод | Среднее САД | Наклон E(САД \| ИМТ) | Наклон E(ИМТ \| САД) |
 |---|:---:|:---:|:---:|
 | CC | ✓ · ✗ · ✗ | ✓ · ✓ · ✗ | ✓ · ✗ · ✓ |
 | IPW по ИМТ | ✓ · ✓ · ✗ | ✓ · ✓ · ✗ | ✓ · ✓ · ✗ |
@@ -1287,10 +1594,10 @@ $$\Omega_{\theta,\psi}=\Omega_\theta\times\Omega_\psi.$$
 Знание параметра данных не ограничивает параметр механизма, и наоборот.
 
 **Контрпример:** $Y_i\sim\mathrm{Bernoulli}(\theta)$,
-$C_i\sim\mathrm{Bernoulli}(\theta)$ независимо от $Y_i$.
-Механизм MCAR, но его параметр совпадает с $\theta$.
+$M_i\sim\mathrm{Bernoulli}(1-\theta)$ независимо от $Y_i$.
+Механизм MCAR, но вероятность пропуска определяется тем же $\theta$.
 
-Если $s=\sum_{C_i=1}Y_i$, то:
+Если $s=\sum_{i:M_i=0}Y_i$, то:
 $$\widehat\theta_{\mathrm{obs}}=\frac{s}{n_{\mathrm{obs}}},\qquad
 \widehat\theta_{\mathrm{joint}}=\frac{s+n_{\mathrm{obs}}}{n+n_{\mathrm{obs}}}.$$
 
@@ -1321,7 +1628,7 @@ $n=100$, $\theta=0.30$, 3000 репликаций.
 ```{r}
 #| results: asis
 d <- adv$distinct$draws
-html_table(list('Оценка'=c('Только Y_obs','Учитывая M'),
+html_table(list('Оценка'=c('\\(\\hat\\theta_{\\mathrm{obs}}\\) (только \\(Y_{\\mathrm{obs}}\\))','\\(\\hat\\theta_{\\mathrm{joint}}\\) (учитывая \\(M\\))'),
  'Среднее'=fmt(colMeans(d),3),'SD'=fmt(apply(d,2,sd),3),
  'MCSE'=fmt(apply(d,2,sd)/sqrt(nrow(d)),4)))
 ```
@@ -1342,7 +1649,7 @@ $Y_i\sim\mathcal N(\mu,\sigma^2)$, независимо;
 $M_i\sim\mathrm{Bernoulli}(\psi)$ независимо от данных, $\psi$ разделим с $(\mu,\sigma^2)$.
 
 $$L(\mu,\sigma^2,\psi)=\psi^{n-n_{\mathrm{obs}}}(1-\psi)^{n_{\mathrm{obs}}}
-\prod_{i:C_i=1}\frac{1}{\sqrt{2\pi\sigma^2}}
+\prod_{i:M_i=0}\frac{1}{\sqrt{2\pi\sigma^2}}
 \exp\!\left[-\frac{(y_i-\mu)^2}{2\sigma^2}\right].$$
 
 $$\log L=(n-n_{\mathrm{obs}})\log\psi+n_{\mathrm{obs}}\log(1-\psi)
@@ -1362,13 +1669,13 @@ $$\log L=(n-n_{\mathrm{obs}})\log\psi+n_{\mathrm{obs}}\log(1-\psi)
 $X$ – ИМТ, $Y$ – САД. Совместную модель записываем как $f(X)f(Y\mid X)$:
 
 $$X\sim\mathcal N(\mu_X,\sigma_X^2),\qquad
-Y\mid X\sim\mathcal N(\beta_0+\beta_1X,\sigma_e^2).$$
+Y\mid X\sim\mathcal N(\beta_0+\beta_1X,\sigma_{Y\mid X}^2).$$
 
-Условные параметры $\phi=(\mu_X,\sigma_X^2,\beta_0,\beta_1,\sigma_e^2)$
+Параметры $\theta=(\mu_X,\sigma_X^2,\beta_0,\beta_1,\sigma_{Y\mid X}^2)$
 взаимно однозначно связаны с моментными:
 
 $$\mu_Y=\beta_0+\beta_1\mu_X,\qquad
-\sigma_Y^2=\beta_1^2\sigma_X^2+\sigma_e^2,$$
+\sigma_Y^2=\beta_1^2\sigma_X^2+\sigma_{Y\mid X}^2,$$
 $$\sigma_{XY}=\beta_1\sigma_X^2,\qquad
 \rho=\frac{\beta_1\sigma_X}{\sigma_Y}.$$
 
@@ -1378,7 +1685,7 @@ $$\sigma_{XY}=\beta_1\sigma_X^2,\qquad
 
 ::: {.notes}
 Для положительно определенной ковариационной матрицы преобразование взаимно однозначно.
-φ здесь – параметры факторизации данных; параметры пропусков по-прежнему ψ.
+θ здесь – параметры модели данных в регрессионной параметризации, как на слайде «Параметризации двумерного нормального распределения»; параметры пропусков по-прежнему ψ.
 Разделимость этих блоков – свойство выбранной нормальной модели, а не любых моделей.
 Anderson (1957), Maximum likelihood estimates for a multivariate normal distribution
 when some observations are missing.
@@ -1386,13 +1693,13 @@ when some observations are missing.
 
 ## ММП использует все значения ИМТ {#ml-example .compact}
 
-$$L_{\mathrm{ign}}(\phi)=
+$$L_{\mathrm{ign}}(\theta)=
 \underbrace{\prod_{i=1}^n f_X(x_i\mid\mu_X,\sigma_X^2)}_{n=1000}\;
-\underbrace{\prod_{i:C_i=1}f_{Y\mid X}(y_i\mid x_i,\beta_0,\beta_1,\sigma_e^2)}_{n_{\mathrm{obs}}=`r sum(!ex$masks$MAR)`}.$$
+\underbrace{\prod_{i:M_{i,Y}=0}f_{Y\mid X}(y_i\mid x_i,\beta_0,\beta_1,\sigma_{Y\mid X}^2)}_{n_{\mathrm{obs}}=`r sum(!ex$masks$MAR)`}.$$
 
 - $\widehat\mu_X,\widehat\sigma_X^2$ – по всем пациентам.
-- $\widehat\beta_0,\widehat\beta_1$ – регрессия САД ~ ИМТ на полных парах, как в CC.
-- $\widehat\sigma_e^2$ – сумма квадратов остатков / $n_{\mathrm{obs}}$.
+- $\widehat\beta_0,\widehat\beta_1$ – регрессия $\mathrm{E}(\text{САД}\mid\text{ИМТ})$ на полных парах, как в CC.
+- $\widehat\sigma_{Y\mid X}^2$ – сумма квадратов остатков / $n_{\mathrm{obs}}$.
 
 $$\widehat\mu_Y=\bar y_{\mathrm{obs}}+
 \widehat\beta_1(\bar x_{\mathrm{all}}-\bar x_{\mathrm{obs}}).$$
@@ -1412,12 +1719,12 @@ $$\widehat\mu_Y=\bar y_{\mathrm{obs}}+
 
 ```{r}
 #| results: asis
-advanced_table(ex,adv$ml$parameters,'ММП')
+theta_table(ex, list(cc_column(ex, 'MAR'), theta_column(adv$ml$parameters, 'ML')))
 ```
 
 ::: {.small}
 ММП-дисперсии имеют делители $n$ и $n_{\mathrm{obs}}$;
-описательные SD в столбцах «Полные данные» и CC – с поправкой на степени свободы.
+описательные SD в столбцах $\hat\theta_{\mathrm{CD}}$ и $\hat\theta_{\mathrm{CC}}$ – с поправкой на степени свободы.
 :::
 
 ::: {.notes}
@@ -1430,7 +1737,7 @@ advanced_table(ex,adv$ml$parameters,'ММП')
 
 **E-шаг:** условное ожидание полного log-правдоподобия:
 $$Q(\theta\mid\theta^{(t)})=
-E_{Y_{\mathrm{mis}}\mid Y_{\mathrm{obs}},\theta^{(t)}}
+\mathrm{E}_{Y_{\mathrm{mis}}\mid Y_{\mathrm{obs}},\theta^{(t)}}
 [\log f(Y_{\mathrm{obs}},Y_{\mathrm{mis}}\mid\theta)].$$
 
 **M-шаг:**
@@ -1453,8 +1760,8 @@ Dempster, Laird & Rubin (1977), https://doi.org/10.1111/j.2517-6161.1977.tb01600
 
 $Y_i\sim\mathcal N(\mu,\sigma^2)$, $\sigma^2$ известна, пропуски MCAR.
 
-$$E[Y_i\mid Y_{\mathrm{obs}},\mu^{(t)}]=\mu^{(t)}\quad\text{для пропусков},$$
-$$\mu^{(t+1)}=\frac{\sum_{i:C_i=1}y_i+(n-n_{\mathrm{obs}})\mu^{(t)}}{n}.$$
+$$\mathrm{E}[Y_i\mid Y_{\mathrm{obs}},\mu^{(t)}]=\mu^{(t)}\quad\text{для пропусков},$$
+$$\mu^{(t+1)}=\frac{\sum_{i:M_i=0}y_i+(n-n_{\mathrm{obs}})\mu^{(t)}}{n}.$$
 
 В неподвижной точке: $\widehat\mu=\bar y_{\mathrm{obs}}$.
 
@@ -1476,9 +1783,9 @@ $$\mu^{(t+1)}-\bar y_{\mathrm{obs}}
 
 При пропуске САД вычисляем **два** условных момента:
 
-$$E[Y_i\mid X_i,\theta^{(t)}]=\widehat y_i^{(t)},$$
-$$E[Y_i^2\mid X_i,\theta^{(t)}]
-=(\widehat y_i^{(t)})^2+(\sigma_e^2)^{(t)}.$$
+$$\mathrm{E}[Y_i\mid X_i,\theta^{(t)}]=\widehat y_i^{(t)},$$
+$$\mathrm{E}[Y_i^2\mid X_i,\theta^{(t)}]
+=(\widehat y_i^{(t)})^2+(\sigma_{Y\mid X}^2)^{(t)}.$$
 
 ::: {.takeaway}
 Регрессионная подстановка оставляет только квадрат прогноза.
@@ -1553,7 +1860,7 @@ $$B=\frac1{m-1}\sum_{\ell=1}^m(\widehat\theta_\ell-\bar\theta)^2,\qquad
 T=W+(1+1/m)B.$$
 
 ::: {.takeaway .small}
-В нормальной модели proper MI разыгрывает и параметры $(\beta^*,\sigma_e^{2*})$,
+В нормальной модели proper MI разыгрывает и параметры $(\beta^*,\sigma_{Y\mid X}^{2*})$,
 и остаточный шум. Повторять заполнение с фиксированными параметрами недостаточно.
 :::
 

@@ -87,7 +87,7 @@ export function locfWidget(d3, options = {}) {
     title.text(arm==='C'?'Контроль':'Лечение');
     status.textContent=v.direction===0?'LOCF совпадает с истинным эффектом':`LOCF: ${v.locf} при истинном эффекте ${v.truth} – эффект ${v.direction<0?'занижен':'завышен'} на ${v.diff}`;
     formula.hidden=!check.checked;
-    formula.textContent=`Смещение = (K − L̄) · (pC · cC − pT · cT); K = ${params.K}, L̄ = среднее(${params.lastVisits.join(", ")}), pC = ${params.pC}, cC = ${params.cC}, pT = ${params.pT}, cT = ${params.cT}. Точно: ${e.bias.toFixed(3)}.`;
+    formula.textContent=`Смещение = (K − L̄) × (pC × cC − pT × cT); K = ${params.K}, L̄ = среднее(${params.lastVisits.join(", ")}), pC = ${params.pC}, cC = ${params.cC}, pT = ${params.pT}, cT = ${params.cT}. Точно: ${e.bias.toFixed(3)}.`;
     root.dataset.locf=v.locf;root.dataset.truth=v.truth;
   }
   sync();render();return root;
