@@ -10,11 +10,13 @@ estimate <- function(ex, scenario = 'Full', method = 'Full') {
   ex$estimates[ex$estimates$scenario == scenario & ex$estimates$method == method, ]
 }
 # Регрессия с названиями переменных: «74.25 + 2.25 × ИМТ».
-equation_named <- function(x, direction = 'SBP') {
+# bold = c(свободный член, наклон): выделить смещенные коэффициенты (D40).
+equation_named <- function(x, direction = 'SBP', bold = c(FALSE, FALSE)) {
   a <- x[[paste0('intercept_', direction)]]
   b <- x[[paste0('slope_', direction)]]
-  paste0(fmt(a), if (b >= 0) ' + ' else ' − ',
-         fmt(abs(b), if (direction == 'SBP') 2 else 3),
+  strong <- function(s, on) if (on) paste0('<strong>', s, '</strong>') else s
+  paste0(strong(fmt(a), bold[1]), if (b >= 0) ' + ' else ' − ',
+         strong(fmt(abs(b), if (direction == 'SBP') 2 else 3), bold[2]),
          if (direction == 'SBP') ' × ИМТ' else ' × САД')
 }
 
@@ -22,24 +24,49 @@ equation_named <- function(x, direction = 'SBP') {
 # столбцы – истина θ (черная) и оценки θ̂ с индексом; цвет оценки – цвет данных:
 # наблюдаемые (CD, CC, IPW, ML) синие, заполненные импутацией красные.
 theta_tex <- function(s) paste0('\\(', s, '\\)')
-theta_labels <- c(theta_tex('\\mu_X'), theta_tex('\\sigma_X'), theta_tex('\\mu_Y'),
-                  theta_tex('\\sigma_Y'), theta_tex('\\rho_{XY}'),
+theta_labels <- c(theta_tex('\\mu_{\\text{ИМТ}}'), theta_tex('\\sigma_{\\text{ИМТ}}'),
+                  theta_tex('\\mu_{\\text{САД}}'), theta_tex('\\sigma_{\\text{САД}}'),
+                  theta_tex('\\rho_{XY}'),
                   theta_tex('\\mathrm{E}(\\text{САД}\\mid\\text{ИМТ})'),
                   theta_tex('\\mathrm{E}(\\text{ИМТ}\\mid\\text{САД})'))
-theta_cells <- function(x) c(fmt(x[['mean_BMI']], 1), fmt(x[['sd_BMI']], 1),
-                             fmt(x[['mean_SBP']], 1), fmt(x[['sd_SBP']], 1),
-                             fmt(x[['correlation']], 3), equation_named(x), equation_named(x, 'BMI'))
-theta_column <- function(x, index, class = 'estimate-observed') {
-  list(head = theta_tex(paste0('\\boldsymbol{\\hat\\theta}_{\\mathbf{', index, '}}')),
-       values = theta_cells(x), class = class)
+# flags – список из bias_flags(): пять логических значений для μ_X … ρ_XY
+# и пары (свободный член, наклон) для двух регрессий.
+theta_cells <- function(x, flags = NULL) {
+  if (is.null(flags)) flags <- list(scalar = rep(FALSE, 5), sbp = c(FALSE, FALSE), bmi = c(FALSE, FALSE))
+  scalar <- c(fmt(x[['mean_BMI']], 1), fmt(x[['sd_BMI']], 1), fmt(x[['mean_SBP']], 1),
+              fmt(x[['sd_SBP']], 1), fmt(x[['correlation']], 3))
+  scalar <- ifelse(flags$scalar, paste0('<strong>', scalar, '</strong>'), scalar)
+  c(scalar, equation_named(x, 'SBP', flags$sbp), equation_named(x, 'BMI', flags$bmi))
 }
-cc_column <- function(ex, scenario) theta_column(estimate(ex, scenario, 'CC'), 'CC')
-imputation_columns <- function(ex, method) lapply(c('MCAR', 'MAR', 'MNAR'), function(s)
-  theta_column(estimate(ex, s, method), s, 'estimate-imputed'))
-theta_table <- function(ex, extra = list(), rows = 1:7) {
+# Смещенные оценки выделяются жирным (D40) по Monte Carlo (3000 репликаций,
+# data/simulation-summary.csv): |смещение| > 10 MCSE. Структурные смещения в курсе
+# составляют 41–870 MCSE, прочие – не больше 6 MCSE. В регрессиях выделяется только
+# смещенный коэффициент. Одна выборка смещение не определяет.
+bias_flags <- function(sim, method, scenario, threshold = 10) {
+  if (is.null(sim)) return(NULL)
+  biased <- function(p) {
+    r <- sim[sim$method == method & sim$scenario == scenario & sim$parameter == p, ]
+    stopifnot(nrow(r) == 1)
+    abs(r$bias) > threshold * r$mcse_mean
+  }
+  list(scalar = vapply(c('mean_BMI', 'sd_BMI', 'mean_SBP', 'sd_SBP', 'correlation'), biased, logical(1)),
+       sbp = c(biased('intercept_SBP'), biased('slope_SBP')),
+       bmi = c(biased('intercept_BMI'), biased('slope_BMI')))
+}
+theta_column <- function(x, index, class = 'estimate-observed', flags = NULL) {
+  list(head = theta_tex(paste0('\\boldsymbol{\\hat\\theta}_{\\mathbf{', index, '}}')),
+       values = theta_cells(x, flags), class = class)
+}
+cc_column <- function(ex, scenario, sim = NULL)
+  theta_column(estimate(ex, scenario, 'CC'), 'CC', flags = bias_flags(sim, 'CC', scenario))
+imputation_columns <- function(ex, method, sim = NULL) lapply(c('MCAR', 'MAR', 'MNAR'), function(s)
+  theta_column(estimate(ex, s, method), s, 'estimate-imputed', flags = bias_flags(sim, method, s)))
+# cd_color = FALSE (по умолчанию, D42): начиная со слайда MCAR оценки по полным данным
+# черные – это опорные значения; синим θ̂_CD только на слайде «Данные для примера».
+theta_table <- function(ex, extra = list(), rows = 1:7, cd_color = FALSE) {
   cols <- c(list(list(head = theta_tex('\\boldsymbol{\\theta}'), values = theta_cells(ex$truth),
                       class = 'truth'),
-                 theta_column(estimate(ex), 'CD')), extra)
+                 theta_column(estimate(ex), 'CD', if (cd_color) 'estimate-observed' else 'truth')), extra)
   # Сырой HTML-блок: иначе Pandoc разбирает текст таблицы как markdown и съедает \\(.
   cat('\n```{=html}\n<table class="estimates theta-table"><thead><tr><th>Параметры</th>',
       paste0('<th>', vapply(cols, `[[`, character(1), 'head'), '</th>', collapse = ''),
@@ -52,7 +79,7 @@ theta_table <- function(ex, extra = list(), rows = 1:7) {
   }
   cat('</tbody></table>\n```\n')
 }
-truth_cd_table <- function(ex) theta_table(ex)
+truth_cd_table <- function(ex) theta_table(ex, cd_color = TRUE)
 
 latex_matrix <- function(x, prefix = '', colors = NULL, headers = NULL) {
   x <- as.matrix(x)
@@ -167,6 +194,17 @@ scatter <- function(ex, scenario = 'Full', method = 'CC', title = '', means = FA
     if (method != 'CC') points(d$BMI[m], d$SBP[m], pch = 17, cex = .65,
                               col = palette['imputed'])
   }
+  # Rug-разметка по осям (D44): ИМТ наблюдается всегда – синяя; САД – синие наблюдаемые
+  # значения и красные пропуски (полные случаи – скрытые значения, импутация – подставленные).
+  rug_col <- function(key, alpha) adjustcolor(palette[[key]], alpha)
+  rug(full$BMI, side = 1, ticksize = .025, lwd = .6, col = rug_col('observed', .35))
+  if (scenario == 'Full') {
+    rug(full$SBP, side = 2, ticksize = .025, lwd = .6, col = rug_col('observed', .35))
+  } else {
+    rug(full$SBP[!m], side = 2, ticksize = .025, lwd = .6, col = rug_col('observed', .35))
+    rug(if (method == 'CC') full$SBP[m] else d$SBP[m], side = 2, ticksize = .025, lwd = .6,
+        col = rug_col('missing', .55))
+  }
   tr <- ex$truth
   # Оценки по показанным данным; обе регрессии на общих осях X=ИМТ, Y=САД.
   b <- coef(lm(SBP ~ BMI, d)); a <- coef(lm(BMI ~ SBP, d))
@@ -188,7 +226,8 @@ scatter <- function(ex, scenario = 'Full', method = 'CC', title = '', means = FA
       segments(u[1], y, x, y, col = col, lty = 2, lwd = 1.2)
       points(x, y, pch = 16, cex = 1.5, col = col)
     }
-    mark(mean(d$BMI), mean(d$SBP), est_col)
+    # Полные случаи по переменным (D44): среднее ИМТ – по всем значениям ИМТ.
+    mark(if (scenario != 'Full' && method == 'CC') mean(full$BMI) else mean(d$BMI), mean(d$SBP), est_col)
     mark(tr[['mean_BMI']], tr[['mean_SBP']], truth_color)
   }
 }

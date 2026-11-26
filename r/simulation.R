@@ -26,13 +26,16 @@ run_simulation <- function(B = 3000L, seed = 20261153L, cfg = example_config()) 
     for (scenario in names(ps)) {
       M <- rbinom(cfg$n,1,ps[[scenario]]) == 1; ok <- !M
       cc <- fast_stats(x[ok],y[ok])
+      # Полные случаи по переменным (D44): ИМТ наблюдается полностью, поэтому μ_X и σ_X
+      # считаются по всем n; остальное – по полным парам. Генератор случайных чисел не задействован.
+      cc_report <- cc; cc_report$parameters[c('mean_BMI','sd_BMI')] <- c(mean(x), sd(x))
       pred <- cc$parameters['intercept_SBP'] + cc$parameters['slope_SBP']*x[M]
       ym <- yr <- ys <- y
       ym[M] <- mean(y[ok]); yr[M] <- pred
       ys[M] <- pred + rnorm(sum(M),sd=cc$error_sd)
       d <- data.frame(BMI=x, SBP=ifelse(M,NA,y))
       ipw <- ipw_fit(d)
-      variants <- list(Full=full, CC=cc, mean=fast_stats(x,ym),
+      variants <- list(Full=full, CC=cc_report, mean=fast_stats(x,ym),
         regression=fast_stats(x,yr), stochastic=fast_stats(x,ys),
         IPW=list(parameters=ipw$parameters, se_mean=NA_real_,se_slope=NA_real_,n=sum(ok)),
         ML=list(parameters=normal_ml(d)$parameters,se_mean=NA_real_,se_slope=NA_real_,n=cfg$n))

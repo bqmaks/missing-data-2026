@@ -47,6 +47,8 @@ for (i in seq_len(nrow(est))) {
   vx <- var(d$BMI); vy <- var(d$SBP); cv <- cov(d$BMI, d$SBP)
   values <- c(mx, my, sqrt(vx), sqrt(vy), cv/sqrt(vx*vy),
               my-cv/vx*mx, cv/vx, mx-cv/vy*my, cv/vy)
+  # Полные случаи по переменным (D44): параметры ИМТ – по всем наблюдаемым ИМТ.
+  if (row$method == 'CC') values[c(1, 3)] <- c(mean(obs$BMI), sd(obs$BMI))
   close(as.numeric(row[names(ex$truth)]), values)
   stopifnot(row$n == nrow(d))
 }

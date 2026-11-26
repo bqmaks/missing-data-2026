@@ -305,8 +305,11 @@
 .reveal #dgp p:has(> .dgp-params) { margin-top: 1.1em; }
 .reveal .left-math .MathJax_Display { text-align: left !important; }
 
+/* Доля пропусков – цветом пропусков (D21, D43). */
+.reveal .missing-value, .reveal .missing-value strong { color: var(--course-missing); }
 /* Таблицы θ / θ̂: стиль задан общими правилами .estimates (D36, D39). */
-.reveal :is(#mcar, #mar, #mnar) .theta-table { font-size: 21px; }
+.reveal :is(#mcar, #mar, #mnar) .theta-table { font-size: 20px; }
+.reveal .theta-table td strong { font-weight: 700; color: inherit; }
 .reveal :is(#mcar, #mar, #mnar) .theta-table :is(th, td) { padding: .3em .32em; }
 .reveal .comparison .theta-table { font-size: 20px; }
 .reveal .comparison .theta-table :is(th, td) { padding: .3em .3em; }

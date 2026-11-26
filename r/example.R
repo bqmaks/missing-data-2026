@@ -30,6 +30,15 @@ estimate_pairs <- function(d) {
              'intercept_SBP', 'slope_SBP', 'intercept_BMI', 'slope_BMI'))
 }
 
+# Полные случаи по переменным (D44): параметры одной переменной – по всем ее
+# наблюдаемым значениям; корреляция и регрессии – по полным парам.
+estimate_complete_cases <- function(d) {
+  est <- estimate_pairs(d)
+  est[c('mean_BMI', 'sd_BMI')] <- c(mean(d$BMI, na.rm = TRUE), sd(d$BMI, na.rm = TRUE))
+  est[c('mean_SBP', 'sd_SBP')] <- c(mean(d$SBP, na.rm = TRUE), sd(d$SBP, na.rm = TRUE))
+  est
+}
+
 pairwise_example <- function() {
   # Три блока по 4 строки: в каждом наблюдаются только две переменные.
   z <- c(-1.5, -0.5, 0.5, 1.5)
@@ -81,7 +90,8 @@ make_example <- function(cfg = example_config()) {
       estimates <- rbind(estimates, data.frame(
         scenario = mechanism, method = method, n = nrow(variants[[method]]),
         n_obs = sum(!m), missing_fraction = mean(m),
-        as.list(estimate_pairs(variants[[method]])), check.names = FALSE))
+        as.list(if (method == 'CC') estimate_complete_cases(d) else estimate_pairs(variants[[method]])),
+        check.names = FALSE))
     }
   }
   list(config = cfg, truth = population_parameters(cfg), complete = complete,

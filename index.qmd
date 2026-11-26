@@ -167,8 +167,8 @@ $$
 
 ::: {.notation-indicator}
 $$
-\color{#006CC2}{M}=(\color{#006CC2}{m_{ij}}),\qquad
-\color{#006CC2}{m_{ij}}=\begin{cases}\color{#006CC2}{1},&\color{#B61A51}{Y_{ij}}\text{ пропущено},\\\color{#006CC2}{0},&\color{#006CC2}{Y_{ij}}\text{ наблюдается}.\end{cases}
+\color{#006CC2}{M}=(\color{#006CC2}{m^{(i)}_{j}}),\qquad
+\color{#006CC2}{m^{(i)}_{j}}=\begin{cases}\color{#006CC2}{1},&\color{#B61A51}{Y^{(i)}_{j}}\text{ пропущено},\\\color{#006CC2}{0},&\color{#006CC2}{Y^{(i)}_{j}}\text{ наблюдается}.\end{cases}
 $$
 :::
 :::::
@@ -180,7 +180,7 @@ $$
 - Полные данные разбиваются на наблюдаемую часть $Y_{\mathrm{obs}}$ и пропущенную часть $Y_{\mathrm{mis}}$ с учетом матрицы индикаторов $M$.
 - В реальном анализе нам доступны $Y_{\mathrm{obs}}$ и $M$. Значения $Y_{\mathrm{mis}}$ неизвестны.
 - Значения матрицы $M$ сначала показаны серым, а при нажатии пробела становятся синими. Обычно предполагают, что M известна полностью: про каждую ячейку известно, пропущена ли она. Это допущение нарушается, если пропуск записан правдоподобным значением, например недокументированным 0 в САД на слайде 2; тогда неизвестна и сама M (Little и Rubin, 2019, с. 27; van Buuren, FIMD, разд. 2.2.3). Единица указывает на пропуск в $Y$, но сама не является пропущенным значением.
-- Здесь $m_{ij}=1$ обозначает пропуск, а $m_{ij}=0$ – наблюдаемое значение. В литературе часто используют обратное соглашение: матрицу $R=1-M$, где 1 означает наблюдаемое значение, а 0 – пропуск.
+- Здесь $m^{(i)}_{j}=1$ обозначает пропуск, а $m^{(i)}_{j}=0$ – наблюдаемое значение. Номер наблюдения $i$ везде пишем верхним индексом в скобках, номер переменной $j$ – нижним. В литературе часто используют обратное соглашение: матрицу $R=1-M$, где 1 означает наблюдаемое значение, а 0 – пропуск.
 :::
 
 ## Паттерны пропущенных значений (где находятся пропуски?) {#patterns}
@@ -347,7 +347,7 @@ $f(y_2\mid y_1)=\dfrac{f(y_1\mid y_2)\,f(y_2)}{f(y_1)}$
 :::
 ::: {.formula-body}
 $Y_1\perp Y_2\iff f(y_1,y_2)=f(y_1)\,f(y_2)$<br>
-$f(\mathbf y_1,\dots,\mathbf y_n\mid\theta)=\prod_{i=1}^{n}f(\mathbf y_i\mid\theta)$
+$f(\mathbf y^{(1)},\dots,\mathbf y^{(n)}\mid\theta)=\prod_{i=1}^{n}f(\mathbf y^{(i)}\mid\theta)$
 :::
 ::: {.formula-term}
 **Условная независимость**
@@ -362,7 +362,7 @@ $Y_1\perp Y_2\mid Y_3\iff f(y_1\mid y_2,y_3)=f(y_1\mid y_3)$
 - Маргинальное распределение. Наблюдаемое правдоподобие получается интегрированием по Y_mis: слайды «Полная модель и наблюдаемое правдоподобие» и «При MAR механизм выносится из интеграла».
 - Условное распределение и цепное правило. Разложения f(Y, M) = f(Y) f(M | Y) (модель отбора) и f(Y | M) f(M) (смесь по паттернам) – слайд «Полная модель и наблюдаемое правдоподобие». Факторизация f(y₁) f(y₂ | y₁) – слайды «Параметризации двумерного нормального распределения», «Двумерная нормальная модель: факторизация», «ММП использует все значения ИМТ».
 - Формула Байеса. Из нее при MAR следует f(Y_mis | Y_obs, M) = f(Y_mis | Y_obs): распределение пропущенных значений при данных наблюдаемых не зависит от паттерна пропусков. На этом основана импутация по наблюдаемым данным – слайд «От стохастической регрессии к MI» (Little и Rubin, 2019, с. 14).
-- Независимость. Правдоподобие выборки – произведение по наблюдениям: слайды «Одномерная нормальная выборка: MCAR» и «ММП использует все значения ИМТ». Здесь 𝐲ᵢ – i-я строка данных, то есть одно наблюдение. MCAR означает независимость M и Y.
+- Независимость. Правдоподобие выборки – произведение по наблюдениям: слайды «Одномерная нормальная выборка: MCAR» и «ММП использует все значения ИМТ». Здесь 𝐲⁽ⁱ⁾ – i-я строка данных, то есть одно наблюдение; номер наблюдения – верхний индекс в скобках. MCAR означает независимость M и Y.
 - Условная независимость. MAR – это M ⊥ Y_mis | Y_obs (слайд «Rubin's Typology» с определениями). Условие корректности анализа полных случаев M ⊥ Y | X – слайд «Complete Case Analysis».
 :::
 
@@ -508,8 +508,8 @@ $$\operatorname{Var}(Y_1\mid Y_2)=\sigma_{1\mid2}^2=\sigma_1^2\,(1-\rho^2)$$
 ## Данные для примера: генеративный процесс (DGP) {#dgp .compact .left-math}
 
 $$
-\begin{bmatrix}X_i\\Y_i\end{bmatrix}
-=\begin{bmatrix}\mathrm{ИМТ}_i\\\mathrm{САД}_i\end{bmatrix}
+\begin{bmatrix}X^{(i)}\\Y^{(i)}\end{bmatrix}
+=\begin{bmatrix}\mathrm{ИМТ}^{(i)}\\\mathrm{САД}^{(i)}\end{bmatrix}
 \overset{\mathrm{iid}}{\sim}\mathcal N_2\!\left(
 \begin{bmatrix}27\\135\end{bmatrix},
 \begin{bmatrix}16&36\\36&225\end{bmatrix}\right),\qquad n=1000.
@@ -517,11 +517,11 @@ $$
 
 [**Параметры**]{.dgp-params}
 
-- $\mu_X=27$, $\sigma_X=4$ кг/м².
-- $\mu_Y=135$, $\sigma_Y=15$ мм рт. ст.
+- $\mu_{\text{ИМТ}}=27$, $\sigma_{\text{ИМТ}}=4$ кг/м².
+- $\mu_{\text{САД}}=135$, $\sigma_{\text{САД}}=15$ мм рт. ст.
 - $\rho=0.60$.
-- $\mathrm{E}(Y\mid X)=74.25+2.25X$, $\quad\beta_{Y\mid X}=\rho\,\sigma_Y/\sigma_X$.
-- $\mathrm{E}(X\mid Y)=5.40+0.160Y$, $\quad\beta_{X\mid Y}=\rho\,\sigma_X/\sigma_Y$.
+- $\mathrm{E}(\text{САД}\mid \text{ИМТ})=74.25+2.25\times\text{ИМТ}$, $\quad\beta_{\text{САД}\mid \text{ИМТ}}=\rho\,\sigma_{\text{САД}}/\sigma_{\text{ИМТ}}$.
+- $\mathrm{E}(\text{ИМТ}\mid \text{САД})=5.40+0.160\times\text{САД}$, $\quad\beta_{\text{ИМТ}\mid \text{САД}}=\rho\,\sigma_{\text{ИМТ}}/\sigma_{\text{САД}}$.
 
 ::: {.notes}
 DGP – data-generating process, процесс порождения данных.
@@ -729,104 +729,112 @@ Heiss, A. (2022). *Marginal and conditional effects for GLMMs with {marginaleffe
 - Хэнд описывает UDD как зависимость от еще неизвестных значений. В строгом смысле MNAR означает, что зависимость от ненаблюдаемых значений сохраняется и после учета наблюдаемых; так сформулирована третья строка таблицы.
 :::
 
-## MCAR: случайная потеря измерений САД {#mcar .compact}
+## MCAR {#mcar .compact}
 
-$\Pr(M_{i,Y}=1)=0.35$.
-Пропущено **`r fmt(100*mean(ex$masks$MCAR),1)`%**;
+$\Pr(M^{(i)}_{\text{САД}}=1)=0.35$.
+
+Пропущено [**`r fmt(100*mean(ex$masks$MCAR),1)`%**]{.missing-value};
 $n_{\mathrm{obs}}=\,$**`r sum(!ex$masks$MCAR)`** полных пар.
 
 :::: {.columns}
-::: {.column width="40%"}
+::: {.column width="44%"}
 ```{r}
 #| label: plot-mcar
+#| fig-width: 6
+#| fig-height: 6
+#| out-width: "88%"
 #| fig-alt: "MCAR: полные случаи и скрытые значения исходной выборки."
 plot_example(ex, "MCAR", square = TRUE, means = TRUE)
 ```
 :::
-::: {.column width="60%"}
+::: {.column width="56%"}
 ```{r}
 #| results: asis
-theta_table(ex, list(cc_column(ex, 'MCAR')))
+theta_table(ex, list(cc_column(ex, 'MCAR', sim)))
 ```
 :::
 ::::
 
-::: {.figure-note}
-Синие точки – наблюдаемые пары; красные крестики – скрытые значения, известные только в симуляции.
-:::
-::: {.takeaway .small}
-Отбор случаен: систематического сдвига распределения нет, но информации меньше.
-Различия в таблице – результат одной реализации.
-:::
-
 ::: {.notes}
+Синие точки – наблюдаемые пары; красные крестики – скрытые значения, известные только в симуляции.
+Черточки у осей (rug) показывают значения переменных: ИМТ наблюдается полностью (синие),
+у САД синие – наблюдаемые значения, красные – пропущенные.
+Тонкие черные прямые и черная точка – истина, толстые синие прямые и синяя точка – оценки по полным случаям.
+Отбор случаен: систематического сдвига распределения нет, но информации меньше.
+Различия в таблице – результат одной реализации. Жирным в таблице выделены оценки, смещенные при этом механизме и методе: по 3000 репликациям Monte Carlo |смещение| больше 10 MCSE (data/simulation-summary.csv). Выделение не зависит от этой конкретной выборки.
 Маска MCAR генерируется независимыми Bernoulli(0.35), поэтому фактическая доля не
 обязана равняться ровно 35%. Средние и коэффициенты корректной линейной регрессии
 сохраняют несмещенность; SD и корреляцию не объявляем строго несмещенными в конечной
-выборке. CC означает отбор строк, в которых одновременно наблюдаются обе переменные.
+выборке. Полные случаи разбираются по переменным: параметры ИМТ – по всем 1000 значениям,
+параметры САД – по наблюдаемым значениям, корреляция и регрессии – по строкам, где
+наблюдаются обе переменные.
 :::
 
-## MAR: пропуски САД зависят от ИМТ {#mar .compact}
+## MAR {#mar .compact}
 
-$\operatorname{logit}\Pr(M_{i,Y}=1\mid X_i)=-13+0.45X_i$.
-Пропущено **`r fmt(100*mean(ex$masks$MAR),1)`%**; $n_{\mathrm{obs}}=\,$**`r sum(!ex$masks$MAR)`**.
+$\operatorname{logit}\Pr(M^{(i)}_{\text{САД}}=1\mid Y^{(i)}_{\text{ИМТ}})=-13+0.45\times Y^{(i)}_{\text{ИМТ}}$.
+
+Пропущено [**`r fmt(100*mean(ex$masks$MAR),1)`%**]{.missing-value}; $n_{\mathrm{obs}}=\,$**`r sum(!ex$masks$MAR)`** полных пар.
 
 :::: {.columns}
-::: {.column width="40%"}
+::: {.column width="44%"}
 ```{r}
 #| label: plot-mar
+#| fig-width: 6
+#| fig-height: 6
+#| out-width: "88%"
 #| fig-alt: "MAR: вероятность пропуска САД повышается с ИМТ; отбор идет по горизонтальной оси."
 plot_example(ex, "MAR", square = TRUE, means = TRUE)
 ```
 :::
-::: {.column width="60%"}
+::: {.column width="56%"}
 ```{r}
 #| results: asis
-theta_table(ex, list(cc_column(ex, 'MAR')))
+theta_table(ex, list(cc_column(ex, 'MAR', sim)))
 ```
 :::
 ::::
 
-::: {.takeaway .small}
-Для **E(САД | ИМТ)** отбор зависит только от предиктора: условная модель сохраняется.
-Для **E(ИМТ | САД)** отбор зависит от отклика: модель меняется.
-:::
-
 ::: {.notes}
+Для E(САД | ИМТ) отбор зависит только от предиктора: условная модель сохраняется.
+Для E(ИМТ | САД) отбор зависит от отклика: модель меняется. Жирным в таблице выделены оценки, смещенные при этом механизме и методе: по 3000 репликациям Monte Carlo |смещение| больше 10 MCSE (data/simulation-summary.csv). Выделение не зависит от этой конкретной выборки.
 ИМТ наблюдается у всех; высокая величина ИМТ повышает вероятность пропуска САД.
-Среднее ИМТ в колонке CC относится только к полным парам: оно не заменяет доступное
-среднее по всем 1000 ИМТ. Отбор меняет маргинальные распределения и корреляцию.
+Полные случаи разбираются по переменным: ИМТ наблюдается полностью, поэтому μ_ИМТ и σ_ИМТ
+в столбце CC считаются по всем 1000 значениям и не смещены; μ_САД и σ_САД – по наблюдаемым
+САД; корреляция и регрессии – по полным парам. Отбор меняет распределение наблюдаемых САД
+и корреляцию.
 Несмещенность коэффициентов прямой регрессии следует из механизма и корректной
 модели условного среднего, а не из близости единственного рассчитанного наклона к 2.25.
 :::
 
-## MNAR: пропуски зависят от самого САД {#mnar .compact}
+## MNAR {#mnar .compact}
 
-$\operatorname{logit}\Pr(M_{i,Y}=1\mid Y_i)=-17.1+0.12Y_i$.
-Пропущено **`r fmt(100*mean(ex$masks$MNAR),1)`%**; $n_{\mathrm{obs}}=\,$**`r sum(!ex$masks$MNAR)`**.
+$\operatorname{logit}\Pr(M^{(i)}_{\text{САД}}=1\mid Y^{(i)}_{\text{САД}})=-17.1+0.12\times Y^{(i)}_{\text{САД}}$.
+
+Пропущено [**`r fmt(100*mean(ex$masks$MNAR),1)`%**]{.missing-value}; $n_{\mathrm{obs}}=\,$**`r sum(!ex$masks$MNAR)`** полных пар.
 
 :::: {.columns}
-::: {.column width="40%"}
+::: {.column width="44%"}
 ```{r}
 #| label: plot-mnar
+#| fig-width: 6
+#| fig-height: 6
+#| out-width: "88%"
 #| fig-alt: "MNAR: высокие значения САД чаще скрыты; отбор идет по вертикальной оси."
 plot_example(ex, "MNAR", square = TRUE, means = TRUE)
 ```
 :::
-::: {.column width="60%"}
+::: {.column width="56%"}
 ```{r}
 #| results: asis
-theta_table(ex, list(cc_column(ex, 'MNAR')))
+theta_table(ex, list(cc_column(ex, 'MNAR', sim)))
 ```
 :::
 ::::
 
-::: {.takeaway .small}
-Для **E(САД | ИМТ)** отбор идет по отклику. Для **E(ИМТ | САД)** – только по предиктору:
-в данном примере обратная регрессия остается корректной.
-:::
-
 ::: {.notes}
+Для E(САД | ИМТ) отбор идет по отклику. Для E(ИМТ | САД) – только по предиктору:
+в данном примере обратная регрессия остается корректной. Жирным в таблице выделены оценки, смещенные при этом механизме и методе: по 3000 репликациям Monte Carlo |смещение| больше 10 MCSE (data/simulation-summary.csv). Выделение не зависит от этой конкретной выборки.
 Это специальный механизм: отбор зависит строго от САД и после его фиксации не
 зависит от ИМТ. Поэтому модель ИМТ|САД в полных случаях сохраняется, хотя механизм
 пропуска САД называется MNAR. Нельзя обобщать результат на любой MNAR.
@@ -907,7 +915,7 @@ MNAR, E(ИМТ | САД) → **`r equation_named(estimate(ex,'MNAR','CC'),'BMI')
 :::: {.columns}
 ::: {.column width="45%"}
 При **независимых** пропусках доли $q$ в каждой из $p$ переменных:
-$$\Pr(M_{i1}=\dots=M_{ip}=0)=(1-q)^p.$$
+$$\Pr(M^{(i)}_{1}=\dots=M^{(i)}_{p}=0)=(1-q)^p.$$
 
 - $p=20,\ q=10\%$: **`r fmt(100*.9^20,1)`%** полных строк.
 - $p=10,\ q=5\%$: **`r fmt(100*.95^10,1)`%** полных строк.
@@ -944,7 +952,7 @@ html_table(list('Группа'=g$group, '\\(n\\)'=g$n, '\\(n_{\\mathrm{obs}}\\)'
  '\\(\\boldsymbol{\\theta}\\)'=fmt(g$truth,1),
  '\\(\\boldsymbol{\\hat\\theta}_{\\mathbf{CD}}\\)'=fmt(g$full,1),
  '\\(\\boldsymbol{\\hat\\theta}_{\\mathbf{CC}}\\)'=fmt(g$CC,1)),
- col_class=c('','','','','truth','estimate-observed','estimate-observed'))
+ col_class=c('','','','','truth','truth','estimate-observed'))
 ```
 
 Доля людей с ожирением: **`r fmt(100*adv$binary$obese_full,1)`%** в полной выборке
@@ -967,10 +975,10 @@ html_table(list('Группа'=g$group, '\\(n\\)'=g$n, '\\(n_{\\mathrm{obs}}\\)'
 
 ## Взвешивание по обратной вероятности {#ipw .compact}
 
-$$\widehat\pi_i=\Pr(M_{i,Y}=0\mid X_i),\qquad w_i=1/\widehat\pi_i,\qquad
-\widehat\mu_{Y,\mathrm{IPW}}=\frac{\sum_{i:M_{i,Y}=0}w_iY_i}{\sum_{i:M_{i,Y}=0}w_i}.$$
+$$\widehat\pi^{(i)}=\Pr(M^{(i)}_{\text{САД}}=0\mid X^{(i)}),\qquad w^{(i)}=1/\widehat\pi^{(i)},\qquad
+\widehat\mu_{Y,\mathrm{IPW}}=\frac{\sum_{i:M^{(i)}_{\text{САД}}=0}w^{(i)}Y^{(i)}}{\sum_{i:M^{(i)}_{\text{САД}}=0}w^{(i)}}.$$
 
-В нашей MAR-маске оцениваем $\pi_i$ логистической регрессией наблюдаемости САД на ИМТ.
+В нашей MAR-маске оцениваем $\pi^{(i)}$ логистической регрессией наблюдаемости САД на ИМТ.
 
 ```{r}
 #| fig-width: 13
@@ -981,7 +989,7 @@ plot_ipw(ex,adv)
 
 ::: {.small}
 Веса: `r fmt(min(adv$ipw$w),1)`–`r fmt(max(adv$ipw$w),1)`;
-эффективный размер $n_{\mathrm{eff}}=(\sum w_i)^2/\sum w_i^2$
+эффективный размер $n_{\mathrm{eff}}=(\sum_i w^{(i)})^2/\sum_i (w^{(i)})^2$
 ≈ **`r round(adv$ipw$ess)`** из **`r length(adv$ipw$w)`** полных случаев.
 :::
 
@@ -997,7 +1005,7 @@ plot_ipw(ex,adv)
 
 ```{r}
 #| results: asis
-theta_table(ex, list(cc_column(ex, 'MAR'), theta_column(adv$ipw$parameters, 'IPW')), rows = 3:7)
+theta_table(ex, list(cc_column(ex, 'MAR', sim), theta_column(adv$ipw$parameters, 'IPW', flags = bias_flags(sim, 'IPW', 'MAR'))), rows = 3:7)
 ```
 
 - Большие веса увеличивают вариабельность оценок.
@@ -1006,6 +1014,7 @@ theta_table(ex, list(cc_column(ex, 'MAR'), theta_column(adv$ipw$parameters, 'IPW
 - Усечение весов меняет компромисс между смещением и дисперсией.
 
 ::: {.notes}
+Жирным в таблице выделены оценки, смещенные при этом механизме и методе: по 3000 репликациям Monte Carlo |смещение| больше 10 MCSE (data/simulation-summary.csv). Выделение не зависит от этой конкретной выборки.
 SD и корреляция IPW получены из нормированных взвешенных центральных моментов
 (делитель – сумма весов). Коэффициенты – из этих же моментов.
 Обычные SE функции lm с weights не являются автоматически корректными IPW SE:
@@ -1084,7 +1093,7 @@ $r_{12}=1$ и $r_{13}=1$ требуют $r_{23}=1$ в одной общей вы
 
 ## Одиночная импутация: среднее {#mean-imputation .compact}
 
-$$\widetilde Y_i=\overline Y_{\mathrm{obs}}\quad\text{для }M_{i,Y}=1.$$
+$$\widetilde Y^{(i)}=\overline Y_{\mathrm{obs}}\quad\text{для }M^{(i)}_{\text{САД}}=1.$$
 
 ```{r}
 #| label: plot-mean
@@ -1116,7 +1125,7 @@ plot_example(ex, method='mean', panels=TRUE, square=TRUE, means=TRUE)
 
 ```{r}
 #| results: asis
-theta_table(ex, imputation_columns(ex, 'mean'))
+theta_table(ex, imputation_columns(ex, 'mean', sim))
 ```
 
 $$s^2_{Y,\mathrm{mean}}=\frac{n_{\mathrm{obs}}-1}{n-1}\,s^2_{Y,\mathrm{obs}}.$$
@@ -1127,6 +1136,7 @@ $$s^2_{Y,\mathrm{mean}}=\frac{n_{\mathrm{obs}}-1}{n-1}\,s^2_{Y,\mathrm{obs}}.$$
 :::
 
 ::: {.notes}
+Жирным в таблице выделены оценки, смещенные при этом механизме и методе: по 3000 репликациям Monte Carlo |смещение| больше 10 MCSE (data/simulation-summary.csv). Выделение не зависит от этой конкретной выборки.
 Это точное тождество выборочной дисперсии при замене всех пропусков одним наблюдаемым
 средним. Числа – оценки именно по выгруженным данным, а не средние по многим симуляциям.
 В простой регрессии с интерсептом наклон ИМТ~САД после импутации САД средним совпадает
@@ -1136,7 +1146,7 @@ $$s^2_{Y,\mathrm{mean}}=\frac{n_{\mathrm{obs}}-1}{n-1}\,s^2_{Y,\mathrm{obs}}.$$
 
 ## Одиночная импутация: регрессия {#regression-imputation .compact}
 
-$$\widetilde Y_i=\widehat\beta_0+\widehat\beta_1X_i\quad\text{для }M_{i,Y}=1.$$
+$$\widetilde Y^{(i)}=\widehat\beta_0+\widehat\beta_1X^{(i)}\quad\text{для }M^{(i)}_{\text{САД}}=1.$$
 
 ```{r}
 #| label: plot-regression
@@ -1163,7 +1173,7 @@ plot_example(ex, method='regression', panels=TRUE, square=TRUE, means=TRUE)
 
 ```{r}
 #| results: asis
-theta_table(ex, imputation_columns(ex, 'regression'))
+theta_table(ex, imputation_columns(ex, 'regression', sim))
 ```
 
 ::: {.takeaway}
@@ -1176,6 +1186,7 @@ theta_table(ex, imputation_columns(ex, 'regression'))
 :::
 
 ::: {.notes}
+Жирным в таблице выделены оценки, смещенные при этом механизме и методе: по 3000 репликациям Monte Carlo |смещение| больше 10 MCSE (data/simulation-summary.csv). Выделение не зависит от этой конкретной выборки.
 Обучающие остатки ортогональны матрице дизайна, а у заполненных строк остатки
 относительно предсказанной прямой равны нулю. Поэтому повторная OLS-подгонка возвращает
 те же коэффициенты. Это алгебраическое тождество, проверяемое в tests/validate_example.R.
@@ -1183,8 +1194,8 @@ theta_table(ex, imputation_columns(ex, 'regression'))
 
 ## Стохастическая регрессионная импутация {#stochastic-imputation .compact}
 
-$$\widetilde Y_i=\widehat\beta_0+\widehat\beta_1X_i+\varepsilon_i^*,\qquad
-\varepsilon_i^*\sim\mathcal N(0,\widehat\sigma_{Y\mid X}^2).$$
+$$\widetilde Y^{(i)}=\widehat\beta_0+\widehat\beta_1X^{(i)}+\varepsilon^{*(i)},\qquad
+\varepsilon^{*(i)}\sim\mathcal N(0,\widehat\sigma_{Y\mid X}^2).$$
 
 ```{r}
 #| label: plot-stochastic
@@ -1211,7 +1222,7 @@ plot_example(ex, method='stochastic', panels=TRUE, square=TRUE, means=TRUE)
 
 ```{r}
 #| results: asis
-theta_table(ex, imputation_columns(ex, 'stochastic'))
+theta_table(ex, imputation_columns(ex, 'stochastic', sim))
 ```
 
 ::: {.takeaway}
@@ -1225,6 +1236,7 @@ theta_table(ex, imputation_columns(ex, 'stochastic'))
 :::
 
 ::: {.notes}
+Жирным в таблице выделены оценки, смещенные при этом механизме и методе: по 3000 репликациям Monte Carlo |смещение| больше 10 MCSE (data/simulation-summary.csv). Выделение не зависит от этой конкретной выборки.
 Значения таблицы вычислены по тем же заполненным данным, которые показаны на графиках.
 Не нужно требовать равенства этим числам результатов другого seed или другой
 реализации генератора. Воспроизводимость означает повторение указанного кода
@@ -1296,8 +1308,8 @@ Andridge & Little (2010), A review of hot deck imputation for survey non-respons
 ### Как работает
 
 После выбывания переносим последнее измеренное значение:
-$$\widetilde Y_{it}=Y_{i,k_i},\qquad t>k_i,$$
-где $k_i$ – последний наблюдавшийся визит.
+$$\widetilde Y^{(i)}_{t}=Y^{(i)}_{k^{(i)}},\qquad t>k^{(i)},$$
+где $k^{(i)}$ – последний наблюдавшийся визит.
 
 **BOCF:** переносим исходное значение вместо последнего.
 
@@ -1452,7 +1464,7 @@ html_table(list('Коэффициент'=c('Свободный член','ИМТ
   '\\(\\boldsymbol{\\theta}\\)'=fmt(adv$category$truth,3),
   '\\(\\boldsymbol{\\hat\\theta}_{\\mathbf{CD}}\\)'=fmt(coef(adv$category$full),3),
   'Missing-category'=fmt(coef(adv$category$missing)[1:3],3)),
-  col_class=c('','truth','estimate-observed',''))
+  col_class=c('','truth','truth',''))
 ```
 
 Модель с категориями «Женщины», «Мужчины», «Missing» задает общий наклон ИМТ.
@@ -1593,11 +1605,11 @@ $$\Omega_{\theta,\psi}=\Omega_\theta\times\Omega_\psi.$$
 
 Знание параметра данных не ограничивает параметр механизма, и наоборот.
 
-**Контрпример:** $Y_i\sim\mathrm{Bernoulli}(\theta)$,
-$M_i\sim\mathrm{Bernoulli}(1-\theta)$ независимо от $Y_i$.
+**Контрпример:** $Y^{(i)}\sim\mathrm{Bernoulli}(\theta)$,
+$M^{(i)}\sim\mathrm{Bernoulli}(1-\theta)$ независимо от $Y^{(i)}$.
 Механизм MCAR, но вероятность пропуска определяется тем же $\theta$.
 
-Если $s=\sum_{i:M_i=0}Y_i$, то:
+Если $s=\sum_{i:M^{(i)}=0}Y^{(i)}$, то:
 $$\widehat\theta_{\mathrm{obs}}=\frac{s}{n_{\mathrm{obs}}},\qquad
 \widehat\theta_{\mathrm{joint}}=\frac{s+n_{\mathrm{obs}}}{n+n_{\mathrm{obs}}}.$$
 
@@ -1645,12 +1657,12 @@ Seed: 20261152.
 
 ## Одномерная нормальная выборка: MCAR {#normal-mcar .compact}
 
-$Y_i\sim\mathcal N(\mu,\sigma^2)$, независимо;
-$M_i\sim\mathrm{Bernoulli}(\psi)$ независимо от данных, $\psi$ разделим с $(\mu,\sigma^2)$.
+$Y^{(i)}\sim\mathcal N(\mu,\sigma^2)$, независимо;
+$M^{(i)}\sim\mathrm{Bernoulli}(\psi)$ независимо от данных, $\psi$ разделим с $(\mu,\sigma^2)$.
 
 $$L(\mu,\sigma^2,\psi)=\psi^{n-n_{\mathrm{obs}}}(1-\psi)^{n_{\mathrm{obs}}}
-\prod_{i:M_i=0}\frac{1}{\sqrt{2\pi\sigma^2}}
-\exp\!\left[-\frac{(y_i-\mu)^2}{2\sigma^2}\right].$$
+\prod_{i:M^{(i)}=0}\frac{1}{\sqrt{2\pi\sigma^2}}
+\exp\!\left[-\frac{(y^{(i)}-\mu)^2}{2\sigma^2}\right].$$
 
 $$\log L=(n-n_{\mathrm{obs}})\log\psi+n_{\mathrm{obs}}\log(1-\psi)
 +\log L_{\mathrm{ign}}(\mu,\sigma^2).$$
@@ -1694,8 +1706,8 @@ when some observations are missing.
 ## ММП использует все значения ИМТ {#ml-example .compact}
 
 $$L_{\mathrm{ign}}(\theta)=
-\underbrace{\prod_{i=1}^n f_X(x_i\mid\mu_X,\sigma_X^2)}_{n=1000}\;
-\underbrace{\prod_{i:M_{i,Y}=0}f_{Y\mid X}(y_i\mid x_i,\beta_0,\beta_1,\sigma_{Y\mid X}^2)}_{n_{\mathrm{obs}}=`r sum(!ex$masks$MAR)`}.$$
+\underbrace{\prod_{i=1}^n f_X(x^{(i)}\mid\mu_X,\sigma_X^2)}_{n=1000}\;
+\underbrace{\prod_{i:M^{(i)}_{\text{САД}}=0}f_{Y\mid X}(y^{(i)}\mid x^{(i)},\beta_0,\beta_1,\sigma_{Y\mid X}^2)}_{n_{\mathrm{obs}}=`r sum(!ex$masks$MAR)`}.$$
 
 - $\widehat\mu_X,\widehat\sigma_X^2$ – по всем пациентам.
 - $\widehat\beta_0,\widehat\beta_1$ – регрессия $\mathrm{E}(\text{САД}\mid\text{ИМТ})$ на полных парах, как в CC.
@@ -1719,7 +1731,7 @@ $$\widehat\mu_Y=\bar y_{\mathrm{obs}}+
 
 ```{r}
 #| results: asis
-theta_table(ex, list(cc_column(ex, 'MAR'), theta_column(adv$ml$parameters, 'ML')))
+theta_table(ex, list(cc_column(ex, 'MAR', sim), theta_column(adv$ml$parameters, 'ML', flags = bias_flags(sim, 'ML', 'MAR'))))
 ```
 
 ::: {.small}
@@ -1728,6 +1740,7 @@ theta_table(ex, list(cc_column(ex, 'MAR'), theta_column(adv$ml$parameters, 'ML')
 :::
 
 ::: {.notes}
+Жирным в таблице выделены оценки, смещенные при этом механизме и методе: по 3000 репликациям Monte Carlo |смещение| больше 10 MCSE (data/simulation-summary.csv). Выделение не зависит от этой конкретной выборки.
 ММП не обязан точно воспроизводить оценки полной выборки: часть исходов скрыта.
 Результаты рассчитаны без заполнения пропусков. Совпадение оценок прямой САД~ИМТ с CC
 и восстановление остальных моментов проверяются независимо от представления таблицы.
@@ -1736,12 +1749,12 @@ theta_table(ex, list(cc_column(ex, 'MAR'), theta_column(adv$ml$parameters, 'ML')
 ## EM: итеративный поиск оценки ММП {#em-algorithm .compact}
 
 **E-шаг:** условное ожидание полного log-правдоподобия:
-$$Q(\theta\mid\theta^{(t)})=
-\mathrm{E}_{Y_{\mathrm{mis}}\mid Y_{\mathrm{obs}},\theta^{(t)}}
+$$Q(\theta\mid\theta^{[t]})=
+\mathrm{E}_{Y_{\mathrm{mis}}\mid Y_{\mathrm{obs}},\theta^{[t]}}
 [\log f(Y_{\mathrm{obs}},Y_{\mathrm{mis}}\mid\theta)].$$
 
 **M-шаг:**
-$$\theta^{(t+1)}=\arg\max_\theta Q(\theta\mid\theta^{(t)}).$$
+$$\theta^{[t+1]}=\arg\max_\theta Q(\theta\mid\theta^{[t]}).$$
 
 ::: {.takeaway}
 При точных E- и M-шагах наблюдаемое log-правдоподобие не убывает.
@@ -1758,15 +1771,15 @@ Dempster, Laird & Rubin (1977), https://doi.org/10.1111/j.2517-6161.1977.tb01600
 
 ## EM на простейшем примере {#em-univariate .compact}
 
-$Y_i\sim\mathcal N(\mu,\sigma^2)$, $\sigma^2$ известна, пропуски MCAR.
+$Y^{(i)}\sim\mathcal N(\mu,\sigma^2)$, $\sigma^2$ известна, пропуски MCAR.
 
-$$\mathrm{E}[Y_i\mid Y_{\mathrm{obs}},\mu^{(t)}]=\mu^{(t)}\quad\text{для пропусков},$$
-$$\mu^{(t+1)}=\frac{\sum_{i:M_i=0}y_i+(n-n_{\mathrm{obs}})\mu^{(t)}}{n}.$$
+$$\mathrm{E}[Y^{(i)}\mid Y_{\mathrm{obs}},\mu^{[t]}]=\mu^{[t]}\quad\text{для пропусков},$$
+$$\mu^{[t+1]}=\frac{\sum_{i:M^{(i)}=0}y^{(i)}+(n-n_{\mathrm{obs}})\mu^{[t]}}{n}.$$
 
 В неподвижной точке: $\widehat\mu=\bar y_{\mathrm{obs}}$.
 
-$$\mu^{(t+1)}-\bar y_{\mathrm{obs}}
-=\frac{n-n_{\mathrm{obs}}}{n}(\mu^{(t)}-\bar y_{\mathrm{obs}}).$$
+$$\mu^{[t+1]}-\bar y_{\mathrm{obs}}
+=\frac{n-n_{\mathrm{obs}}}{n}(\mu^{[t]}-\bar y_{\mathrm{obs}}).$$
 
 ::: {.takeaway}
 На каждом шаге ошибка умножается на долю пропусков:
@@ -1774,18 +1787,18 @@ $$\mu^{(t+1)}-\bar y_{\mathrm{obs}}
 :::
 
 ::: {.notes}
-При известной σ² сумма y_i² также входит в полное log-правдоподобие,
+При известной σ² сумма (y⁽ⁱ⁾)² также входит в полное log-правдоподобие,
 но ее ожидание не зависит от оптимизируемого μ на M-шаге. Для поиска μ достаточно
-ожидания суммы y_i. При неизвестной дисперсии нужно и ожидание квадратов.
+ожидания суммы y⁽ⁱ⁾. При неизвестной дисперсии нужно и ожидание квадратов.
 :::
 
 ## EM учитывает условную дисперсию {#em-second-moment .compact}
 
 При пропуске САД вычисляем **два** условных момента:
 
-$$\mathrm{E}[Y_i\mid X_i,\theta^{(t)}]=\widehat y_i^{(t)},$$
-$$\mathrm{E}[Y_i^2\mid X_i,\theta^{(t)}]
-=(\widehat y_i^{(t)})^2+(\sigma_{Y\mid X}^2)^{(t)}.$$
+$$\mathrm{E}[Y^{(i)}\mid X^{(i)},\theta^{[t]}]=\widehat y^{(i)[t]},$$
+$$\mathrm{E}[(Y^{(i)})^2\mid X^{(i)},\theta^{[t]}]
+=(\widehat y^{(i)[t]})^2+(\sigma_{Y\mid X}^2)^{[t]}.$$
 
 ::: {.takeaway}
 Регрессионная подстановка оставляет только квадрат прогноза.
@@ -1796,7 +1809,7 @@ E-шаг добавляет остаточную дисперсию – поэт
 Supplemented EM или бутстреп; обычный EM сам их не выдает.
 
 ::: {.notes}
-Для совместного момента E[X_iY_i|X_i] = X_i E[Y_i|X_i], поскольку X_i наблюдается.
+Для совместного момента E[X⁽ⁱ⁾Y⁽ⁱ⁾ | X⁽ⁱ⁾] = X⁽ⁱ⁾ E[Y⁽ⁱ⁾ | X⁽ⁱ⁾], поскольку X⁽ⁱ⁾ наблюдается.
 На M-шаге обновляются средние и ковариация с делителем n.
 Не говорим, что «корреляция не сжимается»: детерминированная импутация часто ее завышает.
 Правильнее: EM не теряет условную дисперсию.
