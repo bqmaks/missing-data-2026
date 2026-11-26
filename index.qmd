@@ -1837,7 +1837,7 @@ theta_table(ex, list(theta_column(adv$ml$parameters, 'ML',
 репликациям Monte Carlo |смещение| больше 10 MCSE (data/simulation-summary.csv).
 :::
 
-## EM algorithm {#em-algorithm .compact .left-math}
+## EM algorithm {#em-algorithm .compact .left-math visibility="hidden"}
 
 **E-шаг:** условное ожидание полного log-правдоподобия:
 $$Q(\theta\mid\theta^{[t]})=\mathrm{E}_{\color{#B61A51}{Y_{\mathrm{mis}}}\mid \color{#006CC2}{Y_{\mathrm{obs}}},\theta^{[t]}}\bigl[\log f(\color{#006CC2}{Y_{\mathrm{obs}}},\color{#B61A51}{Y_{\mathrm{mis}}}\mid\theta)\bigr]$$
@@ -1858,7 +1858,7 @@ EM применим и к другим латентным переменным, 
 Dempster, Laird & Rubin (1977), https://doi.org/10.1111/j.2517-6161.1977.tb01600.x.
 :::
 
-## EM algorithm {#em-univariate .compact .left-math}
+## EM algorithm {#em-univariate .compact .left-math visibility="hidden"}
 
 $Y^{(i)}\sim\mathcal N(\mu,\sigma^2)$, $\sigma^2$ известна, пропуски MCAR.
 
@@ -1883,7 +1883,7 @@ $$\mu^{[t+1]}-\bar y_{\mathrm{obs}}
 ожидания суммы y⁽ⁱ⁾. При неизвестной дисперсии нужно и ожидание квадратов.
 :::
 
-## EM algorithm {#em-second-moment .compact .left-math}
+## EM algorithm {#em-second-moment .compact .left-math visibility="hidden"}
 
 При пропуске САД вычисляем **два** условных момента:
 
@@ -1909,7 +1909,7 @@ Supplemented EM или бутстреп; обычный EM сам их не вы
 Kenward & Molenberghs (1998); Meng & Rubin (1991).
 :::
 
-## Ограничения ММП и EM {#ml-limitations .compact}
+## Ограничения ММП и EM {#ml-limitations .compact visibility="hidden"}
 
 ::: {.incremental}
 - Нужна модель данных.
@@ -1972,7 +1972,7 @@ uncertainty_table(sim_iv, 'MAR')
 истинного параметра, а не оценки по полным данным.
 :::
 
-## Single imputation {#rubin-quote .rubin-quote-slide}
+## Single imputation {#rubin-quote .rubin-quote-slide visibility="hidden"}
 
 ::: {.rubin-quote}
 > Imputing one value for a missing datum cannot be correct in general, because we don’t know
@@ -1994,7 +1994,7 @@ https://stefvanbuuren.name/fimd/ch-mi.html, проверено 2026-11-26); пе
 и покрытие интервалов ниже номинального. Ответ Рубина – множественная импутация.
 :::
 
-## От стохастической регрессии к MI {#mi-bridge .compact}
+## От стохастической регрессии к MI {#mi-bridge .compact visibility="hidden"}
 
 1. **Impute:** создать $m$ правдоподобных заполнений, сохраняя $Y_{\mathrm{obs}}$.
 2. **Analyze:** получить $\widehat\theta_\ell$ и $U_\ell=\mathrm{SE}_\ell^2$ в каждой копии.
@@ -2018,7 +2018,7 @@ MI – более общий подход, чем повторение норм�
 Rubin (1987), van Buuren (2018).
 :::
 
-## Как связаны ММП, EM и MI {#mi-and-ml .compact}
+## Как связаны ММП, EM и MI {#mi-and-ml .compact visibility="hidden"}
 
 - **ММП:** интегрировать скрытые данные в наблюдаемом правдоподобии,
   затем максимизировать его по параметрам.
@@ -2042,7 +2042,7 @@ MI не является в общем случае Monte Carlo-вычислен
 связанные, но разные вопросы; их нельзя заменять одним формальным ярлыком.
 :::
 
-## Литература: книги {#references-books .references}
+## Литература: книги {#references-books .references visibility="hidden"}
 - Little R.J.A., Rubin D.B. Statistical Analysis with Missing Data, 3rd ed. Wiley, 2019.
 - van Buuren S. Flexible Imputation of Missing Data, 2nd ed. CRC Press, 2018.
 - Enders C.K. Applied Missing Data Analysis, 2nd ed. Guilford Press, 2022.
@@ -2050,14 +2050,14 @@ MI не является в общем случае Monte Carlo-вычислен
 - Rubin D.B. Multiple Imputation for Nonresponse in Surveys. Wiley, 1987.
 - Schafer J.L. Analysis of Incomplete Multivariate Data. Chapman & Hall, 1997.
 
-## Литература: обзоры и руководства {#references-reviews .references}
+## Литература: обзоры и руководства {#references-reviews .references visibility="hidden"}
 - Seaman S.R., White I.R. (2013). Review of inverse probability weighting for dealing with missing data. Stat Methods Med Res 22: 278–295.
 - Li L., Shen C., Li X., Robins J.M. (2013). On weighting approaches for missing data. Stat Methods Med Res 22: 14–30.
 - Andridge R.R., Little R.J.A. (2010). A review of hot deck imputation for survey non-response. Int Stat Rev 78: 40–64.
 - National Research Council. The Prevention and Treatment of Missing Data in Clinical Trials. 2010.
 - EMA. Guideline on Missing Data in Confirmatory Clinical Trials. 2010.
 
-## Литература: механизмы и простые методы {#references-methods .references}
+## Литература: механизмы и простые методы {#references-methods .references visibility="hidden"}
 - Rubin D.B. (1976). Inference and missing data. Biometrika 63: 581–592.
 - Little R.J.A. (1988). A test of missing completely at random for multivariate data with missing values. JASA 83: 1198–1202.
 - Little R.J.A. (1992). Regression with missing X’s: a review. JASA 87: 1227–1237.
@@ -2067,7 +2067,7 @@ MI не является в общем случае Monte Carlo-вычислен
 - Greenland S., Finkle W.D. (1995). A critical look at methods for handling missing covariates in epidemiologic regression analyses. Am J Epidemiol 142: 1255–1264.
 - Jones M.P. (1996). Indicator and stratification methods for missing explanatory variables in multiple linear regression. JASA 91: 222–230.
 
-## Литература: правдоподобие и EM {#references-likelihood .references}
+## Литература: правдоподобие и EM {#references-likelihood .references visibility="hidden"}
 - Anderson T.W. (1957). Maximum likelihood estimates for a multivariate normal distribution when some observations are missing. JASA 52: 200–203.
 - Dempster A.P., Laird N.M., Rubin D.B. (1977). Maximum likelihood from incomplete data via the EM algorithm. JRSS B 39: 1–38.
 - Meng X.-L., Rubin D.B. (1991). Using EM to obtain asymptotic variance–covariance matrices: the SEM algorithm. JASA 86: 899–909.
