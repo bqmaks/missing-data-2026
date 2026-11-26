@@ -136,7 +136,6 @@
 }
 .reveal :is(#missing-examples, #inference) li.fragment.current-fragment { color: #1a1a1a; }
 .reveal #inference li.fragment.visible:not(.current-fragment) { color: #555; }
-.reveal :is(#missing-examples, #inference) li.fragment::before { color: currentColor; }
 @media (prefers-reduced-motion: reduce) {
   .reveal :is(#missing-examples, #inference) li.fragment { transition: none; }
 }
@@ -308,9 +307,9 @@
 /* Доля пропусков – цветом пропусков (D21, D43). */
 .reveal .missing-value, .reveal .missing-value strong { color: var(--course-missing); }
 /* Таблицы θ / θ̂: стиль задан общими правилами .estimates (D36, D39). */
-.reveal :is(#mcar, #mar, #mnar) .theta-table { font-size: 20px; }
+.reveal :is(#mcar, #mar, #mnar, #mean-imputation, #regression-imputation, #stochastic-imputation, #ml-method) .theta-table { font-size: 20px; }
 .reveal .theta-table td strong { font-weight: 700; color: inherit; }
-.reveal :is(#mcar, #mar, #mnar) .theta-table :is(th, td) { padding: .3em .32em; }
+.reveal :is(#mcar, #mar, #mnar, #mean-imputation, #regression-imputation, #stochastic-imputation, #ml-method) .theta-table :is(th, td) { padding: .3em .32em; }
 .reveal .comparison .theta-table { font-size: 20px; }
 .reveal .comparison .theta-table :is(th, td) { padding: .3em .3em; }
 
@@ -606,3 +605,167 @@ html.print-pdf .reveal .widget-print .cell-output-display { text-align: center; 
   box-shadow: none;
 }
 .reveal #naming .naming-credit { display: block; margin-top: 8px; font-size: 18px; color: #536574; }
+
+/* Определение механизма по данным (D46): пошаговое раскрытие как на слайде цели вывода –
+   текущий шаг черный, предыдущие темно-серые. */
+.reveal #check-mechanism > ul {
+  display: block;
+  margin: 18px 0 0 1.1em;
+  font-size: 31px;
+  line-height: 1.32;
+}
+.reveal #check-mechanism li { margin-bottom: .28em; }
+.reveal #check-mechanism ul ul {
+  display: block;
+  list-style: none;
+  margin: .2em 0 0 1.15em;
+  font-size: inherit;
+  line-height: inherit;
+}
+.reveal #check-mechanism ul ul li:last-child { margin-bottom: 0; }
+.reveal #check-mechanism li.fragment { color: #a8a8a8; transition: opacity .2s ease, color .2s ease; }
+.reveal #check-mechanism li.fragment.visible:not(.current-fragment) { color: #555; }
+.reveal #check-mechanism li.fragment.current-fragment { color: #1a1a1a; }
+.reveal #check-mechanism li.fragment :is(strong, code) { color: inherit; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal #check-mechanism li.fragment { transition: none; }
+}
+
+/* Стратифицированный анализ: рисунок по центру. */
+.reveal #strat-density .cell-output-display { text-align: center; }
+
+/* Методы анализа неполных данных: две колонки, правая появляется по пробелу. */
+.reveal #methods-overview .columns { font-size: 27px; }
+.reveal #methods-overview h3 { margin-bottom: .1em; font-size: 29px; }
+.reveal #methods-overview .methods-note { color: #536574; font-size: 24px; }
+.reveal #methods-overview ul { margin-top: .35em; }
+.reveal #methods-overview li { margin-bottom: .18em; }
+.reveal #methods-overview ul ul { margin-top: .1em; }
+
+/* Потеря полных случаев: схема Y1–Y4 и график рядом, подписи под ними (D52). */
+.reveal .pattern-panel .pattern-col { font-family: inherit; font-size: 26px; fill: #1a1a1a; }
+.reveal .pattern-panel .pattern-note { font-family: inherit; font-size: 26px; font-weight: 700; }
+.reveal #cc-loss .columns { font-size: 26px; }
+.reveal #cc-loss .column { box-sizing: border-box; padding: 0 12px; }
+/* Схема вдвое уже графика (D53): та же высота, половина прежней ширины. */
+.reveal #cc-loss .pattern-panel { width: 46%; margin: 0 auto; }
+.reveal #cc-loss .cell-output-display { text-align: center; }
+/* Подписи – отдельный ряд колонок, поэтому левая и правая начинаются на одной высоте. */
+.reveal #cc-loss .cc-loss-captions { margin-top: .4em; align-items: flex-start; }
+.reveal #cc-loss .cc-loss-captions p { margin: 0 0 .35em; line-height: 1.35; }
+.reveal #cc-loss ul { margin-top: .2em; }
+.reveal #cc-loss .observed-value, .reveal #cc-loss .observed-value strong { color: var(--course-observed); }
+
+/* Когда complete case валиден и оптимален. */
+.reveal #cc-valid :is(ul, p) { font-size: 27px; }
+.reveal #cc-valid .cc-group { display: block; margin: .5em 0 .15em; font-weight: 700; color: var(--course-observed); font-size: 29px; }
+.reveal #cc-valid li { margin-bottom: .2em; }
+
+/* IPW на бинарном примере (D54): сверху рисунок и формулы, снизу таблица. */
+.reveal #binary-mar .binary-top { align-items: center; }
+.reveal #binary-mar .binary-top .cell-output-display { text-align: center; }
+.reveal #binary-mar .binary-formulas { font-size: 24px; padding-left: 48px; box-sizing: border-box; }
+.reveal #binary-mar .binary-formulas .MathJax_Display { text-align: left !important; margin: .3em 0 !important; }
+.reveal #binary-mar .binary-ipw-table { font-size: 21px; margin: 4px 0 0; }
+.reveal #binary-mar .binary-ipw-table :is(th, td) { padding: .22em .5em; text-align: right; }
+.reveal #binary-mar .binary-ipw-table tbody tr:last-child { border-top: 2px solid #1a1a1a; }
+
+/* Таблица оценок CC при трех механизмах – по центру по вертикали (D54). */
+.reveal #complete-cases .vcenter { height: 690px; display: flex; flex-direction: column; justify-content: center; }
+
+/* Покрытие и ширина 95% ДИ (D54). */
+.reveal .uncertainty-table { font-size: 22px; margin: 30px auto 0; }
+.reveal .uncertainty-table :is(th, td) { padding: .35em .6em; text-align: right; }
+.reveal .uncertainty-table thead th { text-align: center; }
+.reveal .uncertainty-table thead tr:last-child th { font-size: 18px; font-weight: 600; }
+.reveal .uncertainty-table tbody th.estimate-observed { color: var(--course-observed); }
+.reveal .uncertainty-table tbody th.estimate-imputed { color: var(--course-missing); }
+.reveal .uncertainty-table td.estimate-imputed { color: var(--course-missing); }
+
+/* Available case: lm и lavaan::sem на полных данных, коэффициенты строкой (D52). */
+.reveal #available-cases div.sourceCode { margin: .5em 0 .2em; }
+.reveal #available-cases div.sourceCode pre { max-height: none; margin: 0; }
+.reveal #available-cases div.sourceCode :is(pre, code) { font-size: 21px; line-height: 1.4; }
+.reveal #available-cases .ac-row { font-size: 22px; width: auto; margin: .2em 0 .6em; }
+.reveal #available-cases .ac-row :is(th, td) { padding: .25em 1.2em; text-align: right; }
+.reveal #available-cases > ul { margin-top: .8em; font-size: 30px; }
+.reveal #available-cases > ul li { margin-bottom: .3em; }
+
+/* Пошаговое раскрытие на слайдах CC (валидность) и available case (D53):
+   текущий пункт черный, предыдущие темно-серые, как на слайде 23. */
+.reveal :is(#cc-valid, #available-cases) li.fragment { color: #a8a8a8; transition: opacity .2s ease, color .2s ease; }
+.reveal :is(#cc-valid, #available-cases) li.fragment.visible:not(.current-fragment) { color: #555; }
+.reveal :is(#cc-valid, #available-cases) li.fragment.current-fragment { color: #1a1a1a; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal :is(#cc-valid, #available-cases) li.fragment { transition: none; }
+}
+
+/* Missing indicator method (D58): исходная таблица → преобразованная, затем код и пункты. */
+.reveal #missing-indicator .mi-tables { display: flex; align-items: center; justify-content: center; gap: 48px; margin-top: 6px; }
+.reveal #missing-indicator .mi-table { font-size: 22px; border-collapse: collapse; margin: 0; }
+.reveal #missing-indicator .mi-table :is(th, td) { padding: .2em .9em; text-align: right; border-bottom: 1px solid #e3e8ee; }
+.reveal #missing-indicator .mi-table thead th { border-bottom: 2px solid #1a1a1a; color: #1a1a1a; }
+.reveal #missing-indicator .mi-table td { color: var(--course-observed); }
+.reveal #missing-indicator .mi-table td.mi-na { color: var(--course-missing); font-weight: 700; }
+.reveal #missing-indicator .mi-arrow { font-size: 54px; color: #858B94; line-height: 1; }
+.reveal #missing-indicator div.sourceCode { width: fit-content; margin: 30px 0 10px; }
+.reveal #missing-indicator div.sourceCode :is(pre, code) { font-size: 22px; }
+.reveal #missing-indicator > ul { font-size: 28px; margin-top: .3em; }
+.reveal #missing-indicator > ul li { margin-bottom: .2em; }
+
+/* LOCF (D58): пункты сверху, рисунок снизу. */
+.reveal #locf > ul { font-size: 28px; margin: 4px 0 6px; }
+.reveal #locf > ul li { margin-bottom: .12em; }
+
+/* Пошаговые пункты на слайдах missing indicator и LOCF – как на слайде 23. */
+.reveal :is(#missing-indicator, #locf) li.fragment { color: #a8a8a8; transition: opacity .2s ease, color .2s ease; }
+.reveal :is(#missing-indicator, #locf) li.fragment.visible:not(.current-fragment) { color: #555; }
+.reveal :is(#missing-indicator, #locf) li.fragment.current-fragment { color: #1a1a1a; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal :is(#missing-indicator, #locf) li.fragment { transition: none; }
+}
+
+/* Маркеры пунктов везде синие, как в шаблоне (D60): на пошаговых слайдах меняется только цвет текста. */
+
+/* Цитата Рубина после таблиц 95% ДИ (D60): без видимого заголовка, цитата по центру. */
+.reveal .slides section#rubin-quote {
+  top: 0 !important;
+  height: var(--slide-height, 900px);
+  padding: 80px 140px 84px !important;
+  box-sizing: border-box;
+}
+.reveal .slides #rubin-quote > h2 { display: none; }
+.reveal #rubin-quote .rubin-quote {
+  position: absolute; left: 140px; right: 140px; top: 50%; transform: translateY(-50%);
+  padding: 40px 56px; background: #f0f0f0; box-sizing: border-box;
+}
+.reveal #rubin-quote .rubin-quote blockquote {
+  width: auto; margin: 0; padding: 0; border: 0; box-shadow: none;
+  font-size: 40px; line-height: 1.35; font-style: normal; color: #1a1a1a;
+}
+.reveal #rubin-quote .rubin-quote blockquote p { margin: 0; }
+.reveal #rubin-quote .definition-source { margin-top: 22px; font-size: 24px; line-height: 1.4; color: #536574; }
+.reveal #rubin-quote .definition-source p { margin: 0; }
+
+/* Слайды ММП (D63): подзаголовки, формулы по левому краю, пошаговые свойства. */
+.reveal .ml-subhead { display: block; margin: .45em 0 0; font-weight: 700; color: var(--course-observed); font-size: 28px; }
+.reveal #ml-normal .columns { font-size: 25px; }
+.reveal #ml-normal .MathJax_Display { margin: .35em 0 !important; }
+.reveal #observed-likelihood .MathJax_Display { margin: .35em 0 !important; }
+.reveal #maximum-likelihood li.fragment { color: #a8a8a8; transition: opacity .2s ease, color .2s ease; }
+.reveal #maximum-likelihood li.fragment.visible:not(.current-fragment) { color: #555; }
+.reveal #maximum-likelihood li.fragment.current-fragment { color: #1a1a1a; }
+.reveal #maximum-likelihood li.fragment strong { color: inherit; }
+.reveal #distinctness-example .estimates { font-size: 22px; }
+.reveal #ignorability .MathJax_Display { margin: .2em 0 .1em !important; }
+
+/* Ограничения ММП и EM, пошаговые пункты (D64). */
+.reveal #ml-limitations > ul { font-size: 29px; }
+.reveal #ml-limitations li { margin-bottom: .25em; }
+.reveal #ml-limitations li.fragment { color: #a8a8a8; transition: opacity .2s ease, color .2s ease; }
+.reveal #ml-limitations li.fragment.visible:not(.current-fragment) { color: #555; }
+.reveal #ml-limitations li.fragment.current-fragment { color: #1a1a1a; }
+.reveal #mar-factorization .MathJax_Display { margin: .25em 0 !important; }
+.reveal #mar-factorization .ml-final-line { margin-top: .9em; }
+.reveal :is(#ml-bvn-canonical, #ml-bvn-regression) :is(p, ul) { font-size: 27px; }
+.reveal :is(#ml-bvn-canonical, #ml-bvn-regression) .MathJax_Display { margin: .45em 0 !important; }

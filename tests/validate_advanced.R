@@ -46,4 +46,31 @@ for(i in seq_len(nrow(s))) {
     close(sqrt(mean(covered)*(1-mean(covered))/3000),row$mcse_coverage,1e-10)
   }
 }
-cat('OK: ML/EM, direct likelihood, IPW, group truth, new examples and 189 simulation summaries.\n')
+# Binary IPW (Hajek) equals the group CC means weighted by full-sample group shares.
+g <- a$binary$groups
+close(a$binary_ipw$mean_SBP, sum(g$n * g$CC) / sum(g$n))
+close(a$binary_ipw$w, g$n / g$n_obs)
+# Demo for CC loss / available case: disjoint 25% blocks, lm == lavaan on full-data moments.
+o <- a$demo$observed
+stopifnot(identical(a$demo$full, ac_demo()$full), all(rowSums(is.na(o)) <= 1),
+          all(a$ac$missing_share == c(0, .25, .25, .25)), a$ac$n_cc == 250,
+          all(a$ac$n_pairs[1, -1] == 750), all(a$ac$n_pairs[2:4, 2:4][upper.tri(diag(3))] == 500))
+close(a$ac$lm_full, a$ac$sem_full, 1e-6)
+close(a$ac$sem_ac, solve(cov(o, use = 'pairwise.complete.obs')[-1, -1],
+                         cov(o, use = 'pairwise.complete.obs')[-1, 1])
+      |> (\(b) c(mean(o$Y1) - sum(b * colMeans(o[-1], na.rm = TRUE)), b))(), 1e-6)
+# Interval summary (D54): coverage and mean width recomputed from retained replicates.
+iv <- read.csv('data/simulation-intervals.csv')
+stopifnot(nrow(iv) == 3*6*4, all(iv$B == 3000))
+for (i in seq_len(nrow(iv))) {
+  row <- iv[i,]; dd <- r[r$scenario==row$scenario & r$method==row$method,]
+  lo <- dd[[paste0('lo_', row$parameter)]]; hi <- dd[[paste0('hi_', row$parameter)]]
+  close(mean(lo <= row$truth & row$truth <= hi), row$coverage, 1e-10)
+  close(mean(hi - lo), row$mean_width, 1e-10)
+  close(sd(hi - lo)/sqrt(3000), row$mcse_width, 1e-10)
+}
+# ML Wald intervals: the analytic MLE is the maximum of the observed likelihood used for the Hessian.
+d <- ex$observed$MAR; ci <- ml_intervals(d)
+stopifnot(all(ci[c(1,3,5,7)] < a$ml$parameters[c('mean_SBP','correlation','slope_SBP','slope_BMI')]),
+          all(ci[c(2,4,6,8)] > a$ml$parameters[c('mean_SBP','correlation','slope_SBP','slope_BMI')]))
+cat('OK: ML/EM, direct likelihood, IPW, group truth, binary IPW, AC demo, new examples, 189 simulation summaries and 72 interval summaries.\n')

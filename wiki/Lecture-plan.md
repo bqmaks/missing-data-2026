@@ -2,7 +2,8 @@
 
 **2026-11-25.** Источник — `course-inputs/missing_data_combined_v2.pptx`, 43 слайда.
 По итогам интервью — одна презентация в порядке PPTX, плотные темы разделены.
-В HTML **66 экранов**, включая титульный. Исходная выборка ИМТ–САД сохранена.
+Порядок блока механизмов и простых методов изменен по D46–D50 (2026-11-26).
+В HTML **60 экранов**, включая титульный (2026-11-26, D61–D62). Исходная выборка ИМТ–САД сохранена.
 По D25 план занятия удален; определение и примеры разделены на слайды 3 и 4.
 Общее число экранов осталось прежним.
 
@@ -24,24 +25,23 @@
 | 10 | Missingness mechanisms (определение механизма); Rubin’s Typology – о Рубине (фото, работы, цитирования, интервью) и определения MCAR, MAR, MNAR; слайд с цитатой Heiss и скриншотом Википедии о MAR; Hand’s Typology с обложкой и лекцией (D32, D33, D37) | `mechanisms`, `rubin-bio`, `rubin-typology`, `naming`, `hand-terms` |
 | 11 | MCAR: формула механизма, доля пропусков, крупный график и таблица θ / θ̂_CD / θ̂_CC с жирными смещенными оценками (D40, D43–D45) | `mcar` |
 | 12 | MAR: logit Pr(M^{(i)}_{САД} = 1 | Y^{(i)}_{ИМТ}), то же оформление (D40, D43–D45) | `mar` |
+| 17, 18 | MAR и взвешивание по обратной вероятности: бинарный предиктор (ИМТ ≥ 30), веса 1/π̂ по группам; сразу после MAR, расширение и SE в заметках (D50) | `binary-mar` |
 | 13 | MNAR: logit Pr(M^{(i)}_{САД} = 1 | Y^{(i)}_{САД}), то же оформление (D40, D43–D45) | `mnar` |
-| 14 | Что можно проверить по данным | `check-mechanism` |
-| 15 | Анализ полных случаев (complete-case analysis) | `complete-cases` |
-| 16 | Неэффективность CC: полных случаев почти не остается | `cc-loss` |
-| 17 | MAR: бинарный и количественный предиктор пропуска | `binary-mar` |
-| 18 | Взвешивание по обратной вероятности (IPW) | `ipw`, `ipw-estimates` |
-| 19 | Попарное удаление (pairwise deletion) | `available-cases`, `pairwise-matrix` |
-| 20 | Одиночная импутация: замена средним (mean imputation) | `mean-imputation`, `mean-estimates` |
-| 21 | Регрессионная импутация (regression imputation) | `regression-imputation`, `regression-estimates` |
-| 22 | Стохастическая регрессионная импутация | `stochastic-imputation`, `stochastic-estimates` |
-| 23 | Третий критерий: покрытие 95% ДИ при одиночной импутации | `coverage` |
-| 24 | Методы с донорами (donor-based): hot deck и kNN | `donor-methods` |
-| 25 | LOCF и BOCF: перенос наблюдения вперед | `locf` |
-| 26 | LOCF на примере: выбывание случайно, а эффект смещен | `locf-widget` |
-| 27 | Одиночная импутация занижает неопределенность | `single-uncertainty` |
-| 28 | Missing-indicator method (количественные ковариаты) | `missing-indicator` |
-| 29 | Missing-category method (категориальные переменные) | `missing-category`, `missing-category-estimates` |
-| 30 | Итог: что дает каждый простой метод | `simple-summary`, `uncertainty-summary` |
+| 14 | Определение механизма по данным: 5 пунктов, 10 шагов (D46) | `check-mechanism` |
+| – | Стратифицированный анализ по пропускам: плотности ИМТ и САД, 2 × 3 (D46) | `strat-density` |
+| – | Методы анализа неполных данных: ad hoc и методы при MAR (D49) | `methods-overview` |
+| 15 | Complete Case Analysis: таблица θ, θ̂_CD, θ̂_CC при MCAR / MAR / MNAR (D52) | `complete-cases` |
+| 16 | Complete Case Analysis: схема 20 × 4 и график доли полных строк с подписями (D52); когда CC валиден и оптимален (D52) | `cc-loss`, `cc-valid` |
+| 19 | Available Case Analysis: lm и lavaan::sem на полных данных, коэффициенты, два пункта о свойствах (D52) | `available-cases` |
+| 20 | Mean imputation (marginal / unconditional mean imputation): MAR, график и таблица θ, θ̂_CD, θ̂_MI (D54) | `mean-imputation` |
+| 21 | Regression imputation (conditional mean imputation): MAR, θ̂_RI (D54) | `regression-imputation` |
+| 22 | Stochastic regression imputation: MAR, θ̂_SRI (D54) | `stochastic-imputation` |
+| 29 | Missing category method: один слайд с двумя графиками (пол известен / категория «Missing»), перенесен перед ММП (D55) | `missing-category` |
+| 28 | Missing indicator method: перенесен сразу после missing category, содержание не менялось (D56) | `missing-indicator` |
+| 25, 26 | LOCF: три пункта и два рисунка траекторий (полные / после LOCF); интерактив удален (D58) | `locf` |
+| – | Maximum likelihood method: MAR, график и таблица θ̂_ML; теория ММП будет вставлена перед этим слайдом (D54) | `ml-method` |
+| 23 | «95% ДИ, MCAR», «95% ДИ, MAR» – покрытие и средняя ширина для CD, CC, MI, RI, SRI, ML (D54) | `uncertainty-mcar`, `uncertainty-mar` |
+| – | Цитата Рубина об одиночной импутации (FIMD, гл. 2), без видимого заголовка (D60) | `rubin-quote` |
 | 31 | Метод максимального правдоподобия (maximum likelihood) | `maximum-likelihood` |
 | 32 | Правдоподобие при пропусках: модель для (Y_obs, Y_mis, M) | `observed-likelihood` |
 | 33 | При MAR механизм пропусков выносится из-под интеграла | `mar-factorization` |
