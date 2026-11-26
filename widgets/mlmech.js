@@ -117,14 +117,18 @@ export function mlMechanismWidget(d3, data) {
   const table = element('table', undefined, {class: 'estimates mdw-mlmech-table'}); root.append(table);
   const fmt = (v, d) => (v < 0 ? '−' : '') + Math.abs(v).toFixed(d);
   const eqBMI = p => `${fmt(p.intercept_BMI, 2)} + ${fmt(p.slope_BMI, 3)} × САД`;
+  const eqSBP = p => `${fmt(p.intercept_SBP, 2)} + ${fmt(p.slope_SBP, 2)} × ИМТ`;
+  // Третий элемент – смещена ли оценка CC при MAR (Monte Carlo, D40): E(САД | ИМТ) не смещена.
   const rows = [
-    ['μ<sub>САД</sub>', p => fmt(p.mean_SBP, 1)], ['σ<sub>САД</sub>', p => fmt(p.sd_SBP, 1)],
-    ['ρ<sub>XY</sub>', p => fmt(p.correlation, 3)], ['E(ИМТ | САД)', eqBMI]];
+    ['μ<sub>САД</sub>', p => fmt(p.mean_SBP, 1), true], ['σ<sub>САД</sub>', p => fmt(p.sd_SBP, 1), true],
+    ['ρ<sub>XY</sub>', p => fmt(p.correlation, 3), true], ['E(САД | ИМТ)', eqSBP, false],
+    ['E(ИМТ | САД)', eqBMI, true]];
   // Без столбца θ̂_CD (D68): сравниваем истину, полные случаи и текущее λ.
   table.innerHTML = '<thead><tr><th>Параметры</th><th>θ</th><th>θ̂<sub>CC</sub></th>' +
-    '<th class="mdw-now">θ̂(λ)</th></tr></thead><tbody>' + rows.map(([lbl, f], r) =>
+    '<th class="mdw-now">θ̂(λ)</th></tr></thead><tbody>' + rows.map(([lbl, f, biased], r) =>
       `<tr><th scope="row">${lbl}</th><td>${f(data.truth)}</td>` +
-      `<td class="estimate-observed"><strong>${f(cc)}</strong></td><td class="estimate-observed" data-row="${r}"></td></tr>`).join('') + '</tbody>';
+      `<td class="estimate-observed">${biased ? `<strong>${f(cc)}</strong>` : f(cc)}</td>` +
+      `<td class="estimate-observed" data-row="${r}"></td></tr>`).join('') + '</tbody>';
 
   function render() {
     const lambda = Number(slider.value);
