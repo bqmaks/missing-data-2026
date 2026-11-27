@@ -18,37 +18,37 @@ plot_cc_loss <- function() {
   lines(p,100*.95^p,lwd=3,col=course_colors[['observed']])
   legend('topright',c('10% NA в каждой','5% NA в каждой'),col=c(course_colors[['missing']],course_colors[['observed']]),lwd=3,bty='n')
 }
-# Missing category method (D55, D58): две квадратные панели. Цвет точек различает пол
-# (оранжевый – женщины, бирюзовый – мужчины); строки с пропущенным полом – красные (D21).
-# Тонкие черные – истинные условные прямые, толстые – оценки модели.
+# Missing category method (D55, D58, D72): две квадратные панели без заголовков. Цвет точек
+# различает пол (оранжевый – женщины, бирюзовый – мужчины); строки с пропущенным полом –
+# красные (D21). Истинные прямые не рисуем (D72): только оценки по данным – отдельная
+# линейная регрессия САД на ИМТ в каждой группе, в пределах ИМТ этой группы.
+category_strata <- function(d, group) {
+  lapply(split(d, group, drop = TRUE), function(g) {
+    b <- coef(lm(SBP ~ BMI, g)); x <- range(g$BMI)
+    list(coef = b, x = x, y = b[1] + b[2] * x)
+  })
+}
 plot_category <- function(a) {
   old <- par(no.readonly = TRUE); on.exit(par(old))
-  d <- a$category$data; tr <- a$category$truth
-  par(mfrow = c(1, 2), pty = 's', mar = c(4.2, 4.7, 2.4, .8), mgp = c(2.8, .8, 0), family = 'sans', cex = 1.05)
+  d <- a$category$data
+  par(mfrow = c(1, 2), pty = 's', mar = c(4.2, 4.7, 1, .8), mgp = c(2.8, .8, 0), family = 'sans', cex = 1.05)
   # Цвета пола (D58): женщины – оранжевый, мужчины – бирюзовый; синий и красный – семантика курса.
-  sex_cols <- c('#D97706', '#0F766E')
+  group_cols <- c('Женщины' = '#D97706', 'Мужчины' = '#0F766E', 'Нет данных' = course_colors[['missing']])
   xl <- range(d$BMI); yl <- range(d$SBP)
-  truth_lines <- function() {
-    abline(tr[1], tr[2], col = truth_color, lwd = truth_lwd)
-    abline(tr[1] + tr[3], tr[2], col = truth_color, lwd = truth_lwd)
-  }
-  plot(d$BMI, d$SBP, pch = 16, cex = .6, col = adjustcolor(sex_cols[d$male + 1], .45), xlim = xl, ylim = yl,
-       xlab = 'ИМТ (кг/м²)', ylab = 'САД (мм рт. ст.)', main = 'Пол известен', font.main = 1, bty = 'l', las = 1)
-  b <- coef(a$category$full)
-  abline(b[1], b[2], col = sex_cols[1], lwd = estimate_lwd)
-  abline(b[1] + b[3], b[2], col = sex_cols[2], lwd = estimate_lwd)
-  truth_lines()
-  legend('topleft', c('Женщины', 'Мужчины'), col = sex_cols, pch = 16, bty = 'n')
+  strata_lines <- function(fits, cols) for (k in names(fits))
+    lines(fits[[k]]$x, fits[[k]]$y, col = cols[[k]], lwd = estimate_lwd)
+  sex <- factor(ifelse(d$male == 1, 'Мужчины', 'Женщины'), levels = c('Женщины', 'Мужчины'))
+  plot(d$BMI, d$SBP, pch = 16, cex = .6, col = adjustcolor(group_cols[as.character(sex)], .45), xlim = xl, ylim = yl,
+       xlab = 'ИМТ (кг/м²)', ylab = 'САД (мм рт. ст.)', bty = 'l', las = 1)
+  strata_lines(category_strata(d, sex), group_cols)
+  legend('topleft', names(group_cols)[1:2], col = group_cols[1:2], pch = 16, bty = 'n')
+  group <- factor(ifelse(d$M == 1, 'Нет данных', as.character(sex)), levels = names(group_cols))
   known <- d$M == 0
-  plot(d$BMI[known], d$SBP[known], pch = 16, cex = .6, col = adjustcolor(sex_cols[d$male[known] + 1], .2),
-       xlim = xl, ylim = yl, xlab = 'ИМТ (кг/м²)', ylab = 'САД (мм рт. ст.)',
-       main = 'Категория «Missing»', font.main = 1, bty = 'l', las = 1)
-  points(d$BMI[!known], d$SBP[!known], pch = 16, cex = .6, col = adjustcolor(course_colors[['missing']], .6))
-  m <- coef(a$category$missing)
-  abline(m[1], m[2], col = sex_cols[1], lwd = estimate_lwd)
-  abline(m[1] + m[3], m[2], col = sex_cols[2], lwd = estimate_lwd)
-  abline(m[1] + m[4], m[2], col = course_colors[['missing']], lwd = estimate_lwd)
-  truth_lines()
+  plot(d$BMI[known], d$SBP[known], pch = 16, cex = .6, col = adjustcolor(group_cols[as.character(group[known])], .2),
+       xlim = xl, ylim = yl, xlab = 'ИМТ (кг/м²)', ylab = 'САД (мм рт. ст.)', bty = 'l', las = 1)
+  points(d$BMI[!known], d$SBP[!known], pch = 16, cex = .6, col = adjustcolor(group_cols[['Нет данных']], .6))
+  strata_lines(category_strata(d, group), group_cols)
+  legend('topleft', names(group_cols), col = group_cols, pch = 16, bty = 'n')
 }
 plot_distinctness <- function(a) {
   d <- a$distinct;par(mar=c(4,4.6,2,1),mgp=c(2.8,.8,0),family='sans')
@@ -232,12 +232,14 @@ plot_ml_profile <- function(path = 'data/ml-profile.json') {
   }
   mtext('распределение САД', side = 3, line = .4, adj = .1, cex = .85)
 
-  # Профили: 2Δℓ как функция закрепленного параметра.
-  profile_panel <- function(which, name, lr, pick) {
+  # Профили (D99): −2 log Λ(c) – статистика отношения правдоподобий как функция значения
+  # параметра c, Λ(c) = L_p(c) / L(θ̂_ML; Y_obs).
+  # «−2» – строкой: унарный минус plotmath ставит пробел между знаком и цифрой.
+  profile_panel <- function(which, sym, lr, pick) {
     pr <- j$profiles[[which]]; rg <- j$ranges[[which]]
-    par(mar = c(3, 3.4, 2.4, .8))
-    plot(0, type = 'n', xlim = rg, ylim = c(0, j$cap), xaxs = 'i', yaxs = 'i', xlab = '', ylab = '',
-         bty = 'l', yaxt = 'n')
+    par(mar = c(3, 3.8, 2.4, .8))
+    plot(0, type = 'n', xlim = rg, ylim = c(0, j$cap), xaxs = 'i', yaxs = 'i', xlab = '',
+         ylab = bquote('−2' ~ log ~ Lambda(.(sym)['САД'])), bty = 'l', yaxt = 'n')
     axis(2, at = c(0, j$cap / 2, j$cap))
     abline(h = j$chi2, col = ref_col, lty = '33', lwd = 1.3)
     abline(v = pick(e$cc), col = blue, lty = '74', lwd = 1.4)
@@ -246,16 +248,17 @@ plot_ml_profile <- function(path = 'data/ml-profile.json') {
     segments(pick(e$full), 0, pick(e$full), .06 * j$cap, col = truth_color, lwd = 2.4)
     points(pick(e$ml), 0, pch = 19, col = blue, cex = 1.4, xpd = NA)
     text(rg[1], j$chi2, '3.84', adj = c(-.15, -.5), col = ref_col, cex = .85)
-    mtext(sprintf('%s: 2Δℓ = %.1f', name, lr), side = 3, line = .7, adj = 0, at = rg[1] - .14 * diff(rg), cex = .9)
+    mtext(bquote('−2' ~ log ~ Lambda(hat(.(sym))[CC]) == .(sprintf('%.1f', lr))),
+          side = 3, line = .7, adj = 0, at = rg[1] - .14 * diff(rg), cex = .9)
   }
-  profile_panel('mean', 'Среднее САД', j$lr$mean, function(v) v$muY)
-  profile_panel('sd', 'Стандартное отклонение САД', j$lr$sd, function(v) v$sdY)
+  profile_panel('mean', quote(mu), j$lr$mean, function(v) v$muY)
+  profile_panel('sd', quote(sigma), j$lr$sd, function(v) v$sdY)
 
   # Рост статистики с долей добавленных строк.
-  par(mar = c(4, 3.4, 2.4, .8))
+  par(mar = c(4, 3.8, 2.4, .8))
   pct <- 100 * (seq_along(j$curves$mean) - 1) / j$K
-  plot(0, type = 'n', xlim = c(0, 100), ylim = c(0, j$cap), xaxs = 'i', yaxs = 'i', xlab = '', ylab = '',
-       bty = 'l', xaxt = 'n', yaxt = 'n')
+  plot(0, type = 'n', xlim = c(0, 100), ylim = c(0, j$cap), xaxs = 'i', yaxs = 'i', xlab = '',
+       ylab = quote('−2' ~ log ~ Lambda), bty = 'l', xaxt = 'n', yaxt = 'n')
   axis(1, at = seq(0, 100, 20), labels = paste0(seq(0, 100, 20), '%'))
   axis(2, at = c(0, j$cap / 2, j$cap))
   abline(h = j$chi2, col = ref_col, lty = '33', lwd = 1.3)
@@ -267,5 +270,6 @@ plot_ml_profile <- function(path = 'data/ml-profile.json') {
   legend('topleft', c('среднее САД', 'стандартное отклонение САД'), col = blue, lwd = 3, lty = c('solid', '64'),
          pch = c(19, 15), seg.len = 3, bty = 'n', cex = .85)
   mtext('доля добавленных случаев с ИМТ, но без САД', side = 1, line = 2.4, cex = .85)
-  title(main = 'Статистика отношения правдоподобия 2Δℓ для оценки по полным случаям', adj = 0, font.main = 1, cex.main = 1)
+  title(main = quote('Статистика отношения правдоподобий' ~ '−2' ~ log ~ Lambda ~ 'для оценки по полным случаям'),
+        adj = 0, font.main = 1, cex.main = 1)
 }

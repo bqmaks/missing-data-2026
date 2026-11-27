@@ -61,8 +61,9 @@ normal_em <- function(d, tol = 1e-9, maxit = 2000L) {
 
 binary_mar <- function(ex, seed = 20261150L) {
   d <- ex$complete; obese <- d$BMI >= 30
-  # Вероятности пропуска САД: 0.80 при ожирении, 0.10 без него (D58; раньше 0.60 / 0.25).
-  set.seed(seed); M <- rbinom(nrow(d), 1, ifelse(obese, .80, .10)) == 1
+  # Вероятности пропуска САД: 0.10 при ожирении, 0.80 без него (D84; в D58 – 0.80 / 0.10,
+  # раньше 0.60 / 0.25). Пропуск чаще в большей группе с меньшим ИМТ – смещение CC больше.
+  set.seed(seed); M <- rbinom(nrow(d), 1, ifelse(obese, .10, .80)) == 1
   z <- (30 - ex$config$mu['BMI']) / ex$config$sigma['BMI']
   mean_x <- ex$config$mu['BMI'] + ex$config$sigma['BMI'] *
     c(-dnorm(z)/pnorm(z), dnorm(z)/(1-pnorm(z)))

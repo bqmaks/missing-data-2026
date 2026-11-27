@@ -501,6 +501,10 @@ html.print-pdf .reveal .widget-print .cell-output-display { text-align: center; 
 
 /* Missingness mechanisms: определение и две записи механизма. */
 .reveal #mechanisms .math.display { font-size: 34px; }
+/* D81: строка с f видна сразу светло-серой, по пробелу становится черной. */
+.reveal #mechanisms .gray-to-black.fragment { opacity: 1; visibility: visible; color: #A8A8A8; transition: color .25s ease; }
+.reveal #mechanisms .gray-to-black.fragment.visible { color: #1A1A1A; }
+@media (prefers-reduced-motion: reduce) { .reveal #mechanisms .gray-to-black.fragment { transition: none; } }
 
 /* Rubin's Typology (о Рубине): фото слева, работы и цитирования справа. */
 .reveal #rubin-bio .rubin-layout {
@@ -568,6 +572,9 @@ html.print-pdf .reveal .widget-print .cell-output-display { text-align: center; 
 .reveal #rubin-typology .typology-full { font-size: 23px; color: #536574; }
 .reveal #rubin-typology .typology-block .MathJax_Display { margin: .25em 0 !important; }
 .reveal #rubin-typology .mechanism-alt { font-size: 22px; color: #536574; }
+/* D82, D83: один узкий блок игнорируемости внизу – две строки обычным черным текстом. */
+.reveal #rubin-typology .typology-ignorable { padding: 6px 20px 8px; }
+.reveal #rubin-typology .typology-ignorable p { font-size: 28px; font-weight: 400; color: #1a1a1a; line-height: 1.45; }
 
 /* Слайд о названиях: без видимого заголовка, цитата и скриншот Википедии. */
 .reveal .slides section#naming {
@@ -759,6 +766,7 @@ html.print-pdf .reveal .widget-print .cell-output-display { text-align: center; 
 .reveal #maximum-likelihood li.fragment.current-fragment { color: #1a1a1a; }
 .reveal #maximum-likelihood li.fragment strong { color: inherit; }
 .reveal #distinctness-example .estimates { font-size: 22px; }
+.reveal #distinctness-example .column:first-child .math.display { font-size: 75%; } /* D80: формулы на 25% меньше */
 .reveal #ignorability .MathJax_Display { margin: .2em 0 .1em !important; }
 
 /* Ограничения ММП и EM, пошаговые пункты (D64). */
@@ -768,7 +776,7 @@ html.print-pdf .reveal .widget-print .cell-output-display { text-align: center; 
 .reveal #ml-limitations li.fragment.visible:not(.current-fragment) { color: #555; }
 .reveal #ml-limitations li.fragment.current-fragment { color: #1a1a1a; }
 .reveal #mar-factorization .MathJax_Display { margin: .25em 0 !important; }
-.reveal #mar-factorization .ml-final-line { margin-top: .9em; }
+.reveal #mar-factorization .ml-final-line { margin-top: 0; padding-top: 1.1em; }
 .reveal :is(#ml-bvn-canonical, #ml-bvn-regression, #ml-bvn-regression2) :is(p, ul) { font-size: 27px; }
 .reveal :is(#ml-bvn-canonical, #ml-bvn-regression, #ml-bvn-regression2) .MathJax_Display { margin: .45em 0 !important; }
 
@@ -777,4 +785,7 @@ html.print-pdf .reveal .widget-print .cell-output-display { text-align: center; 
 .reveal .with-ref .MathJax_Display { padding-right: 7.5em; box-sizing: border-box; }
 .reveal .with-ref p:has(> .eq-ref) { position: absolute; right: 0; top: 50%; transform: translateY(-50%); margin: 0 !important; }
 .reveal .eq-ref { color: #8A94A0; font-size: 24px; white-space: nowrap; }
+/* Подписи шагов вывода (D79): справа от формул, общий левый край, перед номером формулы. */
+.reveal #mar-factorization .with-ref p:has(> .step-label) { position: absolute; left: 1035px; top: 50%; transform: translateY(-50%); margin: 0 !important; }
+.reveal .step-label { color: #555; font-size: 24px; white-space: nowrap; }
 .reveal .fno { color: #8A94A0; }

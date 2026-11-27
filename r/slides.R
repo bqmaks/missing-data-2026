@@ -237,17 +237,19 @@ plot_binary_ipw <- function(ex, adv) {
     segments(k - .42, g$CC[k], k + .42, g$CC[k], col = course_colors[['observed']], lwd = estimate_lwd)
     segments(k - .42, g$truth[k], k + .42, g$truth[k], col = truth_color, lwd = truth_lwd)
   }
-  # Треугольники острием к оси Y, сдвинуты по горизонтали, чтобы близкие значения не сливались.
+  # Треугольники острием в ось Y, все от одной вертикали (D85). Оценки CC и IPW – внутри
+  # рисунка, истина зеркально – снаружи, слева от оси (D86), чтобы близкие значения не
+  # закрывали друг друга.
   u <- par('usr'); w <- .055 * (u[2] - u[1]); h <- .018 * (u[4] - u[3])
-  tri <- function(y, k, col, fill) polygon(u[1] + k * 1.15 * w + c(0, w, w), y + c(0, h, -h),
-                                           col = fill, border = col, lwd = 1.6, xpd = NA)
-  tri(ex$truth[['mean_SBP']], 0, truth_color, truth_color)
-  tri(adv$binary$overall_CC, 1, course_colors[['observed']], 'white')
-  tri(adv$binary_ipw$mean_SBP, 2, course_colors[['observed']], course_colors[['observed']])
+  tri <- function(y, col, fill, side = 1) polygon(u[1] + side * c(0, w, w), y + c(0, h, -h),
+                                                  col = fill, border = col, lwd = 1.6, xpd = NA)
+  tri(adv$binary$overall_CC, course_colors[['observed']], 'white')
+  tri(adv$binary_ipw$mean_SBP, course_colors[['observed']], course_colors[['observed']])
+  tri(ex$truth[['mean_SBP']], truth_color, truth_color, side = -1)
 }
 
 # Покрытие и средняя ширина 95% ДИ (D54, D66) по data/simulation-intervals.csv:
-# строки – методы, столбцы – параметры × (покрытие, %; ширина); без цветового выделения.
+# строки – методы, столбцы – параметры × (покрытие (%), ширина); без цветового выделения (D93: «Покрытие (%)»).
 uncertainty_table <- function(iv, scenario) {
   methods <- c(Full = 'CD', CC = 'CC', mean = 'MI', regression = 'RI', stochastic = 'SRI', ML = 'ML')
   # Без цвета (D66): в таблицах ДИ методы и значения черные.
@@ -257,7 +259,7 @@ uncertainty_table <- function(iv, scenario) {
   digits <- c(mean_SBP = 2, correlation = 3, slope_SBP = 3, slope_BMI = 4)
   cat('\n```{=html}\n<table class="estimates uncertainty-table"><thead><tr><th rowspan="2">Метод</th>',
       paste0('<th colspan="2">', theta_tex(pars), '</th>', collapse = ''), '</tr><tr>',
-      strrep('<th>Покрытие, %</th><th>Ширина</th>', length(pars)), '</tr></thead><tbody>', sep = '')
+      strrep('<th>Покрытие (%)</th><th>Ширина</th>', length(pars)), '</tr></thead><tbody>', sep = '')
   for (m in names(methods)) {
     cells <- vapply(names(pars), function(p) {
       r <- iv[iv$scenario == scenario & iv$method == m & iv$parameter == p, ]
