@@ -35,3 +35,27 @@ html.print-pdf .widget-print { display: block; }
 .reveal .mdw-mlmech-table { font-size: 17px; margin: 2px auto 0; }
 .reveal .mdw-mlmech-table :is(th, td) { padding: .12em .7em; text-align: right; }
 .reveal .mdw-mlmech-table td.estimate-observed { color: var(--course-observed); }
+/* Интерактив W-MLPROFILE «Профильное правдоподобие» (D71). */
+.reveal .mdw-mlprof { max-width: 1460px; display: grid; grid-template-columns: 54fr 46fr; gap: 0 30px; font-size: 19px; line-height: 1.25; }
+.mdw-mlprof-left, .mdw-mlprof-right { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.mdw-mlprof svg text { font-size: 16px; }
+.mdw-mlprof svg text.mdw-mlprof-title { font-size: 17px; }
+.mdw-mlprof svg text.mdw-mlprof-ref { fill: #64748B; }
+.mdw-mlprof-row { display: grid; gap: 1px; }
+.mdw-mlprof-label small { font-size: 16px; color: #536574; margin-left: .8em; }
+.reveal .mdw-mlprof-note { font-size: 16px; color: #536574; }
+.mdw-mlprof sub, .mdw-mlprof sup { font-size: .7em; line-height: 0; }
+.mdw-mlprof .mdw-ss { display: inline-flex; flex-direction: column; vertical-align: .42em; font-size: .7em; line-height: 1.05; margin: 0 .08em; }
+.mdw-mlprof-play { display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: center; }
+.mdw-mlprof-play button { font-size: 18px; padding: 4px 12px; }
+.mdw-mlprof-legend { display: flex; flex-wrap: wrap; gap: 0 18px; font-size: 16px; margin-top: 4px; }
+.mdw-mlprof-legend > span { display: inline-flex; align-items: center; gap: 6px; }
+.mdw-mlprof-legend svg { width: 46px; height: 16px; flex: none; }
+.mdw-mlprof-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.mdw-mlprof-card { background: #F1F5F9; border-radius: 8px; padding: 5px 12px 7px; }
+.mdw-card-title { font-size: 17px; color: #334155; }
+.mdw-card-body { display: flex; align-items: center; gap: 14px; }
+.mdw-card-value { font-size: 30px; font-weight: 700; color: #1A1A1A; min-width: 2.7em; font-variant-numeric: tabular-nums; }
+.mdw-card-value.is-estimate { color: var(--course-observed); }
+.mdw-card-sub { font-size: 16px; color: #536574; line-height: 1.2; }
+.mdw-mlprof-profiles { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }

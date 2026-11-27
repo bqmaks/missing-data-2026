@@ -175,3 +175,97 @@ plot_ml_mechanism <- function(ex, a) {
   lines(g, kd(1), col = course_colors[['observed']], lwd = estimate_lwd)
   lines(g, tr, col = truth_color, lwd = truth_lwd)
 }
+
+# Статичный вариант интерактива W-MLPROFILE (D71) для печати: настройки по умолчанию,
+# 100% добавленных строк только с ИМТ. Данные выгружены из JS-модуля
+# (node scripts/generate_mlprofile.mjs): генератор mulberry32 в R не воспроизводим.
+# Стили как в интерактиве: синий – оценки по наблюдаемым данным (полные случаи – штрих,
+# ММП – толстая сплошная), черный пунктир – все данные, фиолетовый и коричневый – модели
+# ММП с закрепленным средним и стандартным отклонением САД.
+plot_ml_profile <- function(path = 'data/ml-profile.json') {
+  j <- jsonlite::fromJSON(path)
+  old <- par(no.readonly = TRUE); on.exit(par(old))
+  blue <- course_colors[['observed']]; ref_col <- '#64748B'
+  st <- list(full = list(col = truth_color, lty = '24', lwd = 1.8, pch = 3),
+             cc = list(col = blue, lty = '74', lwd = 2.2, pch = 1),
+             ml = list(col = blue, lty = 'solid', lwd = estimate_lwd, pch = 19),
+             fixedMean = list(col = '#7C3AED', lty = '8323', lwd = 2.2, pch = 15),
+             fixedSd = list(col = '#B45309', lty = 'C4', lwd = 2.2, pch = 15))
+  labels <- c(full = 'все данные до пропусков', cc = 'полные случаи', ml = 'ММП с добавленными случаями',
+              fixedMean = 'ММП при закрепленном среднем САД', fixedSd = 'ММП при закрепленном ст. отклонении САД')
+  e <- j$estimates; x <- j$x; y <- j$y
+  layout(matrix(c(1, 2, 3, 4, 1, 2, 5, 5), 2, byrow = TRUE), widths = c(3.9, 1, 2.75, 2.75))
+  par(family = 'sans', mgp = c(2.6, .7, 0), las = 1, cex = 1)
+
+  # Диаграмма рассеяния: полные пары, засечки ИМТ строк без САД, 95%-е эллипсы и центры.
+  par(mar = c(4.2, 4.6, 2.4, .3))
+  plot(x[j$cc], y[j$cc], xlim = c(14, 40), ylim = c(90, 180), xaxs = 'i', yaxs = 'i', pch = 16, cex = .75,
+       col = adjustcolor(blue, .5), xlab = 'ИМТ (кг/м²)', ylab = 'САД (мм рт. ст.)', bty = 'l')
+  segments(x[j$xOnly], 91, x[j$xOnly], 95, col = blue, lwd = 1.2)
+  xr <- range(x); cc <- e$cc; ml <- e$ml
+  lines(xr, cc$muY + cc$slope * (xr - cc$muX), col = adjustcolor(blue, .8), lwd = 1.4)
+  for (kind in c('fixedMean', 'fixedSd', 'cc', 'ml', 'full')) {
+    p <- j$ellipses[[kind]]; s <- st[[kind]]
+    lines(p[, 1], p[, 2], col = s$col, lty = s$lty, lwd = s$lwd)
+  }
+  segments(cc$muX, cc$muY, 40, cc$muY, col = blue, lty = '74', lwd = 1.2)
+  segments(ml$muX, 90, ml$muX, ml$muY, col = blue, lty = '23', lwd = 1.4)
+  segments(ml$muX, ml$muY, 40, ml$muY, col = blue, lty = '23', lwd = 1.4)
+  for (kind in c('fixedMean', 'fixedSd', 'cc', 'full', 'ml')) {
+    s <- st[[kind]]; v <- e[[kind]]
+    points(v$muX, v$muY, pch = s$pch, col = s$col, bg = 'white', cex = 1.5, lwd = 2.2)
+  }
+  legend('topleft', legend = labels, col = sapply(st, `[[`, 'col'), lty = sapply(st, `[[`, 'lty'),
+         lwd = 2, pch = sapply(st, `[[`, 'pch'), seg.len = 3.2, bg = adjustcolor('white', .85), box.col = NA,
+         cex = .8, inset = c(.01, .01))
+  title(main = sprintf('ρ = %.2f, ψ1 = %.2f; добавлены все %d строки без САД', j$params$rho, j$params$psi1, j$K),
+        adj = 0, font.main = 1, cex.main = .9)
+
+  # Нормальные плотности САД.
+  par(mar = c(4.2, .3, 2.4, .6))
+  g <- seq(90, 180, .5)
+  plot(0, type = 'n', xlim = c(0, .035), ylim = c(90, 180), xaxs = 'i', yaxs = 'i', axes = FALSE, xlab = '', ylab = '')
+  abline(v = 0, col = '#9AA1A9')
+  for (kind in c('cc', 'ml', 'full')) {
+    v <- e[[kind]]; s <- st[[kind]]
+    lines(dnorm(g, v$muY, sqrt(v$varY)), g, col = s$col, lty = s$lty, lwd = s$lwd)
+  }
+  mtext('распределение САД', side = 3, line = .4, adj = .1, cex = .85)
+
+  # Профили: 2Δℓ как функция закрепленного параметра.
+  profile_panel <- function(which, name, lr, pick) {
+    pr <- j$profiles[[which]]; rg <- j$ranges[[which]]
+    par(mar = c(3, 3.4, 2.4, .8))
+    plot(0, type = 'n', xlim = rg, ylim = c(0, j$cap), xaxs = 'i', yaxs = 'i', xlab = '', ylab = '',
+         bty = 'l', yaxt = 'n')
+    axis(2, at = c(0, j$cap / 2, j$cap))
+    abline(h = j$chi2, col = ref_col, lty = '33', lwd = 1.3)
+    abline(v = pick(e$cc), col = blue, lty = '74', lwd = 1.4)
+    segments(pick(e$cc), 0, pick(e$cc), min(lr, j$cap), col = blue, lwd = 6, lend = 1)
+    lines(pr[, 1], pr[, 2], col = blue, lwd = 2.6)
+    segments(pick(e$full), 0, pick(e$full), .06 * j$cap, col = truth_color, lwd = 2.4)
+    points(pick(e$ml), 0, pch = 19, col = blue, cex = 1.4, xpd = NA)
+    text(rg[1], j$chi2, '3.84', adj = c(-.15, -.5), col = ref_col, cex = .85)
+    mtext(sprintf('%s: 2Δℓ = %.1f', name, lr), side = 3, line = .7, adj = 0, at = rg[1] - .14 * diff(rg), cex = .9)
+  }
+  profile_panel('mean', 'Среднее САД', j$lr$mean, function(v) v$muY)
+  profile_panel('sd', 'Стандартное отклонение САД', j$lr$sd, function(v) v$sdY)
+
+  # Рост статистики с долей добавленных строк.
+  par(mar = c(4, 3.4, 2.4, .8))
+  pct <- 100 * (seq_along(j$curves$mean) - 1) / j$K
+  plot(0, type = 'n', xlim = c(0, 100), ylim = c(0, j$cap), xaxs = 'i', yaxs = 'i', xlab = '', ylab = '',
+       bty = 'l', xaxt = 'n', yaxt = 'n')
+  axis(1, at = seq(0, 100, 20), labels = paste0(seq(0, 100, 20), '%'))
+  axis(2, at = c(0, j$cap / 2, j$cap))
+  abline(h = j$chi2, col = ref_col, lty = '33', lwd = 1.3)
+  text(0, j$chi2, '3.84', adj = c(-.15, -.5), col = ref_col, cex = .85)
+  lines(pct, j$curves$mean, col = blue, lwd = 3)
+  lines(pct, j$curves$sd, col = blue, lwd = 3, lty = '64')
+  points(100, tail(j$curves$mean, 1), pch = 19, col = blue, cex = 1.5, xpd = NA)
+  points(100, tail(j$curves$sd, 1), pch = 15, col = blue, cex = 1.5, xpd = NA)
+  legend('topleft', c('среднее САД', 'стандартное отклонение САД'), col = blue, lwd = 3, lty = c('solid', '64'),
+         pch = c(19, 15), seg.len = 3, bty = 'n', cex = .85)
+  mtext('доля добавленных случаев с ИМТ, но без САД', side = 1, line = 2.4, cex = .85)
+  title(main = 'Статистика отношения правдоподобия 2Δℓ для оценки по полным случаям', adj = 0, font.main = 1, cex.main = 1)
+}

@@ -40,6 +40,7 @@
 | 28 | Missing indicator method: перенесен сразу после missing category, содержание не менялось (D56) | `missing-indicator` |
 | 25, 26 | LOCF: три пункта и два рисунка траекторий (полные / после LOCF); интерактив удален (D58) | `locf` |
 | – | Maximum likelihood method: MAR, график и таблица θ̂_ML; теория ММП будет вставлена перед этим слайдом (D54) | `ml-method` |
+| – | Интерактив W-MLPROFILE: строки только с ИМТ сдвигают оценку ММП для САД; 2Δℓ профильного правдоподобия для оценки по полным случаям (D71) | `ml-profile` |
 | 23 | «95% ДИ, MCAR», «95% ДИ, MAR» – покрытие и средняя ширина для CD, CC, MI, RI, SRI, ML (D54) | `uncertainty-mcar`, `uncertainty-mar` |
 | – | Цитата Рубина об одиночной импутации (FIMD, гл. 2), без видимого заголовка (D60) | `rubin-quote` |
 | 31 | Метод максимального правдоподобия (maximum likelihood) | `maximum-likelihood` |
