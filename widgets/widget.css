@@ -1,0 +1,70 @@
+.reveal .mdw { max-width: 1240px; margin: 0 auto; font-size: 22px; color: #1E293B; text-align: left; }
+.mdw svg { display: block; width: 100%; overflow: visible; font-family: inherit; }
+.mdw svg text { font-size: 18px; fill: #1E293B; }
+.mdw button,.mdw select { font: inherit; color: #1E293B; background: #fff; border: 1px solid #94A3B8; border-radius: 6px; padding: 6px 10px; cursor: pointer; }
+.mdw button:hover { background: #EDF5FD; }
+.mdw button[aria-pressed=true] { background: #E0F2FE; border-color: var(--course-observed); }
+.mdw :focus-visible { outline: 3px solid #0F766E; outline-offset: 3px; }
+.mdw input[type=range] { display: block; width: 100%; accent-color: var(--course-observed); }
+.mdw input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--course-observed); flex: 0 0 auto; }
+.mdw output { font-weight: 700; color: var(--course-observed); }
+.mdw .mdw-check { display: flex; align-items: center; gap: 8px; }
+.mdw-patterns { position: relative; }
+.mdw-pattern-panel { position: absolute; top: 0; right: 0; width: 32%; display: grid; gap: 14px; }
+.mdw-pattern-panel label { display: grid; gap: 8px; }
+.mdw-pattern-panel select { width: 100%; }
+.reveal .mdw .mdw-status { background: #F1F5F9; padding: 10px 14px; margin: 8px 0; line-height: 1.3; }
+.mdw-presets { display: flex; gap: 12px; }
+.mdw-presets button { flex: 1; font-size: 19px; }
+.mdw-locf > svg { height: 400px; }
+.mdw-locf > svg text { font-size: 19px; }
+.mdw-ranges { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; font-size: 20px; }
+.mdw-extra { display: flex; align-items: center; gap: 20px; font-size: 19px; margin-top: 12px; }
+.reveal .mdw-formula { font-size: 20px; margin: 8px 0 0; }
+.mdw-formula[hidden] { display:none; }
+.widget-print { display: none; }
+html.print-pdf .widget-live, html.print-pdf .widget-context { display: none !important; }
+html.print-pdf .widget-print { display: block; }
+@media print { .widget-live,.widget-context { display: none !important; } .widget-print { display:block; } }
+/* Интерактив «Как ММП использует строки без САД» (D68). */
+.mdw-mlmech > svg { height: 372px; }
+.mdw-mlmech > svg text { font-size: 18px; }
+.mdw-mlmech-controls { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 24px; margin: 2px 0 4px; font-size: 20px; }
+.mdw-mlmech-lambda { white-space: nowrap; }
+.mdw-mlmech-ends { display: flex; justify-content: space-between; font-size: 15px; color: #536574; }
+.reveal .mdw-mlmech-table { font-size: 17px; margin: 2px auto 0; }
+.reveal .mdw-mlmech-table :is(th, td) { padding: .12em .7em; text-align: right; }
+.reveal .mdw-mlmech-table td.estimate-observed { color: var(--course-observed); }
+/* Интерактив W-MLPROFILE «Профильное правдоподобие» (D71). */
+.reveal .mdw-mlprof { max-width: 1460px; display: grid; grid-template-columns: 54fr 46fr; gap: 0 30px; font-size: 19px; line-height: 1.25; }
+.mdw-mlprof-left, .mdw-mlprof-right { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.mdw-mlprof svg text { font-size: 16px; }
+.mdw-mlprof svg .mdw-mlprof-titlegroup text { font-size: 17px; }
+.mdw-mlprof-row { display: grid; gap: 1px; }
+/* D94: значения регуляторов жирные, без цвета. */
+.mdw-mlprof output { color: inherit; }
+.reveal .mdw-mlprof-note { font-size: 16px; color: #536574; }
+.mdw-mlprof sub, .mdw-mlprof sup { font-size: .7em; line-height: 0; }
+.mdw-mlprof .mdw-ss { display: inline-flex; flex-direction: column; vertical-align: .42em; font-size: .7em; line-height: 1.05; margin: 0 .08em; }
+.mdw-mlprof-play { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; }
+.mdw-mlprof .mdw-mlprof-playbtn { width: 30px; height: 30px; padding: 0; display: grid; place-items: center; border-radius: 50%; }
+.mdw-mlprof .mdw-mlprof-playbtn svg { width: 12px; height: 12px; fill: #1E293B; }
+.mdw-mlprof-legend { display: flex; flex-wrap: wrap; gap: 0 18px; font-size: 16px; margin-top: 4px; }
+.mdw-mlprof-legend > span { display: inline-flex; align-items: center; gap: 6px; }
+.mdw-mlprof-legend svg { width: 46px; height: 16px; flex: none; }
+.mdw-mlprof-sections { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 44px; }
+/* D97: оба графика профиля ниже карточек, между ними шире промежуток. */
+.mdw-mlprof-section > svg { margin-top: 28px; }
+.mdw-mlprof-section { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+/* D96: нижний график −2 log Λ прижат к низу колонки – подпись оси X на уровне подписи ИМТ слева. */
+.mdw-mlprof-growth { margin-top: auto; }
+.mdw-mlprof-card { background: #F1F5F9; border-radius: 8px; padding: 4px 12px 6px; }
+.mdw-card-title { font-size: 19px; font-weight: 700; color: #1A1A1A; }
+.mdw-card-body { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.mdw-card-main { font-size: 20px; color: var(--course-observed); white-space: nowrap; }
+.mdw-card-value { font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.mdw-card-sub { font-size: 16px; color: #1A1A1A; line-height: 1.25; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.mdw-card-sub .is-estimate { color: var(--course-observed); }
+/* D95: крышка над μ и σ – отдельный знак по центру буквы (U+0302 сдвигался вправо). */
+.mdw-hat { position: relative; display: inline-block; }
+.mdw-hat::before { content: "ˆ"; position: absolute; left: 0; right: 0; top: .08em; text-align: center; line-height: 1; }

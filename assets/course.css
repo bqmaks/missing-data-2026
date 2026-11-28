@@ -1,0 +1,791 @@
+/* Настройки этой лекции; общий fb-presentation не изменяется. */
+:root {
+  --course-observed: #006cc2;
+  --course-missing: #b61a51;
+  --course-imputed: #b61a51;
+  --title-panel-inset: 76px;
+  --title-text-gap: 32px;
+}
+.reveal { font-size: 34px; }
+.reveal .slides section > h2 { font-size: 1.18em; }
+.reveal p { margin: .35em 0 .6em; }
+.reveal li { margin-bottom: .25em; }
+.reveal .columns { gap: 32px; align-items: flex-start; }
+.reveal .column { min-width: 0; }
+.reveal .column > :first-child { margin-top: 0; }
+.reveal .small { font-size: .78em; }
+.reveal .muted { color: #536574; }
+.reveal .takeaway { border-left: 6px solid var(--course-observed); background: #edf5fd; padding: .4em .65em; margin-top: .6em; }
+.reveal .warning-note { border-left: 6px solid var(--course-missing); background: #fff4f2; padding: .4em .65em; }
+.reveal .takeaway > p, .reveal .warning-note > p { margin: 0; }
+.reveal .estimates { font-size: 27px; width: 100%; margin: .4em 0; font-variant-numeric: tabular-nums; }
+.reveal .estimates th, .reveal .estimates td { padding: .32em .4em; border-bottom: 1px solid #dbe4ed; white-space: nowrap; }
+.reveal .estimates thead th { color: #1a1a1a; background: none; font-weight: 700; text-align: center; white-space: normal; border-bottom: 2px solid #1a1a1a; }
+.reveal .estimates td { text-align: right; }
+.reveal .estimates tbody th { font-weight: 400; color: #1a1a1a; text-align: left; }
+.reveal .estimates td { color: #1a1a1a; }
+/* Цвет оценки – цвет данных (D39): наблюдаемые синие, заполненные импутацией красные. */
+.reveal .estimates td.estimate-observed { color: var(--course-observed); }
+.reveal .estimates td.estimate-imputed { color: var(--course-missing); }
+.reveal .estimates tbody tr:nth-child(even) { background: #f6f8fa; }
+.reveal .comparison .estimates { font-size: 28px; }
+.reveal .comparison .estimates th, .reveal .comparison .estimates td { padding: .28em .38em; }
+.reveal #notation .notation-layout { display: grid; row-gap: 72px; }
+.reveal #notation .notation-matrices {
+  display: grid;
+  grid-template-columns: repeat(3, max-content);
+  justify-content: space-between;
+  align-items: start;
+  column-gap: 24px;
+  font-size: 22px;
+}
+.reveal #notation .notation-layout p { margin: 0; }
+.reveal #notation .notation-layout .MathJax_Display { margin: 0 !important; }
+.reveal #notation :is(.notation-tuple, .notation-indicator) .MathJax_Display {
+  text-align: left !important;
+}
+/* Индикаторы M наблюдаемы: один шаг меняет цвет, не скрывая матрицу. */
+.reveal #notation .indicator-observed.fragment {
+  --indicator-value-color: #858b94;
+  opacity: 1;
+  visibility: visible;
+}
+.reveal #notation .indicator-observed.fragment.visible {
+  --indicator-value-color: var(--course-observed);
+}
+.reveal #notation .indicator-observed .MathJax :is(.mi, .mn) {
+  color: var(--indicator-value-color);
+  transition: color .25s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal #notation .indicator-observed .MathJax :is(.mi, .mn) { transition: none; }
+}
+.reveal .pattern-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.reveal .pattern-panel { display: block; width: 100%; height: auto; }
+.reveal .pattern-panel .pattern-title { font-family: inherit; font-size: 31px; fill: #1a1a1a; }
+.reveal .pattern-grid :is(.cell, .cell-output-display) { display: contents; }
+.reveal .pattern-grid-print { grid-template-columns: repeat(2, 344px); justify-content: center; }
+.reveal .mechanism { display: grid; grid-template-columns: 170px 1fr; gap: 25px; margin-bottom: .65em; padding: .3em .5em; background: #f5f8fc; }
+.reveal .mechanism-label { color: var(--course-observed); font-size: 34px; padding-top: .3em; }
+.reveal .mechanism p { margin: .1em 0 .3em; }
+.reveal .mechanism-label .mechanism-alt { font-size: 24px; color: #536574; }
+.reveal .mechanism .math { font-size: 31px; }
+.reveal .figure-note { font-size: 24px; color: #536574; margin: 0; }
+.reveal .cell-output-display p { margin: 0; }
+.reveal img { max-width: 100%; }
+.reveal .compact { font-size: 30px; }
+.reveal .examples-table { font-size: 30px; }
+.reveal .examples-table td, .reveal .examples-table th { padding: .35em .55em; }
+.reveal .MathJax_Display { margin: .5em 0 !important; }
+.reveal .source { font-size: 22px; color: #536574; }
+.reveal .references { font-size: 28px; }
+.reveal .references li { margin-bottom: .5em; line-height: 1.25; }
+.reveal .references li p { margin: 0; }
+.reveal .compact table { font-size: 26px; }
+.reveal #coverage .estimates { font-size: 27px; }
+.reveal .widget-slide > h2 { margin-bottom: .35em; }
+
+/* Определение отдельным блоком; примеры обсуждаем по одному. */
+.reveal #definition .definition-quote {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 36px 52px;
+  background: #f0f0f0;
+}
+.reveal #definition blockquote {
+  width: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+  font-size: 36px;
+  line-height: 1.4;
+  font-style: normal;
+  color: #1a1a1a;
+}
+.reveal #definition blockquote p { margin: 0; }
+.reveal #definition .definition-translation {
+  margin-top: 24px;
+}
+.reveal #definition .definition-source {
+  margin-top: 24px;
+  font-size: 24px;
+  line-height: 1.4;
+  color: #536574;
+}
+.reveal #definition .definition-source p { margin: 0; }
+.reveal :is(#missing-examples, #inference) > ul {
+  display: block;
+  margin: 20px 0 0 1.1em;
+  font-size: 34px;
+  line-height: 1.35;
+}
+.reveal :is(#missing-examples, #inference) li { margin-bottom: .35em; }
+.reveal :is(#missing-examples, #inference) ul ul {
+  display: block;
+  list-style: none;
+  margin: .25em 0 0 1.15em;
+  font-size: inherit;
+  line-height: inherit;
+}
+.reveal :is(#missing-examples, #inference) ul ul li:last-child { margin-bottom: 0; }
+.reveal :is(#missing-examples, #inference) li.fragment {
+  color: #a8a8a8;
+  transition: opacity .2s ease, color .2s ease;
+}
+.reveal :is(#missing-examples, #inference) li.fragment.current-fragment { color: #1a1a1a; }
+.reveal #inference li.fragment.visible:not(.current-fragment) { color: #555; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal :is(#missing-examples, #inference) li.fragment { transition: none; }
+}
+
+.reveal :is(#missing-examples, #inference) li.fragment strong { color: inherit; }
+.reveal #inference > ul {
+  margin-top: 16px;
+  font-size: 32px;
+}
+.reveal #inference li { margin-bottom: .3em; }
+.reveal #inference .requirement-detail {
+  display: block;
+  margin-top: 2px;
+  font-size: 30px;
+  line-height: 1.25;
+}
+
+/* Слайд 2: электронная таблица и фотография без отдельного заголовка. */
+.reveal .slides section#intro-table {
+  top: 0 !important;
+  height: var(--slide-height, 900px);
+  padding: 80px 40px 84px !important;
+}
+.reveal .slides #intro-table > h2 { display: none; }
+.reveal #intro-table .intro-layout {
+  display: grid;
+  grid-template-columns: 880px 600px;
+  gap: 40px;
+  height: 736px;
+  align-items: center;
+}
+.reveal #intro-table .sheet-window {
+  height: 736px;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1px solid #c9d0d7;
+  background: #fff;
+}
+.reveal #intro-table .intro-sheet {
+  table-layout: fixed;
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0;
+  font-size: 34px;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+.reveal #intro-table .sheet-index { width: 48px; }
+.reveal #intro-table .intro-sheet th,
+.reveal #intro-table .intro-sheet td {
+  box-sizing: border-box;
+  border: 1px solid #d7dce1;
+  padding: 0 16px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.reveal #intro-table .intro-sheet tr > :first-child { border-left: 0; }
+.reveal #intro-table .intro-sheet tr > :last-child { border-right: 0; }
+.reveal #intro-table .sheet-letters { height: 36px; }
+.reveal #intro-table .sheet-letters th {
+  border-top: 0;
+  background: #f1f3f4;
+  color: #60666e;
+  text-align: center;
+  font-size: 19px;
+  font-weight: 400;
+}
+.reveal #intro-table .sheet-corner { position: relative; }
+.reveal #intro-table .sheet-corner::after {
+  content: "";
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  border-right: 13px solid #bbc2c9;
+  border-top: 13px solid transparent;
+}
+.reveal #intro-table .sheet-fields { height: 70px; }
+.reveal #intro-table .sheet-fields th {
+  padding: 0 10px;
+  background: #eaf2fa;
+  color: #243c50;
+  font-size: 28px;
+  font-weight: 500;
+  text-align: center;
+}
+.reveal #intro-table .intro-sheet .sheet-row-number {
+  padding: 0;
+  background: #f1f3f4;
+  color: #60666e;
+  text-align: center;
+  font-size: 19px;
+  font-weight: 400;
+}
+.reveal #intro-table .intro-sheet tbody tr { height: 98px; }
+.reveal #intro-table .intro-sheet td {
+  color: var(--course-observed);
+  text-align: right;
+  font-weight: 400;
+}
+.reveal #intro-table .intro-sheet .sheet-sex { text-align: center; }
+.reveal #intro-table .intro-sheet .sheet-missing { color: var(--course-missing); }
+.reveal #intro-table .intro-sheet .sheet-missing-label {
+  padding: 0 10px;
+  font-size: 28px;
+  line-height: 1.15;
+  text-align: center;
+  white-space: normal;
+}
+.reveal #intro-table .intro-sheet .sheet-mascot {
+  position: relative;
+  padding: 0;
+}
+.reveal #intro-table .sheet-mascot img {
+  --mouse-width: 120px;
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: calc(-.5px - var(--mouse-width) * 24 / 224);
+  transform: translateX(-50%);
+  display: block;
+  width: var(--mouse-width);
+  height: auto;
+  max-height: none;
+  margin: 0;
+  border: 0;
+  box-shadow: none;
+}
+.reveal #intro-table .sheet-tabs {
+  height: 40px;
+  display: flex;
+  align-items: stretch;
+  padding-left: 48px;
+  background: #f1f3f4;
+  font-size: 18px;
+  line-height: 38px;
+  color: #31536d;
+}
+.reveal #intro-table .sheet-tab {
+  padding: 0 22px;
+  border-bottom: 3px solid var(--course-observed);
+  background: #e4eef8;
+}
+.reveal #intro-table img.intro-cat {
+  display: block;
+  width: 600px;
+  height: 736px;
+  object-fit: cover;
+  object-position: center;
+  max-height: none;
+  margin: 0;
+  border: 0;
+  box-shadow: none;
+}
+
+/* Многомерное нормальное распределение: формулы слева, плотность справа. */
+.reveal #mvn-density .mvn-layout { align-items: center; }
+.reveal #mvn-density .mvn-formulas { font-size: 26px; }
+.reveal #mvn-density .column > p { margin: .15em 0 .1em; }
+.reveal #mvn-density .mvn-formulas .MathJax_Display { text-align: left !important; margin: .35em 0 !important; }
+.reveal #mvn-density .mvn-formulas > p:has(strong) { margin-top: .55em; }
+.reveal #mvn-density .mvn-formulas > p:first-child { margin-top: 0; }
+.reveal #mvn-density .cell-output-display { text-align: center; }
+.reveal #mvn-density .mvn-caption { margin: .2em 0 0 18.7%; width: 75%; font-size: 22px; text-align: center; }
+
+/* Слайды с формулами по левому краю (DGP). */
+.reveal #dgp p:has(> .dgp-params) { margin-top: 1.1em; }
+.reveal .left-math .MathJax_Display { text-align: left !important; }
+
+/* Доля пропусков – цветом пропусков (D21, D43). */
+.reveal .missing-value, .reveal .missing-value strong { color: var(--course-missing); }
+/* Таблицы θ / θ̂: стиль задан общими правилами .estimates (D36, D39). */
+.reveal :is(#mcar, #mar, #mnar, #mean-imputation, #regression-imputation, #stochastic-imputation, #ml-method) .theta-table { font-size: 20px; }
+.reveal .theta-table td strong { font-weight: 700; color: inherit; }
+.reveal :is(#mcar, #mar, #mnar, #mean-imputation, #regression-imputation, #stochastic-imputation, #ml-method) .theta-table :is(th, td) { padding: .3em .32em; }
+.reveal .comparison .theta-table { font-size: 20px; }
+.reveal .comparison .theta-table :is(th, td) { padding: .3em .3em; }
+
+/* Основные формулы теории вероятностей: название слева, формула справа. */
+.reveal :is(#prob-distributions, #prob-moments) .formula-list {
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr) 64px;
+  column-gap: 32px;
+  align-items: center;
+  font-size: 26px;
+  line-height: 1.35;
+}
+.reveal :is(#prob-distributions, #prob-moments) :is(.formula-term, .formula-body, .formula-no) {
+  padding: 9px 0;
+  border-bottom: 1px solid #e3e8ee;
+}
+.reveal :is(#prob-distributions, #prob-moments) :is(.formula-term, .formula-body, .formula-no) p { margin: 0; }
+/* Номера формул (1)–(11) (D69): справа, серым, как ссылки в выводах. */
+.reveal :is(#prob-distributions, #prob-moments) .formula-no { text-align: right; color: #8A94A0; align-self: stretch; display: flex; align-items: center; justify-content: flex-end; }
+
+/* Параметризации двумерного нормального: совместная сверху, две регрессионные снизу. */
+.reveal #bvn-parametrizations :is(.param-joint, .param-box) {
+  box-sizing: border-box;
+  padding: 6px 22px 10px;
+  background: #f5f8fc;
+  text-align: left;
+}
+.reveal #bvn-parametrizations .MathJax_Display { text-align: left !important; }
+.reveal #bvn-parametrizations .param-joint { width: 820px; margin: 4px auto 0; font-size: 26px; }
+.reveal #bvn-parametrizations .param-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 48px;
+}
+.reveal #bvn-parametrizations .param-box { font-size: 24px; }
+.reveal #bvn-parametrizations :is(.param-joint, .param-box) p { margin: .1em 0; }
+.reveal #bvn-parametrizations .param-list { font-size: 22px; color: #536574; }
+.reveal #bvn-parametrizations .param-box > p:first-child { padding-bottom: .6em; }
+.reveal #bvn-parametrizations svg.param-arrows {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+}
+
+/* Термины Hand рядом с классификацией Рубина: Seen синий, Unseen красный (D21). */
+.reveal #hand-terms .hand-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 48px;
+  align-items: start;
+  margin-top: 12px;
+}
+.reveal #hand-terms .hand-table {
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 28px;
+  line-height: 1.25;
+}
+.reveal #hand-terms .hand-col-rubin { width: 36%; }
+.reveal #hand-terms .hand-col-hand { width: 30%; }
+.reveal #hand-terms .hand-full { white-space: nowrap; }
+.reveal #hand-terms .hand-table th {
+  padding: 12px 18px;
+  border: 0;
+  background: #f0f0f0;
+  color: #536574;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: left;
+  vertical-align: bottom;
+}
+.reveal #hand-terms .hand-table td {
+  padding: 18px;
+  border: 0;
+  border-bottom: 1px solid #dbe4ed;
+  color: #1a1a1a;
+  text-align: left;
+  vertical-align: top;
+}
+.reveal #hand-terms .hand-abbr {
+  display: block;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.reveal #hand-terms .hand-full {
+  display: block;
+  margin-top: 6px;
+  font-size: 24px;
+  color: #536574;
+}
+.reveal #hand-terms .hand-seen { color: var(--course-observed); font-weight: 700; }
+.reveal #hand-terms .hand-unseen { color: var(--course-missing); font-weight: 700; }
+.reveal #hand-terms .hand-source {
+  margin: 24px 0 0;
+  font-size: 24px;
+  line-height: 1.4;
+  color: #536574;
+}
+.reveal #hand-terms .hand-figure { margin: 0; }
+.reveal #hand-terms .hand-figure figcaption {
+  margin-top: 10px;
+  font-size: 19px;
+  line-height: 1.35;
+  color: #536574;
+}
+.reveal #hand-terms img.hand-cover {
+  display: block;
+  width: 380px;
+  height: auto;
+  max-height: none;
+  margin: 0;
+  border: 1px solid #d5dbe1;
+  box-shadow: none;
+}
+
+/* Пробный титульный слайд и поля колонтитулов, 2026-11-25. */
+.reveal .slides > .mat-nav,
+.reveal .slides > .mat-footer { padding-right: 16px; padding-left: 16px; }
+.reveal .slides:has(#title-slide.present) > .mat-nav > *,
+.reveal .slides:has(#title-slide.present) > .mat-footer > * { visibility: hidden; }
+.reveal .slides section#title-slide .mat-title-panel {
+  position: absolute;
+  top: 80px;
+  left: 0;
+  width: 100%;
+  height: 576px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: var(--title-panel-inset);
+  background-image: url("title-missing-matrix.svg");
+  background-repeat: no-repeat;
+  background-position: right var(--title-panel-inset) bottom var(--title-panel-inset);
+  background-size: 1448px 424px;
+}
+.reveal .slides section#title-slide .mat-title-panel h1.title {
+  font-size: 80px;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+.reveal .slides section#title-slide .mat-title-meta {
+  position: absolute;
+  left: 76px;
+  bottom: 120px;
+  height: 48px;
+  padding: 0;
+  text-align: left;
+}
+.reveal .slides section#title-slide .mat-title-meta p,
+.reveal .slides section#title-slide .quarto-title-authors { margin: 0; }
+.reveal .slides section#title-slide .quarto-title-author { padding: 0; }
+.reveal .slides section#title-slide .quarto-title-authors,
+.reveal .slides section#title-slide .quarto-title-author,
+.reveal .slides section#title-slide .quarto-title-author-name {
+  height: 48px;
+  line-height: 48px;
+  margin: 0;
+}
+
+/* В PDF Reveal оборачивает слайды в .pdf-page: сохраняем поля этой лекции. */
+html.print-pdf .reveal .slides .pdf-page section.slide {
+  padding: 40px 76px 50px !important;
+  box-sizing: border-box !important;
+}
+html.print-pdf .reveal .slides .pdf-page #title-slide {
+  top: 0 !important;
+  height: var(--slide-height, 900px) !important;
+  padding: 40px 0 !important;
+}
+html.print-pdf .reveal .slides .pdf-page #intro-table {
+  top: 0 !important;
+  height: var(--slide-height, 900px) !important;
+  padding: 80px 40px 84px !important;
+}
+html.print-pdf .reveal .slides .pdf-page section#definition {
+  top: 0 !important;
+  height: var(--slide-height, 900px) !important;
+}
+html.print-pdf .reveal .slides > .mat-nav,
+html.print-pdf .reveal .slides > .mat-footer { display: none !important; }
+html.print-pdf .reveal .references li { margin-bottom: .5em !important; line-height: 1.25 !important; }
+html.print-pdf .reveal .references li p { margin: 0 !important; line-height: 1.25 !important; }
+html.print-pdf .reveal .widget-print img { max-height: 550px; width: auto !important; margin: 0 auto; }
+html.print-pdf .reveal .widget-print .cell-output-display { text-align: center; }
+
+/* Missingness mechanisms: определение и две записи механизма. */
+.reveal #mechanisms .math.display { font-size: 34px; }
+/* D81: строка с f видна сразу светло-серой, по пробелу становится черной. */
+.reveal #mechanisms .gray-to-black.fragment { opacity: 1; visibility: visible; color: #A8A8A8; transition: color .25s ease; }
+.reveal #mechanisms .gray-to-black.fragment.visible { color: #1A1A1A; }
+@media (prefers-reduced-motion: reduce) { .reveal #mechanisms .gray-to-black.fragment { transition: none; } }
+
+/* Rubin's Typology (о Рубине): фото слева, работы и цитирования справа. */
+.reveal #rubin-bio .rubin-layout {
+  display: grid;
+  grid-template-columns: 330px minmax(0, 1fr);
+  gap: 44px;
+  align-items: start;
+}
+.reveal #rubin-bio .rubin-photo { margin: 0; }
+.reveal #rubin-bio .rubin-photo img {
+  display: block;
+  width: 330px;
+  height: auto;
+  max-height: none;
+  margin: 0;
+}
+.reveal #rubin-bio .rubin-photo figcaption {
+  margin-top: 10px;
+  font-size: 18px;
+  line-height: 1.35;
+  color: #536574;
+}
+.reveal #rubin-bio .rubin-photo figcaption strong { font-size: 22px; color: #1a1a1a; }
+.reveal #rubin-bio .rubin-table {
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+  font-size: 19px;
+  line-height: 1.25;
+}
+.reveal #rubin-bio .rubin-table th,
+.reveal #rubin-bio .rubin-table td {
+  padding: 3px 8px;
+  border: 0;
+  border-bottom: 1px solid #e3e8ee;
+  color: #1a1a1a;
+  text-align: left;
+  vertical-align: top;
+}
+.reveal #rubin-bio .rubin-table thead th { font-weight: 700; border-bottom: 2px solid #1a1a1a; }
+.reveal #rubin-bio .rubin-table :is(thead th, td):last-child {
+  width: 108px;
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.reveal #rubin-bio .rubin-group th {
+  padding-top: 9px;
+  font-weight: 700;
+  color: var(--course-observed);
+}
+.reveal #rubin-bio :is(.rubin-note, .rubin-interview) { margin: 8px 0 0; font-size: 18px; color: #536574; }
+.reveal #rubin-bio .rubin-ref { color: #536574; }
+.reveal #rubin-bio .rubin-table a { color: var(--course-observed); text-decoration: none; }
+.reveal #rubin-bio .rubin-interview { margin: 30px 0 0; font-size: 20px; color: #1a1a1a; }
+
+/* Rubin's Typology (определения): три блока по левому краю. */
+.reveal #rubin-typology .typology-block {
+  margin-bottom: 14px;
+  padding: 8px 20px 10px;
+  background: #f5f8fc;
+}
+.reveal #rubin-typology .typology-block p { margin: .1em 0; }
+.reveal #rubin-typology .typology-abbr { font-size: 30px; font-weight: 700; color: var(--course-observed); }
+.reveal #rubin-typology .typology-full { font-size: 23px; color: #536574; }
+.reveal #rubin-typology .typology-block .MathJax_Display { margin: .25em 0 !important; }
+.reveal #rubin-typology .mechanism-alt { font-size: 22px; color: #536574; }
+/* D82, D83: один узкий блок игнорируемости внизу – две строки обычным черным текстом. */
+.reveal #rubin-typology .typology-ignorable { padding: 6px 20px 8px; }
+.reveal #rubin-typology .typology-ignorable p { font-size: 28px; font-weight: 400; color: #1a1a1a; line-height: 1.45; }
+
+/* Слайд о названиях: без видимого заголовка, цитата и скриншот Википедии. */
+.reveal .slides section#naming {
+  top: 0 !important;
+  height: var(--slide-height, 900px);
+  padding: 80px 76px 84px !important;
+}
+.reveal .slides #naming > h2 { display: none; }
+.reveal #naming .naming-quote {
+  box-sizing: border-box;
+  margin: 40px 0 0;
+  padding: 28px 44px;
+  background: #f0f0f0;
+}
+.reveal #naming .naming-quote blockquote {
+  width: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+  font-size: 36px;
+  line-height: 1.3;
+  font-style: normal;
+  color: #1a1a1a;
+}
+.reveal #naming .naming-quote blockquote p { margin: 0; }
+.reveal #naming .definition-source { margin-top: 14px; font-size: 22px; line-height: 1.4; color: #536574; }
+.reveal #naming .definition-source p { margin: 0; }
+.reveal #naming .naming-wiki { margin-top: 24px; }
+.reveal #naming .naming-wiki img {
+  display: block;
+  width: 960px;
+  max-width: 100%;
+  height: auto;
+  margin: 0;
+  border: 1px solid #d5dbe1;
+  box-shadow: none;
+}
+.reveal #naming .naming-credit { display: block; margin-top: 8px; font-size: 18px; color: #536574; }
+
+/* Определение механизма по данным (D46): пошаговое раскрытие как на слайде цели вывода –
+   текущий шаг черный, предыдущие темно-серые. */
+.reveal #check-mechanism > ul {
+  display: block;
+  margin: 18px 0 0 1.1em;
+  font-size: 31px;
+  line-height: 1.32;
+}
+.reveal #check-mechanism li { margin-bottom: .28em; }
+.reveal #check-mechanism ul ul {
+  display: block;
+  list-style: none;
+  margin: .2em 0 0 1.15em;
+  font-size: inherit;
+  line-height: inherit;
+}
+.reveal #check-mechanism ul ul li:last-child { margin-bottom: 0; }
+.reveal #check-mechanism li.fragment { color: #a8a8a8; transition: opacity .2s ease, color .2s ease; }
+.reveal #check-mechanism li.fragment.visible:not(.current-fragment) { color: #555; }
+.reveal #check-mechanism li.fragment.current-fragment { color: #1a1a1a; }
+.reveal #check-mechanism li.fragment :is(strong, code) { color: inherit; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal #check-mechanism li.fragment { transition: none; }
+}
+
+/* Стратифицированный анализ: рисунок по центру. */
+.reveal #strat-density .cell-output-display { text-align: center; }
+
+/* Методы анализа неполных данных: две колонки, правая появляется по пробелу. */
+.reveal #methods-overview .columns { font-size: 27px; }
+.reveal #methods-overview h3 { margin-bottom: .1em; font-size: 29px; }
+.reveal #methods-overview .methods-note { color: #536574; font-size: 24px; }
+.reveal #methods-overview ul { margin-top: .35em; }
+.reveal #methods-overview li { margin-bottom: .18em; }
+.reveal #methods-overview ul ul { margin-top: .1em; }
+
+/* Потеря полных случаев: схема Y1–Y4 и график рядом, подписи под ними (D52). */
+.reveal .pattern-panel .pattern-col { font-family: inherit; font-size: 26px; fill: #1a1a1a; }
+.reveal .pattern-panel .pattern-note { font-family: inherit; font-size: 26px; font-weight: 700; }
+.reveal #cc-loss .columns { font-size: 26px; }
+.reveal #cc-loss .column { box-sizing: border-box; padding: 0 12px; }
+/* Схема вдвое уже графика (D53): та же высота, половина прежней ширины. */
+.reveal #cc-loss .pattern-panel { width: 46%; margin: 0 auto; }
+.reveal #cc-loss .cell-output-display { text-align: center; }
+/* Подписи – отдельный ряд колонок, поэтому левая и правая начинаются на одной высоте. */
+.reveal #cc-loss .cc-loss-captions { margin-top: .4em; align-items: flex-start; }
+.reveal #cc-loss .cc-loss-captions p { margin: 0 0 .35em; line-height: 1.35; }
+.reveal #cc-loss ul { margin-top: .2em; }
+.reveal #cc-loss .observed-value, .reveal #cc-loss .observed-value strong { color: var(--course-observed); }
+
+/* Когда complete case валиден и оптимален. */
+.reveal #cc-valid :is(ul, p) { font-size: 27px; }
+.reveal #cc-valid .cc-group { display: block; margin: .5em 0 .15em; font-weight: 700; color: var(--course-observed); font-size: 29px; }
+.reveal #cc-valid li { margin-bottom: .2em; }
+
+/* IPW на бинарном примере (D54): сверху рисунок и формулы, снизу таблица. */
+.reveal #binary-mar .binary-top { align-items: center; }
+.reveal #binary-mar .binary-top .cell-output-display { text-align: center; }
+.reveal #binary-mar .binary-formulas { font-size: 24px; padding-left: 48px; box-sizing: border-box; }
+.reveal #binary-mar .binary-formulas .MathJax_Display { text-align: left !important; margin: .3em 0 !important; }
+.reveal #binary-mar .binary-ipw-table { font-size: 21px; margin: 4px 0 0; }
+.reveal #binary-mar .binary-ipw-table :is(th, td) { padding: .22em .5em; text-align: right; }
+.reveal #binary-mar .binary-ipw-table tbody tr:last-child { border-top: 2px solid #1a1a1a; }
+
+/* Таблица оценок CC при трех механизмах – по центру по вертикали (D54). */
+.reveal #complete-cases .vcenter { height: 690px; display: flex; flex-direction: column; justify-content: center; }
+
+/* Покрытие и ширина 95% ДИ (D54). */
+.reveal .uncertainty-table { font-size: 22px; margin: 30px auto 0; }
+.reveal .uncertainty-table :is(th, td) { padding: .35em .6em; text-align: right; }
+.reveal .uncertainty-table thead th { text-align: center; }
+.reveal .uncertainty-table thead tr:last-child th { font-size: 18px; font-weight: 600; }
+.reveal .uncertainty-table tbody th.estimate-observed { color: var(--course-observed); }
+.reveal .uncertainty-table tbody th.estimate-imputed { color: var(--course-missing); }
+.reveal .uncertainty-table td.estimate-imputed { color: var(--course-missing); }
+
+/* Available case: lm и lavaan::sem на полных данных, коэффициенты строкой (D52). */
+.reveal #available-cases div.sourceCode { margin: .5em 0 .2em; }
+.reveal #available-cases div.sourceCode pre { max-height: none; margin: 0; }
+.reveal #available-cases div.sourceCode :is(pre, code) { font-size: 21px; line-height: 1.4; }
+.reveal #available-cases .ac-row { font-size: 22px; width: auto; margin: .2em 0 .6em; }
+.reveal #available-cases .ac-row :is(th, td) { padding: .25em 1.2em; text-align: right; }
+.reveal #available-cases > ul { margin-top: .8em; font-size: 30px; }
+.reveal #available-cases > ul li { margin-bottom: .3em; }
+
+/* Пошаговое раскрытие на слайдах CC (валидность) и available case (D53):
+   текущий пункт черный, предыдущие темно-серые, как на слайде 23. */
+.reveal :is(#cc-valid, #available-cases) li.fragment { color: #a8a8a8; transition: opacity .2s ease, color .2s ease; }
+.reveal :is(#cc-valid, #available-cases) li.fragment.visible:not(.current-fragment) { color: #555; }
+.reveal :is(#cc-valid, #available-cases) li.fragment.current-fragment { color: #1a1a1a; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal :is(#cc-valid, #available-cases) li.fragment { transition: none; }
+}
+
+/* Missing indicator method (D58): исходная таблица → преобразованная, затем код и пункты. */
+.reveal #missing-indicator .mi-tables { display: flex; align-items: center; justify-content: center; gap: 48px; margin-top: 6px; }
+.reveal #missing-indicator .mi-table { font-size: 22px; border-collapse: collapse; margin: 0; }
+.reveal #missing-indicator .mi-table :is(th, td) { padding: .2em .9em; text-align: right; border-bottom: 1px solid #e3e8ee; }
+.reveal #missing-indicator .mi-table thead th { border-bottom: 2px solid #1a1a1a; color: #1a1a1a; }
+.reveal #missing-indicator .mi-table td { color: var(--course-observed); }
+.reveal #missing-indicator .mi-table td.mi-na { color: var(--course-missing); font-weight: 700; }
+.reveal #missing-indicator .mi-arrow { font-size: 54px; color: #858B94; line-height: 1; }
+.reveal #missing-indicator div.sourceCode { width: fit-content; margin: 30px 0 10px; }
+.reveal #missing-indicator div.sourceCode :is(pre, code) { font-size: 22px; }
+.reveal #missing-indicator > ul { font-size: 28px; margin-top: .3em; }
+.reveal #missing-indicator > ul li { margin-bottom: .2em; }
+
+/* LOCF (D58): пункты сверху, рисунок снизу. */
+.reveal #locf > ul { font-size: 28px; margin: 4px 0 6px; }
+.reveal #locf > ul li { margin-bottom: .12em; }
+
+/* Пошаговые пункты на слайдах missing indicator и LOCF – как на слайде 23. */
+.reveal :is(#missing-indicator, #locf) li.fragment { color: #a8a8a8; transition: opacity .2s ease, color .2s ease; }
+.reveal :is(#missing-indicator, #locf) li.fragment.visible:not(.current-fragment) { color: #555; }
+.reveal :is(#missing-indicator, #locf) li.fragment.current-fragment { color: #1a1a1a; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal :is(#missing-indicator, #locf) li.fragment { transition: none; }
+}
+
+/* Маркеры пунктов везде синие, как в шаблоне (D60): на пошаговых слайдах меняется только цвет текста. */
+
+/* Цитата Рубина после таблиц 95% ДИ (D60): без видимого заголовка, цитата по центру. */
+.reveal .slides section#rubin-quote {
+  top: 0 !important;
+  height: var(--slide-height, 900px);
+  padding: 80px 140px 84px !important;
+  box-sizing: border-box;
+}
+.reveal .slides #rubin-quote > h2 { display: none; }
+.reveal #rubin-quote .rubin-quote {
+  position: absolute; left: 140px; right: 140px; top: 50%; transform: translateY(-50%);
+  padding: 40px 56px; background: #f0f0f0; box-sizing: border-box;
+}
+.reveal #rubin-quote .rubin-quote blockquote {
+  width: auto; margin: 0; padding: 0; border: 0; box-shadow: none;
+  font-size: 40px; line-height: 1.35; font-style: normal; color: #1a1a1a;
+}
+.reveal #rubin-quote .rubin-quote blockquote p { margin: 0; }
+.reveal #rubin-quote .definition-source { margin-top: 22px; font-size: 24px; line-height: 1.4; color: #536574; }
+.reveal #rubin-quote .definition-source p { margin: 0; }
+
+/* Слайды ММП (D63): подзаголовки, формулы по левому краю, пошаговые свойства. */
+.reveal .ml-subhead { display: block; margin: .45em 0 0; font-weight: 700; color: var(--course-observed); font-size: 28px; }
+.reveal #ml-normal .columns { font-size: 25px; }
+.reveal #ml-normal .MathJax_Display { margin: .35em 0 !important; }
+.reveal #observed-likelihood .MathJax_Display { margin: .35em 0 !important; }
+.reveal #maximum-likelihood li.fragment { color: #a8a8a8; transition: opacity .2s ease, color .2s ease; }
+.reveal #maximum-likelihood li.fragment.visible:not(.current-fragment) { color: #555; }
+.reveal #maximum-likelihood li.fragment.current-fragment { color: #1a1a1a; }
+.reveal #maximum-likelihood li.fragment strong { color: inherit; }
+.reveal #distinctness-example .estimates { font-size: 22px; }
+.reveal #distinctness-example .column:first-child .math.display { font-size: 75%; } /* D80: формулы на 25% меньше */
+.reveal #ignorability .MathJax_Display { margin: .2em 0 .1em !important; }
+
+/* Ограничения ММП и EM, пошаговые пункты (D64). */
+.reveal #ml-limitations > ul { font-size: 29px; }
+.reveal #ml-limitations li { margin-bottom: .25em; }
+.reveal #ml-limitations li.fragment { color: #a8a8a8; transition: opacity .2s ease, color .2s ease; }
+.reveal #ml-limitations li.fragment.visible:not(.current-fragment) { color: #555; }
+.reveal #ml-limitations li.fragment.current-fragment { color: #1a1a1a; }
+.reveal #mar-factorization .MathJax_Display { margin: .25em 0 !important; }
+.reveal #mar-factorization .ml-final-line { margin-top: 0; padding-top: 1.1em; }
+.reveal :is(#ml-bvn-canonical, #ml-bvn-regression, #ml-bvn-regression2) :is(p, ul) { font-size: 27px; }
+.reveal :is(#ml-bvn-canonical, #ml-bvn-regression, #ml-bvn-regression2) .MathJax_Display { margin: .45em 0 !important; }
+
+/* Ссылки на формулы «необходимого минимума» (D69): серым у правого края строки формулы. */
+.reveal .with-ref { position: relative; }
+.reveal .with-ref .MathJax_Display { padding-right: 7.5em; box-sizing: border-box; }
+.reveal .with-ref p:has(> .eq-ref) { position: absolute; right: 0; top: 50%; transform: translateY(-50%); margin: 0 !important; }
+.reveal .eq-ref { color: #8A94A0; font-size: 24px; white-space: nowrap; }
+/* Подписи шагов вывода (D79): справа от формул, общий левый край, перед номером формулы. */
+.reveal #mar-factorization .with-ref p:has(> .step-label) { position: absolute; left: 1035px; top: 50%; transform: translateY(-50%); margin: 0 !important; }
+.reveal .step-label { color: #555; font-size: 24px; white-space: nowrap; }
+.reveal .fno { color: #8A94A0; }

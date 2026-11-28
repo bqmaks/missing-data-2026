@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="275" height="220" viewBox="0 0 275 220" role="img" aria-labelledby="mascot-title mascot-description">
+  <title id="mascot-title">Мышь выглядывает из овального отверстия</title>
+  <desc id="mascot-description">Персонаж курса по пропущенным данным. Векторная перерисовка мыши с официального стикера mice авторства Jaden M. Walters: https://github.com/amices/mice/blob/master/man/figures/MICE_sticker_SMALL.png. Сохранены пропорции, поза, складки ушей, овальный нос и короткие лапки. Вместо черной обводки использован серый #858B94. Тело имеет непрерывный замкнутый контур. Кольцо за мышью: эллипс с обводкой 11.25 px, белый слой и #B61A51 с непрозрачностью 50%.</desc>
+  <g id="mascot-art">
+    <g id="mascot-ring" fill="none" stroke-width="11.25">
+      <ellipse id="mouse-hole-underlay" cx="169" cy="123" rx="88" ry="47" transform="rotate(-42 169 123)" stroke="#ffffff"/>
+      <ellipse id="mouse-hole" cx="169" cy="123" rx="88" ry="47" transform="rotate(-42 169 123)" stroke="#b61a51" stroke-opacity="0.5"/>
+    </g>
+    <g id="mascot-mouse" fill="#ffffff" stroke="#858b94" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path id="mascot-body" d="M140 102 C161 110 184 123 203 140 C205 145 205 151 202 157 C188 181 164 196 144 198 L130 190 C126 173 119 155 113 147 Z"/>
+      <g id="mascot-ears">
+        <path id="mascot-ear-left" d="M68 64 C62 48 52 31 39 31 C25 28 15 49 16 69 C17 90 34 105 58 100 L63 82 Z"/>
+        <path id="mascot-ear-left-fold" d="M40 32 C52 34 58 51 61 75 C58 82 57 88 58 94 C43 100 26 92 20 85" fill="none" stroke-width="1.65"/>
+        <path id="mascot-ear-right" d="M121 54 C129 32 140 12 155 16 C170 20 179 42 178 59 C178 77 160 89 143 84 L132 69 Z"/>
+        <path id="mascot-ear-right-fold" d="M149 17 C137 22 133 43 131 58 C137 65 141 72 143 79 C157 83 172 74 177 63" fill="none" stroke-width="1.65"/>
+      </g>
+      <path id="mascot-head" d="M67 64 C83 49 101 43 121 54 C124 42 135 23 146 18 C137 27 133 45 131 58 C142 71 146 85 143 99 C140 111 132 128 124 140 C118 149 111 151 103 147 C91 141 82 131 73 122 C59 108 53 94 58 80 C61 68 60 62 57 49 C60 54 64 59 67 64 Z"/>
+      <g id="mascot-face">
+        <ellipse id="mascot-eye-left" cx="83.5" cy="95" rx="4.3" ry="8" fill="#515963" stroke="none"/>
+        <ellipse id="mascot-eye-right" cx="118" cy="89" rx="4.3" ry="8" transform="rotate(-13 118 89)" fill="#515963" stroke="none"/>
+        <ellipse id="mascot-nose" cx="108" cy="138" rx="11" ry="7.2" stroke-width="1.9"/>
+        <path id="mascot-whiskers" d="M88 140 L63 151 M91 144 L74 165 M130 131 L158 130 M127 136 L154 147" fill="none" stroke="#737c87" stroke-width="1.7"/>
+      </g>
+      <g id="mascot-paws">
+        <g transform="translate(138 190) rotate(-32)">
+          <ellipse id="mascot-paw-left" rx="10.2" ry="15.5"/>
+          <path d="M-4 7 L-4 14 M2 6 L2 15" fill="none" stroke-width="1.6"/>
+        </g>
+        <g transform="translate(196 161) rotate(-25)">
+          <ellipse id="mascot-paw-right" rx="9.2" ry="15.5"/>
+          <path d="M-3.8 7 L-3.8 14 M2.2 6 L2.2 15" fill="none" stroke-width="1.6"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
